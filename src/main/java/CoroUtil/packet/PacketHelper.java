@@ -2,7 +2,6 @@ package CoroUtil.packet;
 
 import java.io.IOException;
 
-import CoroUtil.config.ConfigBlockDestruction;
 import CoroUtil.forge.CoroUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -30,7 +29,7 @@ public class PacketHelper {
 	//modify to be fully nbt! less headache!
 
 	@SideOnly(Side.CLIENT)
-	public static void sendClientPacket(Packet packet) {
+	public static void sendClientPacket(Packet<?> packet) {
 		FMLClientHandler.instance().getClient().player.connection.sendPacket(packet);
 	}
 	
@@ -221,8 +220,6 @@ public class PacketHelper {
 	public static FMLProxyPacket getPacketForUpdateBlockList() {
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("command", "UpdateBlockList");
-		data.setString("blacklistRepairable_RegularBlocks", ConfigBlockDestruction.blacklistRepairable_RegularBlocks);
-		data.setString("whitelistMineable_TileEntities", ConfigBlockDestruction.whitelistMineable_TileEntities);
 		return getNBTPacket(data, CoroUtil.eventChannelName);
 	}
 

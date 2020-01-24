@@ -144,13 +144,13 @@ public class CoroUtilMisc {
                         CULog.log("Clearing relevant spawnableList to fix issue");
                         //detected crashable state of data, clear out spawnlist then
                         if (type == EnumCreatureType.MONSTER) {
-                            biome.spawnableMonsterList.clear();
+                            biome.getSpawnableList(EnumCreatureType.MONSTER).clear();
                         } else if (type == EnumCreatureType.CREATURE) {
-                            biome.spawnableCreatureList.clear();
+                            biome.getSpawnableList(EnumCreatureType.CREATURE).clear();
                         } else if (type == EnumCreatureType.WATER_CREATURE) {
-                            biome.spawnableWaterCreatureList.clear();
+                            biome.getSpawnableList(EnumCreatureType.WATER_CREATURE).clear();
                         } else if (type == EnumCreatureType.AMBIENT) {
-                            biome.spawnableCaveCreatureList.clear();
+                            biome.getSpawnableList(EnumCreatureType.AMBIENT).clear();
                         } else {
                             //theres also Biome.modSpawnableLists for modded entries, but ive decided not to care about this one
                         }

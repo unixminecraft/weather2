@@ -1,11 +1,6 @@
 package weather2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import CoroUtil.util.CoroUtilFile;
-import modconfig.ConfigMod;
-import modconfig.IConfigCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -20,12 +15,6 @@ import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import weather2.config.ConfigFoliage;
 import weather2.config.ConfigMisc;
-import weather2.config.ConfigParticle;
-import weather2.config.ConfigSand;
-import weather2.config.ConfigSnow;
-import weather2.config.ConfigStorm;
-import weather2.config.ConfigTornado;
-import weather2.config.ConfigWind;
 import weather2.player.PlayerData;
 import weather2.util.WeatherUtilConfig;
 import weather2.weathersystem.WeatherManagerServer;
@@ -47,7 +36,6 @@ public class Weather {
     public static String eventChannelName = "weather2";
 	public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(eventChannelName);
 
-	public static List<IConfigCategory> listConfigs = new ArrayList<>();
 
 	public static ConfigMisc configMisc = null;
 
@@ -60,29 +48,10 @@ public class Weather {
 		MinecraftForge.EVENT_BUS.register(new EventHandlerForge());
 
 		configMisc = new ConfigMisc();
-    	ConfigMod.addConfigFile(event, addConfig(configMisc));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigWind()));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigSand()));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigSnow()));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigStorm()));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigTornado()));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigParticle()));
-		ConfigMod.addConfigFile(event, addConfig(new ConfigFoliage()));
     	WeatherUtilConfig.nbtLoadDataAll();
 
 		proxy.preInit();
     }
-
-	/**
-	 * To work around the need to force a configmod refresh on these when EZ GUI changes values
-	 *
-	 * @param config
-	 * @return
-	 */
-	public static IConfigCategory addConfig(IConfigCategory config) {
-		listConfigs.add(config);
-		return config;
-	}
     
 	@Mod.EventHandler
     public void load(FMLInitializationEvent event)

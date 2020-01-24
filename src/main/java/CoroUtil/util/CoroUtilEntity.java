@@ -3,14 +3,11 @@ package CoroUtil.util;
 import java.util.Iterator;
 import java.util.UUID;
 
-import CoroUtil.config.ConfigCoroUtilAdvanced;
-import CoroUtil.difficulty.UtilEntityBuffs;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -80,7 +77,7 @@ public class CoroUtilEntity {
 	}
 	
 	public static EntityPlayer getPlayerByUUID(UUID uuid) {
-		Iterator iterator = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers().iterator();
+		Iterator<EntityPlayerMP> iterator = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers().iterator();
         EntityPlayerMP entityplayermp;
         
         while (iterator.hasNext()) {
@@ -160,9 +157,9 @@ public class CoroUtilEntity {
         return true;
     }
 
-    public static Class getClassFromRegistry(String name) {
+    public static Class<? extends Entity> getClassFromRegistry(String name) {
         //Class clazz = EntityList.NAME_TO_CLASS.get(name);
-        Class clazz = EntityList.getClass(new ResourceLocation(name));
+        Class<? extends Entity> clazz = EntityList.getClass(new ResourceLocation(name));
         //dont think this will be needed for proper registered entity names
         /*if (clazz == null) {
             clazz = EntityList.NAME_TO_CLASS.get(name.replace("minecraft:", "").replace("minecraft.", ""));
@@ -272,18 +269,6 @@ public class CoroUtilEntity {
         }
 
         return flag;
-    }
-
-    public static boolean canPathfindLongDist(EntityCreature ent) {
-        long lastPathTime = ent.getEntityData().getLong(UtilEntityBuffs.dataEntityBuffed_LastTimePathfindLongDist);
-        if (ent.world.getTotalWorldTime() > lastPathTime + ConfigCoroUtilAdvanced.worldTimeDelayBetweenLongDistancePathfindTries) {
-            return true;
-        }
-        return false;
-    }
-
-    public static void updateLastTimeLongDistPathfinded(EntityCreature ent) {
-        ent.getEntityData().setLong(UtilEntityBuffs.dataEntityBuffed_LastTimePathfindLongDist, ent.world.getTotalWorldTime() + (ent.getEntityId() % 20));
     }
 
     public static String getEntityNameStringFromNBTLoadedName(String entityString) {

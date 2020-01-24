@@ -2,12 +2,10 @@ package weather2.config;
 
 import java.io.File;
 
-import modconfig.ConfigComment;
-import modconfig.IConfigCategory;
 import weather2.Weather;
 
 
-public class ConfigStorm implements IConfigCategory {
+public class ConfigStorm {
 
 
 
@@ -45,7 +43,6 @@ public class ConfigStorm implements IConfigCategory {
 	public static int Storm_PercentChanceOf_F4_Tornado = 20;
 	public static int Storm_PercentChanceOf_C4_Cyclone = 20;
 	public static int Storm_PercentChanceOf_F5_Tornado = 10;
-	@ConfigComment("Also known as full blown hurricane")
 	public static int Storm_PercentChanceOf_C5_Cyclone = 10;
 	public static int Storm_ParticleSpawnDelay = 3;
 	
@@ -55,9 +52,7 @@ public class ConfigStorm implements IConfigCategory {
 	
 	//per server storm settings
 	public static boolean Server_Storm_Deadly_UseGlobalRate = false;
-	@ConfigComment("Used if Server_Storm_Deadly_UseGlobalRate is on, replaces use of Player_Storm_Deadly_OddsTo1")
 	public static int Server_Storm_Deadly_OddsTo1 = 30;
-	@ConfigComment("Used if Server_Storm_Deadly_UseGlobalRate is on, replaces use of Player_Storm_Deadly_TimeBetweenInTicks")
 	public static int Server_Storm_Deadly_TimeBetweenInTicks = 20*60*20*3;
 	public static boolean preventServerThunderstorms = true;
 	//lightning
@@ -69,41 +64,33 @@ public class ConfigStorm implements IConfigCategory {
 
 	public static int Storm_Deflector_RadiusOfStormRemoval = 150;
 
-    @ConfigComment("The minimum stage a storm has to be at to be removed, stages are: 0 = anything, 1 = thunder, 2 = high wind, 3 = hail, 4 = F0/C0, 5 = F1/C1, 6 = F2/C2, 7 = F3/C3, 8 = F4/C4, 9 = F5/C5")
     public static int Storm_Deflector_MinStageRemove = 1;
     public static boolean Storm_Deflector_RemoveRainstorms = false;
     public static boolean Storm_Deflector_RemoveSandstorms = true;
 
-	@ConfigComment("Minimum amount of visual rain shown when its raining globally during overcast mode")
     public static double Storm_Rain_Overcast_Amount = 0.01D;
 	public static int Storm_Rain_Overcast_OddsTo1 = 50;
 
 	public static int Storm_Rain_OddsTo1 = 150;
 
-	@ConfigComment("How often in ticks, a rainstorm updates its list of entities under the rainstorm to extinguish. Extinguishes entities under rainclouds when globalOvercast is off. Set to 0 or less to disable")
 	public static int Storm_Rain_TrackAndExtinguishEntitiesRate = 200;
 
-    @Override
     public String getName() {
         return "Storm";
     }
 
-    @Override
     public String getRegistryName() {
         return Weather.modID + getName();
     }
 
-    @Override
     public String getConfigFileName() {
         return "Weather2" + File.separator + getName();
     }
 
-    @Override
     public String getCategory() {
         return "Weather2: " + getName();
     }
 
-    @Override
     public void hookUpdatedValues() {
 
     }

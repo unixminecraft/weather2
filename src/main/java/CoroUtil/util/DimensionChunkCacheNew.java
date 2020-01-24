@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 
 import CoroUtil.OldUtil;
 import CoroUtil.config.ConfigCoroUtilAdvanced;
-import CoroUtil.pathfinding.PFQueue;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -41,8 +40,6 @@ public class DimensionChunkCacheNew implements IBlockAccess {
     public int chunkZMax;
     private Chunk[][] chunkArray;
 
-    /** set by !chunk.getAreLevelsEmpty */
-    private boolean hasExtendedLevels;
 
     /** Reference to the World object. */
     private World worldObj;
@@ -92,11 +89,11 @@ public class DimensionChunkCacheNew implements IBlockAccess {
 	    	int maxX = 0;
 	    	int maxZ = 0;
 	    	
-	    	List chunks = Lists.newArrayList(((ChunkProviderServer)world.getChunkProvider()).getLoadedChunks());
+	    	List<Chunk> chunks = Lists.newArrayList(((ChunkProviderServer)world.getChunkProvider()).getLoadedChunks());
     		
 	    	if (chunks == null) {
 	    		try {
-    				chunks = (ArrayList)OldUtil.getPrivateValueSRGMCP(ChunkProviderServer.class, world.getChunkProvider(), OldUtil.refl_loadedChunks_obf, OldUtil.refl_loadedChunks_mcp);
+    				chunks = (List<Chunk>) OldUtil.getPrivateValueSRGMCP(ChunkProviderServer.class, world.getChunkProvider(), OldUtil.refl_loadedChunks_obf, OldUtil.refl_loadedChunks_mcp);
     			} catch (Exception ex2) {
     				System.out.println("SERIOUS REFLECTION FAIL IN DimensionChunkCache");
     			}
@@ -146,7 +143,6 @@ public class DimensionChunkCacheNew implements IBlockAccess {
 			        int var9 = maxZ;
 			        
 		    		this.chunkArray = new Chunk[var8 - this.chunkX + 1][var9 - this.chunkZ + 1];
-		    		this.hasExtendedLevels = true;
 		    		
 		    		for (int i = 0; i < chunks.size(); i++) {
 		    			Chunk chunk = (Chunk) chunks.get(i);
@@ -181,7 +177,6 @@ public class DimensionChunkCacheNew implements IBlockAccess {
 		        this.chunkXMax = var8;
 		        this.chunkZMax = var9;
 		        this.chunkArray = new Chunk[var8 - this.chunkX + 1][var9 - this.chunkZ + 1];
-		        this.hasExtendedLevels = true;
 		        
 		        for (int i = 0; i < world.playerEntities.size(); ++i)
 		        {
@@ -210,12 +205,10 @@ public class DimensionChunkCacheNew implements IBlockAccess {
 		        }
 	    	}
 	        
-	        PFQueue.lastChunkCacheCount = chunkCount;
 	        
     	} catch (Exception ex) {
     		ex.printStackTrace();
     		System.out.println("DimensionChunkCache crash, tell Corosus");
-    		PFQueue.lastChunkCacheCount = 0;
     	}
         //System.out.println("Total Cached Chunks for Dim " + world.provider.dimensionId + ": " + chunkCount);
     }

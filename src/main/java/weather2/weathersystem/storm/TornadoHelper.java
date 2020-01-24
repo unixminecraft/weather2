@@ -8,11 +8,7 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import CoroUtil.block.TileEntityRepairingBlock;
-import CoroUtil.forge.CULog;
-import CoroUtil.forge.CommonProxy;
 import CoroUtil.util.CoroUtilBlock;
-import CoroUtil.util.UtilMining;
 import CoroUtil.util.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -177,21 +173,13 @@ public class TornadoHelper {
 		if (!parWorld.isRemote) {
 			if (parWorld.getTotalWorldTime() % queueProcessRate == 0) {
 				Iterator<BlockUpdateSnapshot> it = listBlockUpdateQueue.values().iterator();
-				int count = 0;
-				int entityCreateStaggerRate = 3;
 				Random rand = new Random();
 				while (it.hasNext()) {
 					BlockUpdateSnapshot snapshot = it.next();
 					World world = DimensionManager.getWorld(snapshot.getDimID());
 					if (world != null) {
 
-						if (snapshot.getState().getBlock() == Blocks.AIR && ConfigTornado.Storm_Tornado_grabbedBlocksRepairOverTime && UtilMining.canConvertToRepairingBlock(world, snapshot.statePrev)) {
-							TileEntityRepairingBlock.replaceBlockAndBackup(world, snapshot.getPos(), ConfigTornado.Storm_Tornado_TicksToRepairBlock);
-							//world.setBlockState(snapshot.getPos(), Blocks.LEAVES.getDefaultState(), 3);
-						} else {
-							CULog.dbg("cant use repairing block on: " + snapshot.statePrev);
-							world.setBlockState(snapshot.getPos(), snapshot.getState(), 3);
-						}
+						world.setBlockState(snapshot.getPos(), snapshot.getState(), 3);
 
 						if (snapshot.isCreateEntityForBlockRemoval()) {
 							EntityMovingBlock mBlock = new EntityMovingBlock(parWorld, snapshot.getPos().getX(), snapshot.getPos().getY(), snapshot.getPos().getZ(), snapshot.statePrev, storm);
@@ -205,7 +193,6 @@ public class TornadoHelper {
 							parWorld.spawnEntity(mBlock);
 						}
 					}
-					count++;
 				}
 				listBlockUpdateQueue.clear();
 			}
@@ -383,7 +370,7 @@ public class TornadoHelper {
 	                    {
 	                    	BlockPos pos = new BlockPos(tryX, tryY, tryZ);
 	                    	IBlockState state = parWorld.getBlockState(pos);
-	                        Block blockID = state.getBlock();
+	                        state.getBlock();
 
 							if (canGrab(parWorld, state, pos))
 							{
@@ -569,11 +556,7 @@ public class TornadoHelper {
 
     public boolean canGrab(World parWorld, IBlockState state, BlockPos pos)
     {
-        if (!CoroUtilBlock.isAir(state.getBlock()) &&
-				state.getBlock() != Blocks.FIRE &&
-				state.getBlock() != CommonProxy.blockRepairingBlock &&
-				WeatherUtil.shouldGrabBlock(parWorld, state) &&
-				!isBlockGrabbingBlocked(parWorld, state, pos))
+        if (!CoroUtilBlock.isAir(state.getBlock()) && state.getBlock() != Blocks.FIRE && !isBlockGrabbingBlocked(parWorld, state, pos))
         {
         	return canGrabEventCheck(parWorld, state, pos);
         }
@@ -669,8 +652,6 @@ public class TornadoHelper {
         aabb = aabb.grow(dist, this.storm.maxHeight * 3, dist);
         List list = parWorld.getEntitiesWithinAABB(Entity.class, aabb);
         boolean foundEnt = false;
-        int killCount = 0;
-
         if (list != null)
         {
             for (int i = 0; i < list.size(); i++)
@@ -805,8 +786,6 @@ public class TornadoHelper {
 
     public boolean tryPlaySound(String[] sound, int arrIndex, Entity source, float vol, float parCutOffRange)
     {
-        Entity soundTarget = source;
-
         Random rand = new Random();
         
         // should i?

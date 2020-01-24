@@ -13,8 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import CoroUtil.config.ConfigCoroUtil;
 import CoroUtil.forge.CoroUtil;
 import CoroUtil.util.CoroUtilFile;
-import modconfig.ConfigMod;
-import modconfig.IConfigCategory;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
@@ -219,16 +217,6 @@ public class WeatherUtilConfig {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-
-		/*ConfigMod.configLookup.get(modIDWeather).writeConfigFile(true);
-		ConfigMod.configLookup.get(modIDCoroUtil).writeConfigFile(true);*/
-		ConfigMod.forceSaveAllFilesFromRuntimeSettings();
-		
-		//work lists here
-		
-		//client nbt to client mod config setttings, and server nbt to server mod config settings
-		//invoke whatever method modconfig uses to write out its data, for both its client and server side
 	}
 
 	//server should call this on detecting of a save request (close of GUI packet send)
@@ -403,13 +391,6 @@ public class WeatherUtilConfig {
 			ex.printStackTrace();
 		}
 
-		for (IConfigCategory config : Weather.listConfigs) {
-			//refresh configmods caches and data
-			ConfigMod.configLookup.get(config.getRegistryName()).writeConfigFile(true);
-			//not needed
-			//ConfigMod.populateData(config.getRegistryName());
-		}
-
 		ServerTickHandler.syncServerConfigToClient();
 
 		//ConfigMod.configLookup.get(modID).writeConfigFile(true);
@@ -420,11 +401,6 @@ public class WeatherUtilConfig {
 		//client nbt to client mod config setttings, and server nbt to server mod config settings
 		//invoke whatever method modconfig uses to write out its data, for both its client and server side
 	}
-	
-	/*public static void nbtSaveDataAll() {
-		nbtSaveDataClient();
-		nbtSaveDataServer();
-	}*/
 	
 	public static void nbtReceiveClientData(NBTTagCompound parNBT) {
 		for (int i = 0; i <= CMD_BTN_HIGHEST_ID; i++) {

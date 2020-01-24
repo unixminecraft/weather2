@@ -76,35 +76,23 @@ public class EntityAIMoveIndoorsStorm extends EntityAIBase implements ITaskIniti
             }
         }
 
-        if (runInside)
-        {
-            /*if (this.entityObj.getRNG().nextInt(10) != 0)
-            {
+        if (runInside) {
+            if (this.insidePosX != -1 && this.entityObj.getDistanceSq((double)this.insidePosX, this.entityObj.posY, (double)this.insidePosZ) < 4.0D) {
                 return false;
             }
-            else */
-            //if villager is right next to its safe spot, cancel
-            if (this.insidePosX != -1 && this.entityObj.getDistanceSq((double)this.insidePosX, this.entityObj.posY, (double)this.insidePosZ) < 4.0D)
-            {
-                return false;
-            }
-            else
-            {
+            else {
                 Village village = this.entityObj.world.getVillageCollection().getNearestVillage(blockpos, 14);
 
-                if (village == null)
-                {
+                if (village == null) {
                     return false;
                 }
-                else
-                {
+                else {
                     this.doorInfo = village.getDoorInfo(blockpos);
                     return this.doorInfo != null;
                 }
             }
         }
-        else
-        {
+        else {
             return false;
         }
     }

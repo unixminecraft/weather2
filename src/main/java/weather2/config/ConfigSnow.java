@@ -2,11 +2,10 @@ package weather2.config;
 
 import java.io.File;
 
-import modconfig.IConfigCategory;
 import weather2.Weather;
 
 
-public class ConfigSnow implements IConfigCategory {
+public class ConfigSnow {
 
 
 	//snow
@@ -16,27 +15,22 @@ public class ConfigSnow implements IConfigCategory {
 	//public static int Snow_MaxBlockBuildupHeight = 3;
 	//public static boolean Snow_SmoothOutPlacement = false;
 
-    @Override
     public String getName() {
         return "Snow";
     }
 
-    @Override
     public String getRegistryName() {
         return Weather.modID + getName();
     }
 
-    @Override
     public String getConfigFileName() {
         return "Weather2" + File.separator + getName();
     }
 
-    @Override
     public String getCategory() {
         return "Weather2: " + getName();
     }
 
-    @Override
     public void hookUpdatedValues() {
 
     }

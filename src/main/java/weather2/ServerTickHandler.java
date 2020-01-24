@@ -7,7 +7,6 @@ import java.util.List;
 import CoroUtil.forge.CULog;
 import CoroUtil.packet.PacketHelper;
 import CoroUtil.util.Vec3;
-import modconfig.ConfigMod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -93,7 +92,6 @@ public class ServerTickHandler
         		ConfigMisc.overcastMode = true;
 				CULog.dbg("detected Aesthetic_Only_Mode on, setting overcast mode on");
 				WeatherUtilConfig.setOvercastModeServerSide(ConfigMisc.overcastMode);
-				ConfigMod.forceSaveAllFilesFromRuntimeSettings();
 				syncServerConfigToClient();
 			}
 		}
