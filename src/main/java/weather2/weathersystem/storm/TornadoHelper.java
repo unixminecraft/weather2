@@ -1,12 +1,19 @@
 package weather2.weathersystem.storm;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
 
 import CoroUtil.block.TileEntityRepairingBlock;
 import CoroUtil.forge.CULog;
 import CoroUtil.forge.CommonProxy;
+import CoroUtil.util.CoroUtilBlock;
 import CoroUtil.util.UtilMining;
-import com.mojang.authlib.GameProfile;
+import CoroUtil.util.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -35,7 +42,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.ClientConfigData;
 import weather2.ClientTickHandler;
-import weather2.Weather;
 import weather2.config.ConfigMisc;
 import weather2.config.ConfigStorm;
 import weather2.config.ConfigTornado;
@@ -44,9 +50,6 @@ import weather2.util.WeatherUtil;
 import weather2.util.WeatherUtilBlock;
 import weather2.util.WeatherUtilEntity;
 import weather2.util.WeatherUtilSound;
-import CoroUtil.util.CoroUtilBlock;
-import CoroUtil.util.Vec3;
-import weather2.weathersystem.WeatherManagerBase;
 
 public class TornadoHelper {
 	

@@ -1,5 +1,7 @@
 package weather2.client.entity;
 
+import org.lwjgl.opengl.GL11;
+
 import CoroUtil.util.CoroUtilParticle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 import weather2.entity.EntityIceBall;
 import weather2.entity.EntityMovingBlock;
 

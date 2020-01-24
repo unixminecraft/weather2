@@ -2,6 +2,7 @@ package weather2.block;
 
 import java.util.Random;
 
+import CoroUtil.util.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -18,7 +19,6 @@ import weather2.ServerTickHandler;
 import weather2.config.ConfigMisc;
 import weather2.weathersystem.WeatherManagerServer;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.Vec3;
 
 public class BlockTSensor extends Block
 {

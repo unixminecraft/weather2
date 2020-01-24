@@ -3,11 +3,11 @@ package weather2;
 import java.util.List;
 import java.util.Random;
 
+import CoroUtil.util.CoroUtilEntity;
+import CoroUtil.util.Vec3;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -15,14 +15,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import weather2.entity.EntityLightningBolt;
 import weather2.util.WeatherUtilBlock;
-import weather2.volcano.VolcanoObject;
 import weather2.weathersystem.WeatherManagerServer;
 import weather2.weathersystem.storm.StormObject;
-import weather2.weathersystem.storm.WeatherObjectSandstorm;
 import weather2.weathersystem.storm.WeatherObject;
-import CoroUtil.util.CoroUtilMisc;
-import CoroUtil.util.CoroUtilEntity;
-import CoroUtil.util.Vec3;
+import weather2.weathersystem.storm.WeatherObjectSandstorm;
 
 public class CommandWeather2 extends CommandBase {
 	
@@ -50,24 +46,7 @@ public class CommandWeather2 extends CommandBase {
 			{*/
 				//EntityPlayer player = getCommandSenderAsPlayer(var1);
 				
-				if (var2[0].equals("volcano")) {
-					if (var2[1].equals("create") && posVec != Vec3d.ZERO) {
-						if (dimension == 0) {
-							WeatherManagerServer wm = ServerTickHandler.lookupDimToWeatherMan.get(0);
-							VolcanoObject vo = new VolcanoObject(wm);
-							vo.pos = new Vec3(posVec);
-							vo.initFirstTime();
-							wm.addVolcanoObject(vo);
-							vo.initPost();
-							
-							wm.syncVolcanoNew(vo);
-							
-							sendCommandSenderMsg(var1, "volcano created");
-						} else {
-							sendCommandSenderMsg(var1, "can only make volcanos on main overworld");
-						}
-					}
-				} else if (var2[0].equals("testLightning")) {
+				if (var2[0].equals("testLightning")) {
 					Random rand = new Random();
 					EntityLightningBolt ent = new EntityLightningBolt(world, posBlock.getX() + rand.nextInt(2) -  + rand.nextInt(2)
 							, posBlock.getY(), posBlock.getZ() + rand.nextInt(2) -  + rand.nextInt(2));

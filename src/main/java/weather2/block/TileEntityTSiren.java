@@ -1,6 +1,9 @@
 package weather2.block;
 
+import java.util.List;
+
 import CoroUtil.util.CoroUtilPhysics;
+import CoroUtil.util.Vec3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,10 +14,7 @@ import weather2.config.ConfigMisc;
 import weather2.config.ConfigSand;
 import weather2.util.WeatherUtilSound;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.Vec3;
 import weather2.weathersystem.storm.WeatherObjectSandstorm;
-
-import java.util.List;
 
 public class TileEntityTSiren extends TileEntity implements ITickable
 {

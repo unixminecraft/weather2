@@ -1,10 +1,10 @@
 package weather2.config;
 
+import java.io.File;
+
 import modconfig.ConfigComment;
 import modconfig.IConfigCategory;
 import weather2.Weather;
-
-import java.io.File;
 
 
 public class ConfigTornado implements IConfigCategory {

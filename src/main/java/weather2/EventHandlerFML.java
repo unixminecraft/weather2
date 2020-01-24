@@ -2,26 +2,19 @@ package weather2;
 
 import CoroUtil.forge.CULog;
 import extendedrenderer.EventHandler;
-import extendedrenderer.ExtendedRenderer;
-import extendedrenderer.foliage.Foliage;
-import extendedrenderer.shader.InstancedMeshFoliage;
-import extendedrenderer.shader.MeshBufferManagerFoliage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.*;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import weather2.client.foliage.FoliageEnhancerShader;
-import weather2.client.foliage.FoliageReplacerBase;
 import weather2.config.ConfigFoliage;
 import weather2.config.ConfigMisc;
-
-import java.util.List;
-import java.util.Map;
 
 public class EventHandlerFML {
 
@@ -124,13 +117,6 @@ public class EventHandlerFML {
 				e.printStackTrace();
 			}
 
-		}
-	}
-
-	@SubscribeEvent
-	public void tickRenderScreen(RenderTickEvent event) {
-		if (event.phase == Phase.END) {
-			ClientProxy.clientTickHandler.onRenderScreenTick();
 		}
 	}
 

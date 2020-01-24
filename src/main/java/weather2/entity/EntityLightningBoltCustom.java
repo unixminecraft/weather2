@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import CoroUtil.util.CoroUtilBlock;
+import CoroUtil.util.Vec3;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -22,8 +24,6 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.config.ConfigStorm;
-import CoroUtil.util.CoroUtilBlock;
-import CoroUtil.util.Vec3;
 
 public class EntityLightningBoltCustom extends EntityWeatherEffect
 {

@@ -2,12 +2,9 @@ package weather2.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import CoroUtil.forge.CULog;
-import net.minecraft.util.math.*;
-import weather2.CommonProxy;
-import weather2.block.BlockSandLayer;
+import CoroUtil.util.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockSnow;
@@ -15,8 +12,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import CoroUtil.util.Vec3;
+import weather2.CommonProxy;
+import weather2.block.BlockSandLayer;
 
 /**
  * All stackable block code in this class considers "height" as a meta val height, not actual pixel height of AABB, basically 1 meta height = 2 pixel height, this is also used for all amount values

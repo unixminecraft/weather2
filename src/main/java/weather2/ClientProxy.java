@@ -21,15 +21,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.block.TileEntityAnemometer;
 import weather2.block.TileEntityTSiren;
-import weather2.block.TileEntityWeatherDeflector;
 import weather2.block.TileEntityWeatherForecast;
-import weather2.block.TileEntityWeatherMachine;
 import weather2.block.TileEntityWindVane;
 import weather2.client.block.TileEntityAnemometerRenderer;
 import weather2.client.block.TileEntityTSirenRenderer;
-import weather2.client.block.TileEntityWeatherDeflectorRenderer;
 import weather2.client.block.TileEntityWeatherForecastRenderer;
-import weather2.client.block.TileEntityWeatherMachineRenderer;
 import weather2.client.block.TileEntityWindVaneRenderer;
 import weather2.client.entity.RenderFlyingBlock;
 import weather2.client.entity.RenderLightningBolt;
@@ -81,8 +77,6 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTSiren.class, new TileEntityTSirenRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWindVane.class, new TileEntityWindVaneRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeatherForecast.class, new TileEntityWeatherForecastRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeatherMachine.class, new TileEntityWeatherMachineRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeatherDeflector.class, new TileEntityWeatherDeflectorRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAnemometer.class, new TileEntityAnemometerRenderer());
     }
 

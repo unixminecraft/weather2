@@ -1,6 +1,7 @@
 package weather2.entity.AI;
 
-import CoroUtil.ai.ITaskInitializer;
+import java.util.List;
+
 import CoroUtil.util.CoroUtilPhysics;
 import CoroUtil.util.Vec3;
 import net.minecraft.entity.EntityCreature;
@@ -15,8 +16,6 @@ import weather2.config.ConfigMisc;
 import weather2.weathersystem.WeatherManagerBase;
 import weather2.weathersystem.storm.StormObject;
 import weather2.weathersystem.storm.WeatherObjectSandstorm;
-
-import java.util.List;
 
 /**
  * Based off of EntityAIMoveIndoors

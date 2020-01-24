@@ -2,6 +2,9 @@ package weather2.entity;
 
 import java.util.List;
 
+import CoroUtil.api.weather.IWindHandler;
+import CoroUtil.entity.EntityThrowableUsefull;
+import CoroUtil.util.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -13,9 +16,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import CoroUtil.api.weather.IWindHandler;
-import CoroUtil.entity.EntityThrowableUsefull;
-import CoroUtil.util.Vec3;
 
 public class EntityIceBall extends EntityThrowableUsefull implements IWindHandler
 {

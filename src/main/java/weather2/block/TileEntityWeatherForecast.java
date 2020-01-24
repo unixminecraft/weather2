@@ -3,13 +3,13 @@ package weather2.block;
 import java.util.ArrayList;
 import java.util.List;
 
+import CoroUtil.util.Vec3;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import weather2.ClientTickHandler;
 import weather2.config.ConfigMisc;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.Vec3;
 import weather2.weathersystem.storm.WeatherObject;
 
 public class TileEntityWeatherForecast extends TileEntity implements ITickable

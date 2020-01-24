@@ -1,15 +1,10 @@
 package weather2.config;
 
+import java.io.File;
+
 import modconfig.ConfigComment;
 import modconfig.IConfigCategory;
 import weather2.Weather;
-import weather2.util.WeatherUtil;
-import weather2.util.WeatherUtilConfig;
-import weather2.weathersystem.storm.StormObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ConfigWind implements IConfigCategory {
 

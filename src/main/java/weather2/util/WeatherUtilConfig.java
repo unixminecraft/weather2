@@ -8,8 +8,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import CoroUtil.config.ConfigCoroUtil;
 import CoroUtil.forge.CoroUtil;
+import CoroUtil.util.CoroUtilFile;
 import modconfig.ConfigMod;
 import modconfig.IConfigCategory;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -17,13 +20,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-
-import org.apache.commons.lang3.StringUtils;
-
 import weather2.ServerTickHandler;
 import weather2.Weather;
-import weather2.config.*;
-import CoroUtil.util.CoroUtilFile;
+import weather2.config.ConfigMisc;
+import weather2.config.ConfigParticle;
+import weather2.config.ConfigSand;
+import weather2.config.ConfigSnow;
+import weather2.config.ConfigStorm;
+import weather2.config.ConfigTornado;
 
 public class WeatherUtilConfig {
 

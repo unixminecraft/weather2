@@ -1,30 +1,29 @@
 package weather2.client.block;
 
+import org.lwjgl.opengl.GL11;
+
+import CoroUtil.util.Vec3;
+import extendedrenderer.ExtendedRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
-
 import weather2.ClientProxy;
 import weather2.ClientTickHandler;
-import weather2.util.WindReader;
 import weather2.block.TileEntityWeatherForecast;
 import weather2.client.SceneEnhancer;
 import weather2.config.ConfigMisc;
+import weather2.util.WindReader;
 import weather2.weathersystem.WeatherManagerClient;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.Vec3;
-import extendedrenderer.ExtendedRenderer;
 import weather2.weathersystem.storm.WeatherObject;
 import weather2.weathersystem.storm.WeatherObjectSandstorm;
 

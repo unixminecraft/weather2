@@ -1,11 +1,11 @@
 package weather2.util;
 
-import CoroUtil.ai.ITaskInitializer;
+import java.lang.reflect.Constructor;
+
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITasks;
-
-import java.lang.reflect.Constructor;
+import weather2.entity.AI.ITaskInitializer;
 
 /**
  * Use until the difficulty/AI branch from CoroUtil hits production

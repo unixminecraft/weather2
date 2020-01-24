@@ -10,8 +10,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.CommonProxy;
 import weather2.util.WeatherUtilSound;
 
-import java.util.List;
-
 public class TileEntityTSirenManual extends TileEntity implements ITickable
 {
     public long lastPlayTime = 0L;

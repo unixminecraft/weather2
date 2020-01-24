@@ -1,10 +1,10 @@
 package weather2.client.entity.particle;
 
+import extendedrenderer.particle.entity.ParticleTexFX;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import extendedrenderer.particle.entity.ParticleTexFX;
 
 public class ParticleSandstorm extends ParticleTexFX {
 

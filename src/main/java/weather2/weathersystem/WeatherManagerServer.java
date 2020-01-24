@@ -3,6 +3,9 @@ package weather2.weathersystem;
 import java.util.Iterator;
 import java.util.Random;
 
+import CoroUtil.packet.PacketHelper;
+import CoroUtil.util.CoroUtilEntity;
+import CoroUtil.util.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,20 +20,15 @@ import weather2.Weather;
 import weather2.config.ConfigMisc;
 import weather2.config.ConfigSand;
 import weather2.config.ConfigStorm;
-import weather2.config.ConfigTornado;
 import weather2.player.PlayerData;
 import weather2.util.CachedNBTTagCompound;
 import weather2.util.WeatherUtilBlock;
 import weather2.util.WeatherUtilConfig;
 import weather2.util.WeatherUtilEntity;
-import weather2.volcano.VolcanoObject;
 import weather2.weathersystem.storm.StormObject;
 import weather2.weathersystem.storm.WeatherObject;
 import weather2.weathersystem.storm.WeatherObjectSandstorm;
 import weather2.weathersystem.wind.WindManager;
-import CoroUtil.packet.PacketHelper;
-import CoroUtil.util.CoroUtilEntity;
-import CoroUtil.util.Vec3;
 
 public class WeatherManagerServer extends WeatherManagerBase {
 
@@ -71,14 +69,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 				int updateRate = wo.getUpdateRateForNetwork();
 				if (world.getTotalWorldTime() % updateRate == 0) {
 					syncStormUpdate(wo);
-				}
-			}
-			
-			
-			//sync volcanos
-			if (world.getTotalWorldTime() % 40 == 0) {
-				for (int i = 0; i < getVolcanoObjects().size(); i++) {
-					syncVolcanoUpdate(getVolcanoObjects().get(i));
 				}
 			}
 			
@@ -453,11 +443,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 			for (int i = 0; i < getStormObjects().size(); i++) {
 				syncStormNew(getStormObjects().get(i), entP);
 			}
-						
-			//sync volcanos
-			for (int i = 0; i < getVolcanoObjects().size(); i++) {
-				syncVolcanoNew(getVolcanoObjects().get(i), entP);
-			}
 		}
 	}
 	
@@ -574,37 +559,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		//fix for client having broken states
 		data.getCompoundTag("data").setBoolean("isDead", true);
 		Weather.eventChannel.sendToDimension(PacketHelper.getNBTPacket(data, Weather.eventChannelName), getWorld().provider.getDimension());
-	}
-	
-	public void syncVolcanoNew(VolcanoObject parStorm) {
-		syncVolcanoNew(parStorm, null);
-	}
-	
-	public void syncVolcanoNew(VolcanoObject parStorm, EntityPlayerMP entP) {
-		NBTTagCompound data = new NBTTagCompound();
-		data.setString("packetCommand", "WeatherData");
-		data.setString("command", "syncVolcanoNew");
-		data.setTag("data", parStorm.nbtSyncForClient());
-		
-		if (entP == null) {
-			Weather.eventChannel.sendToDimension(PacketHelper.getNBTPacket(data, Weather.eventChannelName), getWorld().provider.getDimension());
-		} else {
-			Weather.eventChannel.sendTo(PacketHelper.getNBTPacket(data, Weather.eventChannelName), entP);
-		}
-		//PacketDispatcher.sendPacketToAllAround(parStorm.pos.xCoord, parStorm.pos.yCoord, parStorm.pos.zCoord, syncRange, getWorld().provider.dimensionId, WeatherPacketHelper.createPacketForServerToClientSerialization("WeatherData", data));
-	}
-	
-	public void syncVolcanoUpdate(VolcanoObject parStorm) {
-		//packets
-		NBTTagCompound data = new NBTTagCompound();
-		data.setString("packetCommand", "WeatherData");
-		data.setString("command", "syncVolcanoUpdate");
-		data.setTag("data", parStorm.nbtSyncForClient());
-		Weather.eventChannel.sendToDimension(PacketHelper.getNBTPacket(data, Weather.eventChannelName), getWorld().provider.getDimension());
-	}
-	
-	public void syncVolcanoRemove(VolcanoObject parStorm) {
-		
 	}
 	
 	public void syncWeatherVanilla() {

@@ -1,6 +1,9 @@
 package weather2.util;
 
-import net.minecraft.client.particle.Particle;
+import CoroUtil.api.weather.IWindHandler;
+import CoroUtil.util.CoroUtilEntOrParticle;
+import CoroUtil.util.Vec3;
+import extendedrenderer.particle.entity.EntityRotFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityBoat;
@@ -20,10 +23,6 @@ import weather2.ClientTickHandler;
 import weather2.api.WeatherUtilData;
 import weather2.entity.EntityMovingBlock;
 import weather2.weathersystem.wind.WindManager;
-import CoroUtil.api.weather.IWindHandler;
-import CoroUtil.util.CoroUtilEntOrParticle;
-import CoroUtil.util.Vec3;
-import extendedrenderer.particle.entity.EntityRotFX;
 
 public class WeatherUtilEntity {
 	

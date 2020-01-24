@@ -1,7 +1,6 @@
 package weather2.weathersystem.storm;
 
 import CoroUtil.util.Vec3;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -15,7 +15,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import weather2.block.*;
+import weather2.block.BlockAnemometer;
+import weather2.block.BlockSandLayer;
+import weather2.block.BlockTSensor;
+import weather2.block.BlockTSiren;
+import weather2.block.BlockTSirenManual;
+import weather2.block.BlockWeatherForecast;
+import weather2.block.BlockWindVane;
+import weather2.block.TileEntityAnemometer;
+import weather2.block.TileEntityTSiren;
+import weather2.block.TileEntityTSirenManual;
+import weather2.block.TileEntityWeatherForecast;
+import weather2.block.TileEntityWindVane;
 import weather2.config.ConfigMisc;
 import weather2.entity.EntityIceBall;
 import weather2.entity.EntityLightningBolt;
@@ -95,8 +106,6 @@ public class CommonProxy implements IGuiHandler
 		Weather.proxy.addBlock(event, blockTSirenManual = (new BlockTSirenManual()), TileEntityTSirenManual.class, tornado_siren_manual);
 		Weather.proxy.addBlock(event, blockWindVane = (new BlockWindVane()), TileEntityWindVane.class, wind_vane);
 		Weather.proxy.addBlock(event, blockWeatherForecast = (new BlockWeatherForecast()), TileEntityWeatherForecast.class, weather_forecast);
-		Weather.proxy.addBlock(event, blockWeatherMachine = (new BlockWeatherMachine()), TileEntityWeatherMachine.class, weather_machine);
-		Weather.proxy.addBlock(event, blockWeatherDeflector = (new BlockWeatherDeflector()), TileEntityWeatherDeflector.class, weather_deflector);
 		Weather.proxy.addBlock(event, blockAnemometer = (new BlockAnemometer()), TileEntityAnemometer.class, anemometer);
 		Weather.proxy.addBlock(event, blockSandLayer = (new BlockSandLayer()), sand_layer, false);
 	}

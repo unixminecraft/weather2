@@ -1,26 +1,34 @@
 package weather2;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import CoroUtil.util.CoroUtilFile;
 import modconfig.ConfigMod;
 import modconfig.IConfigCategory;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import weather2.config.*;
-import weather2.item.ItemSandLayer;
-import weather2.item.ItemWeatherRecipe;
+import weather2.config.ConfigFoliage;
+import weather2.config.ConfigMisc;
+import weather2.config.ConfigParticle;
+import weather2.config.ConfigSand;
+import weather2.config.ConfigSnow;
+import weather2.config.ConfigStorm;
+import weather2.config.ConfigTornado;
+import weather2.config.ConfigWind;
 import weather2.player.PlayerData;
 import weather2.util.WeatherUtilConfig;
 import weather2.weathersystem.WeatherManagerServer;
-import CoroUtil.util.CoroUtilFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod(modid = "weather2", name="weather2", version=Weather.version, dependencies="required-after:coroutil@[1.12.1-1.2.12,)")
 public class Weather {

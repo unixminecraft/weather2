@@ -1,13 +1,13 @@
 package weather2.client.foliage;
 
+import java.util.Map;
+
 import CoroUtil.util.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.Map;
 
 public class FoliageReplacerCrossGrass extends FoliageReplacerCross {
 

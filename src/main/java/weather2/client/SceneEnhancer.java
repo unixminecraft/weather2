@@ -1,14 +1,41 @@
 package weather2.client;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import static CoroUtil.util.CoroUtilMisc.adjVal;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+
+import javax.vecmath.Vector3f;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.vector.Quaternion;
+import org.lwjgl.util.vector.Vector4f;
+
+import CoroUtil.api.weather.IWindHandler;
 import CoroUtil.config.ConfigCoroUtil;
 import CoroUtil.forge.CULog;
-import CoroUtil.physics.MatrixRotation;
-import CoroUtil.util.*;
+import CoroUtil.util.ChunkCoordinatesBlock;
+import CoroUtil.util.CoroUtilBlock;
+import CoroUtil.util.CoroUtilCompatibility;
+import CoroUtil.util.CoroUtilEntOrParticle;
+import CoroUtil.util.CoroUtilMisc;
+import CoroUtil.util.CoroUtilPhysics;
+import CoroUtil.util.Vec3;
 import extendedrenderer.EventHandler;
-import extendedrenderer.particle.behavior.*;
+import extendedrenderer.ExtendedRenderer;
+import extendedrenderer.particle.ParticleRegistry;
+import extendedrenderer.particle.behavior.ParticleBehaviorFogGround;
+import extendedrenderer.particle.behavior.ParticleBehaviorMiniTornado;
+import extendedrenderer.particle.behavior.ParticleBehaviorSandstorm;
+import extendedrenderer.particle.behavior.ParticleBehaviors;
+import extendedrenderer.particle.entity.EntityRotFX;
+import extendedrenderer.particle.entity.ParticleTexExtraRender;
+import extendedrenderer.particle.entity.ParticleTexFX;
+import extendedrenderer.particle.entity.ParticleTexLeafColor;
 import extendedrenderer.render.RotatingParticleManager;
 import extendedrenderer.shader.Matrix4fe;
 import net.minecraft.block.Block;
@@ -38,35 +65,27 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.vector.*;
 import weather2.ClientTickHandler;
 import weather2.SoundRegistry;
-import weather2.client.tornado.TornadoFunnel;
-import weather2.util.WindReader;
 import weather2.client.entity.particle.EntityWaterfallFX;
 import weather2.client.entity.particle.ParticleFish;
 import weather2.client.entity.particle.ParticleSandstorm;
 import weather2.client.foliage.FoliageEnhancerShader;
+import weather2.client.tornado.TornadoFunnel;
 import weather2.config.ConfigMisc;
 import weather2.config.ConfigParticle;
 import weather2.config.ConfigStorm;
-import weather2.util.*;
+import weather2.util.WeatherUtil;
+import weather2.util.WeatherUtilBlock;
+import weather2.util.WeatherUtilConfig;
+import weather2.util.WeatherUtilEntity;
+import weather2.util.WeatherUtilParticle;
+import weather2.util.WeatherUtilSound;
+import weather2.util.WindReader;
 import weather2.weathersystem.WeatherManagerClient;
 import weather2.weathersystem.storm.StormObject;
 import weather2.weathersystem.storm.WeatherObjectSandstorm;
 import weather2.weathersystem.wind.WindManager;
-import CoroUtil.api.weather.IWindHandler;
-import extendedrenderer.ExtendedRenderer;
-import extendedrenderer.particle.ParticleRegistry;
-import extendedrenderer.particle.entity.EntityRotFX;
-import extendedrenderer.particle.entity.ParticleTexExtraRender;
-import extendedrenderer.particle.entity.ParticleTexFX;
-import extendedrenderer.particle.entity.ParticleTexLeafColor;
-
-import javax.vecmath.Vector3f;
-
-import static CoroUtil.util.CoroUtilMisc.adjVal;
 
 @SideOnly(Side.CLIENT)
 public class SceneEnhancer implements Runnable {

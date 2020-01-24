@@ -1,9 +1,9 @@
 package weather2.config;
 
+import java.io.File;
+
 import modconfig.IConfigCategory;
 import weather2.Weather;
-
-import java.io.File;
 
 
 public class ConfigSnow implements IConfigCategory {

@@ -3,27 +3,29 @@ package weather2.weathersystem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
+import CoroUtil.util.CoroUtilFile;
 import CoroUtil.util.CoroUtilPhysics;
+import CoroUtil.util.Vec3;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import org.apache.commons.io.FileUtils;
-
 import weather2.ServerTickHandler;
 import weather2.Weather;
 import weather2.config.ConfigStorm;
-import weather2.volcano.VolcanoObject;
 import weather2.weathersystem.storm.EnumWeatherObjectType;
 import weather2.weathersystem.storm.StormObject;
 import weather2.weathersystem.storm.WeatherObject;
 import weather2.weathersystem.storm.WeatherObjectSandstorm;
 import weather2.weathersystem.wind.WindManager;
-import CoroUtil.util.CoroUtilFile;
-import CoroUtil.util.Vec3;
 
 public class WeatherManagerBase {
 
@@ -36,10 +38,6 @@ public class WeatherManagerBase {
 	public HashMap<Long, WeatherObject> lookupStormObjectsByID = new HashMap<>();
 	public HashMap<Integer, ArrayList<StormObject>> lookupStormObjectsByLayer = new HashMap<>();
 	//private ArrayList<ArrayList<StormObject>> listStormObjectsByLayer = new ArrayList<ArrayList<StormObject>>();
-	
-	//volcanos
-	private List<VolcanoObject> listVolcanoes = new ArrayList<>();
-	public HashMap<Long, VolcanoObject> lookupVolcanoes = new HashMap<>();
 	
 	//wind
 	public WindManager windMan;
@@ -82,15 +80,6 @@ public class WeatherManagerBase {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		for (int i = 0; i < getVolcanoObjects().size(); i++) {
-			VolcanoObject vo = getVolcanoObjects().get(i);
-			
-			vo.reset();
-		}
-		
-		getVolcanoObjects().clear();
-		lookupVolcanoes.clear();
 		
 		windMan.reset();
 
@@ -146,11 +135,6 @@ public class WeatherManagerBase {
 						
 					//}
 				}
-			}
-						
-			//tick volcanos
-			for (int i = 0; i < getVolcanoObjects().size(); i++) {
-				getVolcanoObjects().get(i).tick();
 			}
 
 			//tick wind
@@ -221,31 +205,6 @@ public class WeatherManagerBase {
 			}
 		} else {
 			Weather.dbg("error looking up storm ID on server for removal: " + ID + " - lookup count: " + lookupStormObjectsByID.size() + " - last used ID: " + WeatherObject.lastUsedStormID);
-		}
-	}
-	
-	public List<VolcanoObject> getVolcanoObjects() {
-		return listVolcanoes;
-	}
-	
-	public void addVolcanoObject(VolcanoObject so) {
-		if (!lookupVolcanoes.containsKey(so.ID)) {
-			listVolcanoes.add(so);
-			lookupVolcanoes.put(so.ID, so);
-		} else {
-			Weather.dbg("Weather2 WARNING!!! Client received new volcano create for an ID that is already active! design bug");
-		}
-	}
-	
-	public void removeVolcanoObject(long ID) {
-		VolcanoObject vo = lookupVolcanoes.get(ID);
-		
-		if (vo != null) {
-			vo.setDead();
-			listVolcanoes.remove(vo);
-			lookupVolcanoes.remove(ID);
-			
-			Weather.dbg("removing volcano");
 		}
 	}
 	
@@ -472,15 +431,6 @@ public class WeatherManagerBase {
 	
 	public void writeToFile() {
 		NBTTagCompound mainNBT = new NBTTagCompound();
-		NBTTagCompound listVolcanoesNBT = new NBTTagCompound();
-		for (int i = 0; i < listVolcanoes.size(); i++) {
-			VolcanoObject td = listVolcanoes.get(i);
-			NBTTagCompound teamNBT = new NBTTagCompound();
-			td.writeToNBT(teamNBT);
-			listVolcanoesNBT.setTag("volcano_" + td.ID, teamNBT);
-		}
-		mainNBT.setTag("volcanoData", listVolcanoesNBT);
-		mainNBT.setLong("lastUsedIDVolcano", VolcanoObject.lastUsedID);
 		
 		NBTTagCompound listStormsNBT = new NBTTagCompound();
 		for (int i = 0; i < listStormObjects.size(); i++) {
@@ -564,7 +514,6 @@ public class WeatherManagerBase {
 			cloudIntensity = rtsNBT.getFloat("cloudIntensity");
 		}
 		
-		VolcanoObject.lastUsedID = rtsNBT.getLong("lastUsedIDVolcano");
 		WeatherObject.lastUsedStormID = rtsNBT.getLong("lastUsedIDStorm");
 
 		windMan.readFromNBT(rtsNBT.getCompoundTag("windMan"));
@@ -572,28 +521,6 @@ public class WeatherManagerBase {
 		NBTTagCompound nbtVolcanoes = rtsNBT.getCompoundTag("volcanoData");
 		
 		Iterator it = nbtVolcanoes.getKeySet().iterator();
-		
-		while (it.hasNext()) {
-			String tagName = (String) it.next();
-			NBTTagCompound teamData = nbtVolcanoes.getCompoundTag(tagName);
-			
-			VolcanoObject to = new VolcanoObject(ServerTickHandler.lookupDimToWeatherMan.get(0)/*-1, -1, null*/);
-			try {
-				to.readFromNBT(teamData);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			//to.initAITree();
-			addVolcanoObject(to);
-			
-			//THIS LINE NEEDS REFINING FOR PLAYERS WHO JOIN AFTER THE FACT!!!
-			((WeatherManagerServer)(this)).syncVolcanoNew(to);
-			
-			//listVolcanoes.add(to);
-			//lookupVolcanoes.put(to.ID, to);
-			
-			to.initPost();
-		}
 		
 		NBTTagCompound nbtStorms = rtsNBT.getCompoundTag("stormData");
 		

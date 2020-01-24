@@ -1,27 +1,17 @@
 package weather2.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import CoroUtil.util.Vec3;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import paulscode.sound.SoundSystem;
 import weather2.SoundRegistry;
 import weather2.client.sound.MovingSoundStreamingSource;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.Vec3;
 
 /**
  * TODO: rewrite this to use a class that contains array of sounds, amount of them, length of them, and the last played time and next random index

@@ -1,5 +1,6 @@
 package weather2.block;
 
+import CoroUtil.util.Vec3;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -7,9 +8,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import weather2.util.WindReader;
 import weather2.util.WeatherUtilEntity;
-import CoroUtil.util.Vec3;
+import weather2.util.WindReader;
 
 public class TileEntityWindVane extends TileEntity implements ITickable
 {

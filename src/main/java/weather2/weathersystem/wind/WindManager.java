@@ -2,10 +2,11 @@ package weather2.weathersystem.wind;
 
 import java.util.Random;
 
+import CoroUtil.util.CoroUtilEntOrParticle;
+import CoroUtil.util.Vec3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,8 +17,6 @@ import weather2.util.WeatherUtilEntity;
 import weather2.weathersystem.WeatherManagerBase;
 import weather2.weathersystem.WeatherManagerServer;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.CoroUtilEntOrParticle;
-import CoroUtil.util.Vec3;
 
 public class WindManager {
 

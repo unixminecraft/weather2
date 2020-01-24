@@ -6,25 +6,18 @@ import java.lang.reflect.Modifier;
 import CoroUtil.packet.PacketHelper;
 import extendedrenderer.ExtendedRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
-import org.lwjgl.input.Mouse;
-
-import weather2.config.ConfigFoliage;
-import weather2.util.WindReader;
 import weather2.client.SceneEnhancer;
 import weather2.client.foliage.FoliageEnhancerShader;
-import weather2.client.gui.GuiEZConfig;
+import weather2.config.ConfigFoliage;
 import weather2.config.ConfigMisc;
 import weather2.util.WeatherUtilConfig;
+import weather2.util.WindReader;
 import weather2.weathersystem.EntityRendererProxyWeather2Mini;
 import weather2.weathersystem.WeatherManagerClient;
 
@@ -41,7 +34,6 @@ public class ClientTickHandler
 	
 	public boolean hasOpenedConfig = false;
 	
-	public GuiButton configButton;
 
 	//storing old reference to help retain any modifications done by other mods (dynamic surroundings asm)
 	public EntityRenderer oldRenderer;
@@ -69,26 +61,6 @@ public class ClientTickHandler
 
 		clientConfigData = new ClientConfigData();
 	}
-
-    public void onRenderScreenTick()
-    {
-    	Minecraft mc = FMLClientHandler.instance().getClient();
-    	if (mc.currentScreen instanceof GuiIngameMenu) {
-    		ScaledResolution scaledresolution = new ScaledResolution(mc);
-            int i = scaledresolution.getScaledWidth();
-            int j = scaledresolution.getScaledHeight();
-    		int k = Mouse.getX() * i / mc.displayWidth;
-            int l = j - Mouse.getY() * j / mc.displayHeight - 1;
-    		configButton = new GuiButton(0, (i/2)-100, 0, 200, 20, "Weather2 EZ Config");
-    		configButton.drawButton(mc, k, l, 1F);
-    		
-    		if (k >= configButton.x && l >= configButton.y && k < configButton.x + 200 && l < configButton.y + 20) {
-    			if (Mouse.isButtonDown(0)) {
-    				mc.displayGuiScreen(new GuiEZConfig());
-    			}
-    		}
-    	}
-    }
 
     public void onTickInGUI(GuiScreen guiscreen)
     {
@@ -137,23 +109,12 @@ public class ClientTickHandler
 				sceneEnhancer.tickClient();
 			}
 
-			//TODO: replace with proper client side command?
-			if (mc.ingameGUI.getChatGUI().getSentMessages().size() > 0) {
-				String msg = (String) mc.ingameGUI.getChatGUI().getSentMessages().get(mc.ingameGUI.getChatGUI().getSentMessages().size()-1);
-
-				if (msg.equals("/weather2 config")) {
-					mc.ingameGUI.getChatGUI().getSentMessages().remove(mc.ingameGUI.getChatGUI().getSentMessages().size()-1);
-					mc.displayGuiScreen(new GuiEZConfig());
-				}
-			}
-
 			//TODO: evaluate if best here
 			float windDir = WindReader.getWindAngle(world, null);
 			float windSpeed = WindReader.getWindSpeed(world, null);
 
 			//windDir = 0;
 
-			float give = 30;
 
 			float diff = Math.abs(windDir - smoothAngle)/* - 180*/;
 

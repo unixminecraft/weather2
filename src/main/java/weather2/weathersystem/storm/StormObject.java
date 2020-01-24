@@ -1,9 +1,24 @@
 package weather2.weathersystem.storm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import CoroUtil.config.ConfigCoroUtil;
-import CoroUtil.util.*;
+import CoroUtil.util.ChunkCoordinatesBlock;
+import CoroUtil.util.CoroUtilBlock;
+import CoroUtil.util.CoroUtilCompatibility;
+import CoroUtil.util.CoroUtilEntOrParticle;
+import CoroUtil.util.CoroUtilEntity;
+import CoroUtil.util.Vec3;
+import extendedrenderer.ExtendedRenderer;
+import extendedrenderer.particle.ParticleRegistry;
+import extendedrenderer.particle.behavior.ParticleBehaviorFog;
+import extendedrenderer.particle.entity.EntityRotFX;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -12,7 +27,6 @@ import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -36,13 +50,13 @@ import weather2.config.ConfigTornado;
 import weather2.entity.EntityIceBall;
 import weather2.entity.EntityLightningBolt;
 import weather2.player.PlayerData;
-import weather2.util.*;
+import weather2.util.CachedNBTTagCompound;
+import weather2.util.WeatherUtil;
+import weather2.util.WeatherUtilBlock;
+import weather2.util.WeatherUtilConfig;
+import weather2.util.WeatherUtilEntity;
 import weather2.weathersystem.WeatherManagerBase;
 import weather2.weathersystem.WeatherManagerServer;
-import extendedrenderer.ExtendedRenderer;
-import extendedrenderer.particle.ParticleRegistry;
-import extendedrenderer.particle.behavior.ParticleBehaviorFog;
-import extendedrenderer.particle.entity.EntityRotFX;
 import weather2.weathersystem.wind.WindManager;
 
 public class StormObject extends WeatherObject {

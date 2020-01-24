@@ -1,9 +1,9 @@
 package weather2.entity;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.List;
 
+import CoroUtil.util.CoroUtilBlock;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -28,8 +28,6 @@ import weather2.config.ConfigStorm;
 import weather2.config.ConfigTornado;
 import weather2.util.WeatherUtil;
 import weather2.weathersystem.storm.StormObject;
-import CoroUtil.util.CoroUtilBlock;
-import CoroUtil.util.Vec3;
 
 public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnData
 {

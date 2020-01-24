@@ -1,11 +1,9 @@
 package weather2.config;
 
-import CoroUtil.config.ConfigCoroUtil;
-import extendedrenderer.EventHandler;
+import java.io.File;
+
 import modconfig.IConfigCategory;
 import weather2.Weather;
-
-import java.io.File;
 
 public class ConfigFoliage implements IConfigCategory {
 

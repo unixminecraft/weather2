@@ -4,15 +4,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayDeque;
 import java.util.Random;
 
+import extendedrenderer.particle.entity.EntityRotFX;
+import extendedrenderer.particle.entity.ParticleTexFX;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import CoroUtil.OldUtil;
-import CoroUtil.util.Vec3;
-import extendedrenderer.particle.entity.EntityRotFX;
-import extendedrenderer.particle.entity.ParticleTexFX;
 
 public class WeatherUtilParticle {
     public static ArrayDeque<Particle>[][] fxLayers;
