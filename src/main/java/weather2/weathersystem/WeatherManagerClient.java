@@ -27,10 +27,6 @@ public class WeatherManagerClient extends WeatherManagerBase {
 	//new for 1.10.2, replaces world.weatherEffects use
 	public List<Particle> listWeatherEffectedParticles = new ArrayList<Particle>();
 
-	public static StormObject closestStormCached;
-
-
-
 	public WeatherManagerClient(int parDim) {
 		super(parDim);
 	}
@@ -59,7 +55,6 @@ public class WeatherManagerClient extends WeatherManagerBase {
 		String command = parNBT.getString("command");
 		
 		if (command.equals("syncStormNew")) {
-			//Weather.dbg("creating client side storm");
 			NBTTagCompound stormNBT = parNBT.getCompoundTag("data");
 			long ID = stormNBT.getLong("ID");
 			Weather.dbg("syncStormNew, ID: " + ID);
@@ -80,7 +75,6 @@ public class WeatherManagerClient extends WeatherManagerBase {
 			
 			addStormObject(wo);
 		} else if (command.equals("syncStormRemove")) {
-			//Weather.dbg("removing client side storm");
 			NBTTagCompound stormNBT = parNBT.getCompoundTag("data");
 			long ID = stormNBT.getLong("ID");
 			
@@ -91,7 +85,6 @@ public class WeatherManagerClient extends WeatherManagerBase {
 				Weather.dbg("error removing storm, cant find by ID: " + ID);
 			}
 		} else if (command.equals("syncStormUpdate")) {
-			//Weather.dbg("updating client side storm");
 			NBTTagCompound stormNBT = parNBT.getCompoundTag("data");
 			long ID = stormNBT.getLong("ID");
 			
@@ -102,16 +95,13 @@ public class WeatherManagerClient extends WeatherManagerBase {
 				so.getNbtCache().updateCacheFromNew();
 			} else {
 				Weather.dbg("error syncing storm, cant find by ID: " + ID + ", probably due to client resetting and waiting on full resync (this is ok)");
-				//Weather.dbgStackTrace();
 			}
 		} else if (command.equals("syncWindUpdate")) {
-			//Weather.dbg("updating client side wind");
 			
 			NBTTagCompound nbt = parNBT.getCompoundTag("data");
 			
 			windMan.nbtSyncFromServer(nbt);
 		} else if (command.equals("syncLightningNew")) {
-			//Weather.dbg("updating client side wind");
 			
 			NBTTagCompound nbt = parNBT.getCompoundTag("data");
 			
@@ -120,8 +110,6 @@ public class WeatherManagerClient extends WeatherManagerBase {
 			int posZS = nbt.getInteger("posZ");
 			
 			boolean custom = nbt.getBoolean("custom");
-			
-			//Weather.dbg("uhhh " + parNBT);
 			
 			double posX = (double)posXS;// / 32D;
 			double posY = (double)posYS;// / 32D;
@@ -142,22 +130,15 @@ public class WeatherManagerClient extends WeatherManagerBase {
 			ent.setEntityId(nbt.getInteger("entityID"));
 			getWorld().addWeatherEffect(ent);
 		} else if (command.equals("syncWeatherUpdate")) {
-			//Weather.dbg("updating client side wind");
 			
-			//NBTTagCompound nbt = parNBT.getCompoundTag("data");
 			isVanillaRainActiveOnServer = parNBT.getBoolean("isVanillaRainActiveOnServer");
 			isVanillaThunderActiveOnServer = parNBT.getBoolean("isVanillaThunderActiveOnServer");
 			vanillaRainTimeOnServer = parNBT.getInteger("vanillaRainTimeOnServer");
-			//windMan.nbtSyncFromServer(nbt);
 		}
 	}
 	
 	public void addWeatheredParticle(Particle particle) {
 		listWeatherEffectedParticles.add(particle);
-
-		/*if (listWeatherEffectedParticles.size() > 5000) {
-			listWeatherEffectedParticles.clear();
-		}*/
 	}
 
 	@Override
@@ -165,7 +146,5 @@ public class WeatherManagerClient extends WeatherManagerBase {
 		super.reset();
 
 		listWeatherEffectedParticles.clear();
-
-		closestStormCached = null;
 	}
 }

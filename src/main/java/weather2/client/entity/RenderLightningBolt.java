@@ -89,10 +89,6 @@ public class RenderLightningBolt extends Render<EntityLightningBolt>
                     }
 
                     worldrenderer.begin(5, DefaultVertexFormats.POSITION_COLOR);
-                    float f = 0.5F;
-                    float f1 = 0.45F;
-                    float f2 = 0.45F;
-                    float f3 = 0.5F;
                     double d6 = 0.1D + (double)k1 * 0.2D;
 
                     if (j == 0)

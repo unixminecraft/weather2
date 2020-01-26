@@ -18,7 +18,7 @@ import weather2.weathersystem.storm.WeatherObjectSandstorm;
 
 public class TileEntityTSiren extends TileEntity implements ITickable
 {
-    public long lastPlayTime = 0L;
+	private long lastPlayTime = 0L;
 
     @Override
     public void update()
@@ -26,7 +26,6 @@ public class TileEntityTSiren extends TileEntity implements ITickable
     	if (world.isRemote) {
     	    int meta = CommonProxy.blockTSiren.getMetaFromState(this.world.getBlockState(this.getPos()));
             if (BlockTSiren.isEnabled(meta)) {
-                //System.out.println("enabled");
                 tickClient();
             }
 
@@ -34,7 +33,7 @@ public class TileEntityTSiren extends TileEntity implements ITickable
     }
     
     @SideOnly(Side.CLIENT)
-    public void tickClient() {
+    private void tickClient() {
     	
     	if (this.lastPlayTime < System.currentTimeMillis())
         {
@@ -55,7 +54,6 @@ public class TileEntityTSiren extends TileEntity implements ITickable
 
                         float distMax = 75F;
 
-                        //double scale = sandstorm.getSandstormScale();
                         boolean inStorm = CoroUtilPhysics.isInConvexShape(pos, points);
                         double dist = Math.min(distMax, CoroUtilPhysics.getDistanceToShape(pos, points));
 
@@ -76,5 +74,4 @@ public class TileEntityTSiren extends TileEntity implements ITickable
             }
         }
     }
-    
 }

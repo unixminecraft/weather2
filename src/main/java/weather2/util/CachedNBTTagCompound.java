@@ -19,16 +19,6 @@ public class CachedNBTTagCompound {
 		this.cachedData = new NBTTagCompound();
 	}
 
-	public void setCachedNBT(NBTTagCompound cachedData) {
-		if (cachedData == null)
-			cachedData = new NBTTagCompound();
-		this.cachedData = cachedData;
-	}
-
-	public NBTTagCompound getCachedNBT() {
-		return cachedData;
-	}
-
 	public NBTTagCompound getNewNBT() {
 		return newData;
 	}
@@ -65,19 +55,6 @@ public class CachedNBTTagCompound {
 			newData.setInteger(key, newVal);
 		}
 		cachedData.setInteger(key, newVal);
-	}
-
-	public short getShort(String key) {
-		if (!newData.hasKey(key))
-			newData.setShort(key, cachedData.getShort(key));
-		return newData.getShort(key);
-	}
-
-	public void setShort(String key, short newVal) {
-		if (!cachedData.hasKey(key) || cachedData.getShort(key) != newVal || forced) {
-			newData.setShort(key, newVal);
-		}
-		cachedData.setShort(key, newVal);
 	}
 
 	public String getString(String key) {
@@ -135,5 +112,4 @@ public class CachedNBTTagCompound {
 	public void updateCacheFromNew() {
 		this.cachedData = this.newData;
 	}
-
 }

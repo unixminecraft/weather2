@@ -9,5 +9,4 @@ public class FoliageData {
 
     //orig values
     public static ConcurrentHashMap<IBlockState, IBakedModel> backupBakedModelStore = new ConcurrentHashMap<>();
-
 }

@@ -38,6 +38,7 @@ public class ParticleTexLeafColor extends ParticleTexFX {
 	public float rotationYawMomentum = 0;
 	public float rotationPitchMomentum = 0;
 
+	@SuppressWarnings("unchecked")
 	public ParticleTexLeafColor(World worldIn, double posXIn, double posYIn,
 			double posZIn, double mX, double mY, double mZ,
 			TextureAtlasSprite par8Item) {
@@ -60,7 +61,7 @@ public class ParticleTexLeafColor extends ParticleTexFX {
 		    state = state.withProperty(BlockDoublePlant.VARIANT, worldIn.getBlockState(pos.down()).getValue(BlockDoublePlant.VARIANT));
 		}
 
-		int multiplier = this.colors.colorMultiplier(state, this.world, pos, 0);
+		int multiplier = ParticleTexLeafColor.colors.colorMultiplier(state, this.world, pos, 0);
 
 		int[] colors = colorCache.get(state);
 		if (colors == null) {

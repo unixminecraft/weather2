@@ -11,19 +11,19 @@ import net.minecraft.client.renderer.OpenGlHelper;
 
 public class InstancedMeshFoliage extends Mesh {
 
-    public static final int FLOAT_SIZE_BYTES = 4;
+    private static final int FLOAT_SIZE_BYTES = 4;
 
-    public static final int VECTOR4F_SIZE_BYTES = 4 * FLOAT_SIZE_BYTES;
+    private static final int VECTOR4F_SIZE_BYTES = 4 * FLOAT_SIZE_BYTES;
 
     public static final int MATRIX_SIZE_FLOATS = 4 * 4;
 
-    public static final int MATRIX_SIZE_BYTES = MATRIX_SIZE_FLOATS * FLOAT_SIZE_BYTES;
+    private static final int MATRIX_SIZE_BYTES = MATRIX_SIZE_FLOATS * FLOAT_SIZE_BYTES;
 
-    public static final int INSTANCE_SIZE_BYTES = FLOAT_SIZE_BYTES * 2;
+    private static final int INSTANCE_SIZE_BYTES = FLOAT_SIZE_BYTES * 2;
 
     public static final int INSTANCE_SIZE_FLOATS = 2;
 
-    public static final int INSTANCE_SIZE_BYTES_SELDOM = MATRIX_SIZE_BYTES + FLOAT_SIZE_BYTES * 8;
+    private static final int INSTANCE_SIZE_BYTES_SELDOM = MATRIX_SIZE_BYTES + FLOAT_SIZE_BYTES * 8;
 
     public static final int INSTANCE_SIZE_FLOATS_SELDOM = MATRIX_SIZE_FLOATS + 8;
 
@@ -34,8 +34,6 @@ public class InstancedMeshFoliage extends Mesh {
 
     public FloatBuffer instanceDataBufferVBO1;
     public FloatBuffer instanceDataBufferVBO2;
-    public FloatBuffer instanceDataBufferSeldom2;
-
     public int curBufferPosVBO1 = 0;
     public int curBufferPosVBO2 = 0;
 
@@ -43,7 +41,7 @@ public class InstancedMeshFoliage extends Mesh {
 
     public boolean dirtyVBO2Flag = false;
 
-    public static int vboSizeMesh = 2;
+    private static int vboSizeMesh = 2;
 
     public double interpPosX;
     public double interpPosY;
@@ -65,7 +63,6 @@ public class InstancedMeshFoliage extends Mesh {
 
         /** VBO 1 START **/
 
-        //Minecraft.getMinecraft().mouseHelper.ungrabMouseCursor();
         instanceDataVBO1 = GL15.glGenBuffers();
         vboIdList.add(instanceDataVBO1);
         instanceDataBufferVBO1 = BufferUtils.createFloatBuffer(numInstances * INSTANCE_SIZE_FLOATS);//MemoryUtil.memAllocFloat(numInstances * INSTANCE_SIZE_FLOATS);
@@ -79,16 +76,8 @@ public class InstancedMeshFoliage extends Mesh {
         start++;
         strideStart += FLOAT_SIZE_BYTES;
 
-        //brightness
-        /*GL20.glVertexAttribPointer(start, 1, GL11.GL_FLOAT, false, INSTANCE_SIZE_BYTES, strideStart);
-        ShaderManager.glVertexAttribDivisor(start, 1);
-        start++;
-        strideStart += FLOAT_SIZE_BYTES;*/
-
         /** VBO 2 START **/
 
-        //test
-        //start = vboSizeMesh;
         strideStart = 0;
 
         instanceDataVBO2 = OpenGlHelper.glGenBuffers();
@@ -116,21 +105,6 @@ public class InstancedMeshFoliage extends Mesh {
         start++;
         strideStart += VECTOR4F_SIZE_BYTES;
 
-        //instance index
-        /*GL20.glVertexAttribPointer(start, 1, GL11.GL_FLOAT, false, INSTANCE_SIZE_BYTES_SELDOM, strideStart);
-        ShaderManager.glVertexAttribDivisor(start, 1);
-        start++;*/
-/*
-        //animation ID
-        GL20.glVertexAttribPointer(start, 1, GL11.GL_FLOAT, false, INSTANCE_SIZE_BYTES_SELDOM, strideStart);
-        ShaderManager.glVertexAttribDivisor(start, 1);
-        start++;
-
-        //height from base piece
-        GL20.glVertexAttribPointer(start, 1, GL11.GL_FLOAT, false, INSTANCE_SIZE_BYTES_SELDOM, strideStart);
-        ShaderManager.glVertexAttribDivisor(start, 1);
-        start++;*/
-
         OpenGlHelper.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         ShaderManager.glBindVertexArray(0);
     }
@@ -139,62 +113,39 @@ public class InstancedMeshFoliage extends Mesh {
     public void cleanup() {
         super.cleanup();
         if (this.instanceDataBufferVBO1 != null) {
-            //MemoryUtil.memFree(this.instanceDataBuffer);
             this.instanceDataBufferVBO1 = null;
         }
 
         if (this.instanceDataBufferVBO2 != null) {
-            //MemoryUtil.memFree(this.instanceDataBuffer);
             this.instanceDataBufferVBO2 = null;
         }
     }
 
-    @Override
-    public void initRender() {
-        super.initRender();
-    }
-
-    @Override
-    public void endRender() {
-
-        super.endRender();
-    }
-
-    public int getAttribSizeVBO1() {
-        //alphaBrightness
-        return 1;
-    }
-
-    public int getAttribSizeVBO2() {
-        //model matrix (4) + rgbrot (1) + index,animationID,heightIndex,stiffness (1)
-        return 6;
-    }
-
     public void initRenderVBO1() {
         int start = vboSizeMesh;
-        for (int i = 0; i < getAttribSizeVBO1(); i++) {
+        for (int i = 0; i < 1; i++) {
             ShaderManager.glEnableVertexAttribArray(start + i);
         }
     }
 
     public void endRenderVBO1() {
         int start = vboSizeMesh;
-        for (int i = 0; i < getAttribSizeVBO1(); i++) {
+        for (int i = 0; i < 1; i++) {
             ShaderManager.glDisableVertexAttribArray(start + i);
         }
     }
 
     public void initRenderVBO2() {
         int start = vboSizeMesh;
-        for (int i = 0; i < getAttribSizeVBO2(); i++) {
-            ShaderManager.glEnableVertexAttribArray(start + getAttribSizeVBO1() + i);
+        for (int i = 0; i < 6; i++) {
+            ShaderManager.glEnableVertexAttribArray(start + 1 + i);
         }
     }
 
     public void endRenderVBO2() {
         int start = vboSizeMesh;
-        for (int i = 0; i < getAttribSizeVBO2(); i++) {
-            ShaderManager.glDisableVertexAttribArray(start + getAttribSizeVBO1() + i);
+        for (int i = 0; i < 6; i++) {
+            ShaderManager.glDisableVertexAttribArray(start + 1 + i);
         }
     }
 }

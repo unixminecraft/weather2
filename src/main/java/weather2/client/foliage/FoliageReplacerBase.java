@@ -34,20 +34,19 @@ public abstract class FoliageReplacerBase {
      */
 
     //TODO: variants on the plant type
-    public IBlockState state;
+	protected IBlockState state;
     //public TextureAtlasSprite sprite;
     public List<TextureAtlasSprite> sprites = new ArrayList<>();
 
-    public int expectedHeight = 1;
+    protected int expectedHeight = 1;
 
-    public Material baseMaterial = Material.GRASS;
-    public boolean biomeColorize = true;
-    public boolean randomizeCoord = true;
+    protected Material baseMaterial = Material.GRASS;
+    protected boolean biomeColorize = true;
+    protected boolean randomizeCoord = true;
 
-    public boolean stateSensitive = false;
-    public HashMap<IProperty, Comparable> lookupPropertiesToComparable = new HashMap<>();
+    protected boolean stateSensitive = false;
+    protected HashMap<IProperty<?>, Comparable<?>> lookupPropertiesToComparable = new HashMap<>();
 
-    public int animationID;
     public float looseness = 1F;
 
     public FoliageReplacerBase(IBlockState state) {
@@ -84,7 +83,7 @@ public abstract class FoliageReplacerBase {
         return this;
     }
 
-    public FoliageReplacerBase addComparable(IProperty property, Comparable comparable) {
+    public FoliageReplacerBase addComparable(IProperty<?> property, Comparable<?> comparable) {
         lookupPropertiesToComparable.put(property, comparable);
         return this;
     }

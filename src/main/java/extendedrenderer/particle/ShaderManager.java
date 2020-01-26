@@ -34,7 +34,6 @@ public class ShaderManager {
 
     private static boolean check = true;
 
-    private static boolean canUseShaders = false;
     private static boolean canUseShadersInstancedRendering = false;
 
     private static boolean useARBInstancedRendering = false;
@@ -52,11 +51,10 @@ public class ShaderManager {
     }
 
     public static void disableShaders() {
-        canUseShaders = false;
         canUseShadersInstancedRendering = false;
     }
 
-    public static void queryGLCaps() {
+    private static void queryGLCaps() {
         ContextCapabilities contextcapabilities = GLContext.getCapabilities();
 
         CULog.log("Extended Renderer: Detected GLSL version: " + GL11.glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -67,8 +65,6 @@ public class ShaderManager {
                 (contextcapabilities.GL_ARB_vertex_shader &&
                 contextcapabilities.GL_ARB_fragment_shader &&
                 contextcapabilities.GL_ARB_shader_objects)) {
-            canUseShaders = true;
-
             if (contextcapabilities.OpenGL21) {
                 useARBShaders = false;
             } else {
@@ -206,5 +202,4 @@ public class ShaderManager {
     public static void resetCheck() {
         check = true;
     }
-
 }

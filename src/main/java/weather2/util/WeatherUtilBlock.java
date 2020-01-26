@@ -29,7 +29,7 @@ import weather2.block.BlockSandLayer;
  */
 public class WeatherUtilBlock {
 	
-	public static int layerableHeightPropMax = 8;
+	private static int layerableHeightPropMax = 8;
 
 	public static void fillAgainstWallSmoothly(World world, Vec3 posSource, float directionYaw, float scanDistance, float fillRadius, Block blockLayerable) {
 		fillAgainstWallSmoothly(world, posSource, directionYaw, scanDistance, fillRadius, blockLayerable, 4);
@@ -55,29 +55,13 @@ public class WeatherUtilBlock {
 		 * - factor in height of current block we are on if its not air, aka half filled sand block vs next block
 		 */
 		
-		//fix for starting on a layerable block
-		IBlockState stateTest = world.getBlockState(posSource.toBlockPos());
-		if (stateTest.getBlock() == blockLayerable) {
-			int heightTest = getHeightForAnyBlock(stateTest);
-			if (heightTest < 8) {
-				//posSource = new Vec3(posSource.addVector(0, -1, 0));
-			}
-		}
-		
 		BlockPos posSourcei = posSource.toBlockPos();
-		//int ySource = world.getHeight(posSourcei).getY();
 		int y = posSourcei.getY();
 		float tickStep = 0.75F;
-		
-		//float startScan = scanDistance;
-		
 		Vec3 posLastNonWall = new Vec3(posSource);
 		Vec3 posWall = null;
 		
 		BlockPos lastScannedPosXZ = null;//new BlockPos(posSourcei);
-		
-		//System.out.println("Start block (should be air): " + world.getBlockState(posSourcei));
-		
 		int previousBlockHeight = 0;
 		
 		//looking for a proper wall we cant fly over as sand
@@ -119,9 +103,6 @@ public class WeatherUtilBlock {
 		    				}
 		    				
 		    				posLastNonWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
-		    				
-		    				//System.out.println(posLastNonWall);
-		    				
 		    				continue;
 		    			//too high, count as a wall
 		    			} else {
@@ -133,10 +114,6 @@ public class WeatherUtilBlock {
 	    				posWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
 	    				break;
 	    			}
-	    			
-	    			//startScan = i;
-	    			//posWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
-	    			//break;
 	    		} else {
 	    			posLastNonWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
 	    		}
@@ -169,78 +146,7 @@ public class WeatherUtilBlock {
 			}
 			
 			amountWeHave = trySpreadOnPos2(world, new BlockPos(posLastNonWall.xCoord, posLastNonWall.yCoord, posLastNonWall.zCoord), amountWeHave, amountToAddPerXZ, 10, blockLayerable);
-		} else {
-			//System.out.println("no wall found");
 		}
-	}
-	
-	public static void fillAgainstWall(World world, Vec3 posSource, float directionYaw, float scanDistance, float fillRadius, Block blockLayerable) {
-		//want to use this variable for how much the fill up spreads out to neighboring blocks
-		float thickness = 1F;
-		float tickStep = 0.75F;
-		//int fillPerTick = amountToTakeOrFill;
-		//use snow for now, make sand block after
-		
-		//snow has 7 layers till its a full solid block (full solid on 8th layer)
-		//0 is nothing, 1-7, 8 is full
-		
-		BlockPos posSourcei = posSource.toBlockPos();
-		int ySource = WeatherUtilBlock.getPrecipitationHeightSafe(world, posSourcei).getY();
-		int y = ySource;
-		
-		//override y so it scans from where ground at coord is
-		y = (int) posSource.yCoord;
-		//for sandstorm we might want to scan upwards in some scenarios.... but what
-		
-		float startScan = scanDistance;
-		
-		Vec3 posLastNonWall = new Vec3(posSource);
-		Vec3 posWall = null;
-		
-		//scan outwards to find closest wall
-		for (float i = 0; i < scanDistance; i += tickStep) {
-			double vecX = (-Math.sin(Math.toRadians(directionYaw)) * (i));
-    		double vecZ = (Math.cos(Math.toRadians(directionYaw)) * (i));
-    		
-    		int x = MathHelper.floor(posSource.xCoord + vecX);
-    		int z = MathHelper.floor(posSource.zCoord + vecZ);
-    		
-    		BlockPos pos = new BlockPos(x, y, z);
-    		IBlockState state = world.getBlockState(pos);
-    		
-    		if (state.getMaterial() != Material.AIR) {
-    			startScan = i;
-    			posWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
-    			break;
-    		} else {
-    			posLastNonWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
-    		}
-		}
-		
-		double distFromSourceToWall = posSource.distanceTo(posLastNonWall);
-		
-		//new code, check wall is high enough
-		if (posWall != null) {
-			BlockPos posCheck = new BlockPos(posWall.toBlockPos());
-			int heightOfWall = 0;
-			int heightNeeded = 2;
-			while (heightOfWall++ < heightNeeded) {
-				posCheck = posCheck.add(0, 1, 0);
-				IBlockState stateCheck = world.getBlockState(posCheck);
-				if (!stateCheck.isSideSolid(world, posCheck, EnumFacing.UP)) {
-					break;
-				}
-			}
-			
-			if (heightOfWall >= heightNeeded) {
-				int amountWeHave = 4;
-				int amountToAddPerXZ = 2;
-				
-				amountWeHave = trySpreadOnPos2(world, new BlockPos(posLastNonWall.xCoord, posLastNonWall.yCoord, posLastNonWall.zCoord), amountWeHave, amountToAddPerXZ, 10, blockLayerable);
-			}
-		}
-		
-		
 	}
 
 	public static void floodAreaWithLayerableBlock(World world, Vec3 posSource, float directionYaw, float scanDistance, float fillRadius/*, float takeRadius*/, Block blockLayerable, int amountToTakeOrFill) {
@@ -268,8 +174,6 @@ public class WeatherUtilBlock {
 	 * 
 	 */
 	public static void floodAreaWithLayerableBlock(World world, Vec3 posSource, float directionYaw, float scanDistance, float fillRadius, float takeRadius, Block blockLayerable, int amountToTakeOrRelocate/*, boolean transferSandEqually*/) {
-		//want to use this variable for how much the fill up spreads out to neighboring blocks
-		float thickness = 1F;
 		float tickStep = 0.75F;
 		//int fillPerTick = amountToTakeOrFill;
 		//use snow for now, make sand block after
@@ -285,11 +189,7 @@ public class WeatherUtilBlock {
 		y = (int) posSource.yCoord;
 		//for sandstorm we might want to scan upwards in some scenarios.... but what
 		
-		float startScan = scanDistance;
-		
 		Vec3 posLastNonWall = new Vec3(posSource);
-		Vec3 posWall = null;
-		
 		//scan outwards to find closest wall
 		for (float i = 0; i < scanDistance; i += tickStep) {
 			double vecX = (-Math.sin(Math.toRadians(directionYaw)) * (i));
@@ -302,8 +202,6 @@ public class WeatherUtilBlock {
     		IBlockState state = world.getBlockState(pos);
     		
     		if (state.getMaterial() != Material.AIR) {
-    			startScan = i;
-    			posWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
     			break;
     		} else {
     			posLastNonWall = new Vec3(posSource.xCoord + vecX, y, posSource.zCoord + vecZ);
@@ -359,8 +257,6 @@ public class WeatherUtilBlock {
 		if (doRadius) {
 			for (float i = 1; i < takeRadius/* && amountWeHave > 0*/; i += 0.75F) {
 				
-				int amountToAddBasedOnDist = 2;
-				
 				//radial
 				for (float angle = 0; angle <= 180/* && amountWeHave > 0*/; angle += angleScanResolution) {
 					
@@ -382,7 +278,6 @@ public class WeatherUtilBlock {
 			    		
 			    		BlockPos pos = new BlockPos(x, y, z);
 			    		
-			    		IBlockState state = world.getBlockState(pos);
 			    		if (!listProcessedFilter.contains(pos)) {
 			    			listProcessedFilter.add(pos);
 			    			//amountWeHave = trySpreadOnPos2(world, pos, amountWeHave, amountToAddBasedOnDist, maxFallDist, blockLayerable);
@@ -446,7 +341,6 @@ public class WeatherUtilBlock {
 			    		RayTraceResult destFound = world.rayTraceBlocks(sourceTest, destTest, false);
 			    		
 			    		if (destFound == null) {
-				    		IBlockState state = world.getBlockState(pos);
 				    		if (!listProcessedFilter.contains(pos)) {
 				    			listProcessedFilter.add(pos);
 				    			amountWeHave = trySpreadOnPos2(world, pos, amountWeHave, amountToAddBasedOnDist, maxFallDist, blockLayerable);
@@ -460,7 +354,7 @@ public class WeatherUtilBlock {
 		CULog.dbg("leftover: " + amountWeHave);
 	}
 	
-	public static int tryTakeFromPos(World world, BlockPos posTakeFrom, int amount, int amountAllowedToTakeForXZ, int maxDropAllowed, Block blockLayerable) {
+	private static int tryTakeFromPos(World world, BlockPos posTakeFrom, int amount, int amountAllowedToTakeForXZ, int maxDropAllowed, Block blockLayerable) {
 		
 		int amountTaken = 0;
 		
@@ -499,7 +393,7 @@ public class WeatherUtilBlock {
 		
 	}
 	
-	public static int trySpreadOnPos2(World world, BlockPos posSpreadTo, int amount, int amountAllowedToAdd, int maxDropAllowed, Block blockLayerable) {
+	private static int trySpreadOnPos2(World world, BlockPos posSpreadTo, int amount, int amountAllowedToAdd, int maxDropAllowed, Block blockLayerable) {
 		
 		if (amount <= 0) return amount;
 		
@@ -519,8 +413,6 @@ public class WeatherUtilBlock {
 		if (world.getBlockState(posSpreadTo.add(0, 1, 0)).getMaterial() != Material.AIR) {
 			return amount;
 		}
-		
-		IBlockState statePos = world.getBlockState(posSpreadTo);
 		
 		BlockPos posCheckNonAir = new BlockPos(posSpreadTo);
 		IBlockState stateCheckNonAir = world.getBlockState(posCheckNonAir);
@@ -555,12 +447,10 @@ public class WeatherUtilBlock {
 				distForPlaceableBlocks++;
 				continue;
 			//if its the kind of solid we want, break loop
-			} else if (stateCheckPlaceable.isSideSolid(world, posCheckPlaceable, EnumFacing.UP) || 
-					stateCheckPlaceable.getBlock() == blockLayerable) {
+			} else if (stateCheckPlaceable.isSideSolid(world, posCheckPlaceable, EnumFacing.UP) || stateCheckPlaceable.getBlock() == blockLayerable) {
 				break;
 			//its something we cant stack onto
 			} else {
-				//System.out.println("found unstackable block: " + stateCheckPlaceable);
 				return amount;
 			}
 		}
@@ -571,8 +461,7 @@ public class WeatherUtilBlock {
 		}
 		
 		//at this point the block we are about to work with is solid facing up, or snow
-		if (!stateCheckPlaceable.isSideSolid(world, posCheckPlaceable, EnumFacing.UP) && 
-					stateCheckPlaceable.getBlock() != blockLayerable) {
+		if (!stateCheckPlaceable.isSideSolid(world, posCheckPlaceable, EnumFacing.UP) && stateCheckPlaceable.getBlock() != blockLayerable) {
 			CULog.err("sandstorm: shouldnt be, failed a check somewhere!");
 			return amount;
 		}
@@ -587,11 +476,6 @@ public class WeatherUtilBlock {
 		
 		int amountToAdd = amountAllowedToAdd;
 		
-		//add in the amount of air blocks we found
-		//distForPlaceableBlocks += depth;
-		
-		//just place while stuff to add and air above
-		
 		while (amountAllowedToAdd > 0 && world.getBlockState(posPlaceLayerable.add(0, 1, 0)).getMaterial() == Material.AIR) {
 			//if no more layers to add
 			if (amountAllowedToAdd <= 0) {
@@ -600,7 +484,6 @@ public class WeatherUtilBlock {
 			//if its snow we can add snow to
 			if (statePlaceLayerable.getBlock() == blockLayerable && getHeightForLayeredBlock(statePlaceLayerable) < layerableHeightPropMax) {
 				int height = getHeightForLayeredBlock(statePlaceLayerable);
-				//if (height < snowMetaMax) {
 					height += amountAllowedToAdd;
 					if (height > layerableHeightPropMax) {
 						amountAllowedToAdd = height - layerableHeightPropMax;
@@ -620,8 +503,6 @@ public class WeatherUtilBlock {
 						posPlaceLayerable = posPlaceLayerable.add(0, 1, 0);
 						statePlaceLayerable = world.getBlockState(posPlaceLayerable);
 					}
-				//}
-			//solid block------------------- or air because we moved up 1 due to the previous being fully filled snow
 			} else if (statePlaceLayerable.isSideSolid(world, posPlaceLayerable, EnumFacing.UP)) {
 				posPlaceLayerable = posPlaceLayerable.add(0, 1, 0);
 				statePlaceLayerable = world.getBlockState(posPlaceLayerable);
@@ -668,7 +549,7 @@ public class WeatherUtilBlock {
 	 * @param blockLayerable
 	 * @return
 	 */
-	public static boolean isLayeredOrVanillaVersionOfBlock(IBlockState state, Block blockLayerable) {
+	private static boolean isLayeredOrVanillaVersionOfBlock(IBlockState state, Block blockLayerable) {
 		Block block = state.getBlock();
 		if (block == blockLayerable) {
 			return true;
@@ -682,7 +563,7 @@ public class WeatherUtilBlock {
 		return false;
 	}
 	
-	public static int getHeightForAnyBlock(IBlockState state) {
+	private static int getHeightForAnyBlock(IBlockState state) {
 		Block block = state.getBlock();
 		if (block == Blocks.SNOW_LAYER) {
 			return ((Integer)state.getValue(BlockSnow.LAYERS)).intValue();
@@ -699,7 +580,7 @@ public class WeatherUtilBlock {
 		}
 	}
 	
-	public static int getHeightForLayeredBlock(IBlockState state) {
+	private static int getHeightForLayeredBlock(IBlockState state) {
 		if (state.getBlock() == Blocks.SNOW_LAYER) {
 			return ((Integer)state.getValue(BlockSnow.LAYERS)).intValue();
 		} else if (state.getBlock() == CommonProxy.blockSandLayer) {
@@ -712,7 +593,7 @@ public class WeatherUtilBlock {
 		}
 	}
 	
-	public static IBlockState setBlockWithLayerState(Block block, int height) {
+	private static IBlockState setBlockWithLayerState(Block block, int height) {
 		boolean solidBlockUnderMode = true;
 		if (block == Blocks.SNOW_LAYER) {
 			if (height == layerableHeightPropMax && solidBlockUnderMode) {
@@ -732,89 +613,7 @@ public class WeatherUtilBlock {
 		}
 	}
 	
-	/**
-	 * This method is bad, logic like this is difficult to do
-	 * 
-	 * @param state
-	 * @param worldIn
-	 * @param pos
-	 * @param blockIn
-	 * @return
-	 */
-	public static boolean divideToNeighborCheck(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-		boolean foundSpotToSpread = false;
-		
-		int heightToUse = getHeightForLayeredBlock(state);
-
-		CULog.dbg("try smooth out");
-		
-		if (heightToUse > 2) {
-			for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
-	        {
-				if (heightToUse > 2) {
-					BlockPos posCheck = pos.offset(enumfacing);
-		            IBlockState stateCheck = worldIn.getBlockState(posCheck);
-		            
-	
-	            	int addAmount = 1;
-		            
-		            //do height comparison if its sand already
-		            if (stateCheck.getBlock() == state.getBlock()) {
-		            	int heightCheck = getHeightForLayeredBlock(stateCheck);
-			            if (heightCheck + 2 <= heightToUse) {
-			            	heightToUse -= addAmount;
-			            	addHeightToLayerableBLock(worldIn, posCheck, stateCheck.getBlock(), heightCheck, addAmount);
-			            	foundSpotToSpread = true;
-			            }
-			        //else, do the usual
-		            }/* else if (stateCheck.getMaterial() == Material.AIR) {
-		            	int returnVal = trySpreadOnPos2(worldIn, posCheck, addAmount, addAmount, 10, stateCheck.getBlock());
-		            	//TODO: factor in partial addition not just fully used
-		            	if (returnVal == 0) {
-		            		heightToUse -= addAmount;
-		            		foundSpotToSpread = true;
-		            	}
-		            }*/
-				}
-	        }
-		}
-		
-		if (foundSpotToSpread) {
-			worldIn.setBlockState(pos, setBlockWithLayerState(state.getBlock(), heightToUse));
-		}
-		
-		return foundSpotToSpread;
-	}
-	
-	/**
-	 * Simple helper method, returns amount it couldnt add
-	 * @param world
-	 * @param pos
-	 * @param block
-	 * @param amount
-	 * @return
-	 */
-	public static int addHeightToLayerableBLock(World world, BlockPos pos, Block block, int sourceAmount, int amount) {
-		IBlockState state = world.getBlockState(pos);
-		int curAmount = sourceAmount;//getHeightForLayeredBlock(state);
-		curAmount += amount;
-		int leftOver = 0;
-		if (curAmount > layerableHeightPropMax) {
-			leftOver = curAmount - layerableHeightPropMax;
-			curAmount = layerableHeightPropMax;
-		} else {
-			leftOver = 0;
-		}
-		try {
-			world.setBlockState(pos, setBlockWithLayerState(block, curAmount));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return leftOver;
-	}
-	
-	public static int takeHeightFromLayerableBlock(World world, BlockPos pos, Block block, int amount) {
+	private static int takeHeightFromLayerableBlock(World world, BlockPos pos, Block block, int amount) {
 		IBlockState state = world.getBlockState(pos);
 		int height = getHeightForLayeredBlock(state);
 		int amountReceived = 0;

@@ -45,7 +45,7 @@ public class ParticleBehaviors {
 		}
 	}
 	
-	public void tickUpdate(EntityRotFX particle) {
+	private void tickUpdate(EntityRotFX particle) {
 		
 		if (sourceEntity != null) {
 			coordSource = new Vec3(sourceEntity.posX, sourceEntity.posY, sourceEntity.posZ);
@@ -55,16 +55,14 @@ public class ParticleBehaviors {
 	}
 	
 	//default is smoke effect, override for custom
-	public void tickUpdateAct(EntityRotFX particle) {
+	protected void tickUpdateAct(EntityRotFX particle) {
 		
 			
 		double centerX = particle.getPosX();
-		//double centerY = particle.posY;
 		double centerZ = particle.getPosZ();
 		
 		if (coordSource != null) {
 			centerX = coordSource.xCoord/* + 0.5D*/;
-			//centerY = coordSource.yCoord/* + 0.5D*/;
 			centerZ = coordSource.zCoord/* + 0.5D*/;
 		}
 		
@@ -75,8 +73,6 @@ public class ParticleBehaviors {
 		double adjYaw = Math.min(360, 45+particle.getAge());
 		
 		rotYaw -= adjYaw;
-		//rotYaw -= 90D;
-		//rotYaw += 20D;
 		double speed = 0.1D;
 		if (particle.getAge() < 25 && distToCenter > 0.05D) {
 			particle.setMotionX(Math.cos(rotYaw * 0.017453D) * speed);
@@ -112,7 +108,6 @@ public class ParticleBehaviors {
 		} else {
 			brightnessShiftRate = rateBrighten;
 			particle.setGravity(-0.05F);
-			//particle.motionY *= 0.99F;
 			if (particle.getRedColorF() < 0.3F) {
 				
 			} else {
@@ -129,31 +124,6 @@ public class ParticleBehaviors {
 		}
 		
 		if (particle.getScale() < 8F) particle.setScale(particle.getScale() + rateScale);
-		
-		/*if (particle.getAge() % cycle < cycle/2) {
-			particle.setGravity(-0.02F);
-		} else {*/
-			
-		//}
-			
-		
-	}
-	
-	public void tickUpdateCloud(EntityRotFX particle) {
-		particle.rotationYaw -= 0.1;
-		
-		int ticksFadeInMax = 100;
-		
-		if (particle.getAge() < ticksFadeInMax) {
-			//System.out.println("particle.getAge(): " + particle.getAge());
-			particle.setAlphaF(particle.getAge() * 0.01F);
-		} else {
-			if (particle.getAlphaF() > 0) {
-				particle.setAlphaF(particle.getAlphaF() - rateAlpha*1.3F);
-			} else {
-				particle.setExpired();
-			}
-		}
 	}
 	
 	public EntityRotFX spawnNewParticleIconFX(World world, TextureAtlasSprite icon, double x, double y, double z, double vecX, double vecY, double vecZ) {
@@ -172,9 +142,6 @@ public class ParticleBehaviors {
 		particle.setPrevPosX(particle.getPosX());
 		particle.setPrevPosY(particle.getPosY());
 		particle.setPrevPosZ(particle.getPosZ());
-		/*particle.prevPosX = particle.getPosX();
-		particle.prevPosY = particle.getPosY();
-		particle.prevPosZ = particle.getPosZ();*/
 		
 		//keep AABB small, very important to performance
 		particle.setSize(0.01F, 0.01F);
@@ -198,29 +165,4 @@ public class ParticleBehaviors {
 		particle.setAlphaF(0.6F);
 		return particle;
 	}
-	
-	public static EntityRotFX setParticleCloud(EntityRotFX particle, float freezeY) {
-		particle.spawnY = freezeY;
-		particle.rotationPitch = 90F;
-		//particle.renderDistanceWeight = 999D;
-		//1.10.2 no known replacement for above
-        //particle.noClip = true;
-		particle.setCanCollide(false);
-        particle.setSize(0.25F, 0.25F);
-        particle.setScale(500F);
-        //particle.particleScale = 200F;
-        particle.callUpdateSuper = false;
-        particle.callUpdatePB = false;
-        particle.setMaxAge(500);
-        particle.setRBGColorF(1F, 1F, 1F);
-        particle.brightness = 0.3F;//- ((200F - particle.spawnY) * 0.05F);
-        particle.renderRange = 999F;
-        particle.setAlphaF(0F);
-		return particle;
-	}
-	
-	public void cleanup() {
-		
-	}
-	
 }

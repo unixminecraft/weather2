@@ -31,7 +31,7 @@ import weather2.util.WeatherUtilBlock;
 public class ItemPocketSand extends Item {
 
     @SideOnly(Side.CLIENT)
-    public static ParticleBehaviorSandstorm particleBehavior;
+    private static ParticleBehaviorSandstorm particleBehavior;
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
@@ -65,7 +65,7 @@ public class ItemPocketSand extends Item {
      * @param player The sand item using source
      */
     @SideOnly(Side.CLIENT)
-    public static void particulate(World world, EntityLivingBase player) {
+    private static void particulate(World world, EntityLivingBase player) {
 
         if (particleBehavior == null) {
             particleBehavior = new ParticleBehaviorSandstorm(new Vec3(player.getPosition()));
@@ -82,11 +82,8 @@ public class ItemPocketSand extends Item {
         double vecZCast = (Math.cos(Math.toRadians(player.rotationYawHead)) * (distCast)) * xzAdj;
 
         BlockPos pos = new BlockPos(player.posX + vecXCast, player.posY + vecYCast, player.posZ + vecZCast);
-        //pos = new BlockPos(player.getLookVec().add(new Vec3d(player.posX, player.posY, player.posZ)));
 
         double dist = Math.sqrt(Minecraft.getMinecraft().player.getDistanceSq(pos));
-
-        //System.out.println(dist);
 
         if (Minecraft.getMinecraft().player != player && dist < 7) {
             SceneEnhancer.adjustAmountTargetPocketSandOverride = 1.3F;
@@ -104,13 +101,7 @@ public class ItemPocketSand extends Item {
             randAngle = player.world.rand.nextDouble() * randSize - player.world.rand.nextDouble() * randSize;
             double vecZ = (Math.cos(Math.toRadians(player.rotationYawHead + randAngle)) * (speed));
             randAngle = player.world.rand.nextDouble() * randSize - player.world.rand.nextDouble() * randSize;
-
-            //double xzAdj = Math.cos(Math.toRadians(player.rotationPitch));
-
             double vecY = (-Math.sin(Math.toRadians(player.rotationPitch + randAngle)) * (speed));
-
-            //System.out.println("?:" + xzAdj);
-
             part.setMotionX(vecX * xzAdj);
             part.setMotionZ(vecZ * xzAdj);
             part.setMotionY(vecY);
@@ -139,8 +130,6 @@ public class ItemPocketSand extends Item {
             ClientTickHandler.weatherManager.addWeatheredParticle(part);
             part.spawnAsWeatherEffect();
         }
-
-        //System.out.println("spawn!");
     }
 
     @Override
@@ -154,14 +143,14 @@ public class ItemPocketSand extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public void tickClient(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    private void tickClient(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (particleBehavior == null) {
             particleBehavior = new ParticleBehaviorSandstorm(new Vec3(entityIn.getPosition()));
         }
         particleBehavior.tickUpdateList();
     }
 
-    public static void particulateToClients(World world, EntityLivingBase player) {
+    private static void particulateToClients(World world, EntityLivingBase player) {
         NBTTagCompound data = new NBTTagCompound();
         data.setString("packetCommand", "PocketSandData");
         data.setString("command", "create");

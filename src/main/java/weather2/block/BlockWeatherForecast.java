@@ -7,8 +7,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.world.World;
 
-public class BlockWeatherForecast extends BlockContainer
-{
+public class BlockWeatherForecast extends BlockContainer {
+	
     public BlockWeatherForecast()
     {
         super(Material.CLAY);

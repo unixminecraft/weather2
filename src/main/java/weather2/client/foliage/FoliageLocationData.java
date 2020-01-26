@@ -8,7 +8,7 @@ import extendedrenderer.foliage.Foliage;
 public class FoliageLocationData {
 
     public FoliageReplacerBase foliageReplacer;
-    public List<Foliage> listFoliage = new ArrayList<>();
+    public List<Foliage> listFoliage = new ArrayList<Foliage>();
 
     public FoliageLocationData(FoliageReplacerBase foliageReplacer) {
         this.foliageReplacer = foliageReplacer;

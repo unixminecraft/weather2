@@ -1,7 +1,6 @@
 package weather2.block;
 
 import CoroUtil.util.Vec3;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -17,15 +16,10 @@ public class TileEntityWindVane extends TileEntity implements ITickable
 	//since client receives data every couple seconds, we need to smooth out everything for best visual
 	
 	public float smoothAngle = 0;
-	public float smoothSpeed = 0;
+	private float smoothAngleRotationalVelAccel = 0;
 	
-	public float smoothAngleRotationalVel = 0;
-	public float smoothAngleRotationalVelAccel = 0;
-	
-	public float smoothAngleAdj = 0.1F;
-	public float smoothSpeedAdj = 0.1F;
-	
-	public boolean isOutsideCached = false;
+	private float smoothAngleAdj = 0.1F;
+	private boolean isOutsideCached = false;
 
 	@Override
     public void update()
@@ -37,28 +31,19 @@ public class TileEntityWindVane extends TileEntity implements ITickable
     		}
     		
     		if (isOutsideCached) {
-	    		//x1 * y2 - y1 * x2 cross product to get optimal turn angle, errr i have angle and target angle, not positions...
-	    		
-	    		//smoothAngle = 0;
-	    		//smoothAngleRotationalVel = 0;
-	    		//smoothAngleRotationalVelAccel = 0;
 	    		
 	    		float targetAngle = WindReader.getWindAngle(world, new Vec3(getPos().getX(), getPos().getY(), getPos().getZ()));
 	    		float windSpeed = WindReader.getWindSpeed(world, new Vec3(getPos().getX(), getPos().getY(), getPos().getZ()));
-	    		
-	    		//System.out.println("targetAngle: " + targetAngle);
 	    		
 	    		if (smoothAngle > 180) smoothAngle-=360;
 	    		if (smoothAngle < -180) smoothAngle+=360;
 	    		
 	    		float bestMove = MathHelper.wrapDegrees(targetAngle - smoothAngle);
 	    		
-	    		float diff = ((targetAngle + 360 + 180) - (smoothAngle + 360 + 180));
+	    		smoothAngleAdj = windSpeed;
 	    		
-	    		smoothAngleAdj = windSpeed;//0.2F;
-	    		
-	    		if (Math.abs(bestMove) < 180/* - (angleAdjust * 2)*/) {
-	    			float realAdj = smoothAngleAdj;//Math.max(smoothAngleAdj, Math.abs(bestMove));
+	    		if (Math.abs(bestMove) < 180) {
+	    			float realAdj = smoothAngleAdj;
 	    			
 	    			if (realAdj * 2 > windSpeed) {
 		    			if (bestMove > 0) smoothAngleRotationalVelAccel -= realAdj;
@@ -67,17 +52,9 @@ public class TileEntityWindVane extends TileEntity implements ITickable
 	    			
 	    			if (smoothAngleRotationalVelAccel > 0.3 || smoothAngleRotationalVelAccel < -0.3) {
 	    				smoothAngle += smoothAngleRotationalVelAccel;
-	    			} else {
-	    				//smoothAngleRotationalVelAccel *= 0.9F;
 	    			}
-	    			
-	    			//smoothAngle += smoothAngleRotationalVelAccel;
-	    			
+	    				    			
 	    			smoothAngleRotationalVelAccel *= 0.80F;
-	    			
-	    			//System.out.println("diff: " + diff);
-	    			
-	    			//System.out.println("smoothAngle: " + smoothAngle + " - smoothAngleRotationalVel: " + smoothAngleRotationalVel + " - smoothAngleRotationalVelAccel: " + smoothAngleRotationalVelAccel);
 	    		}
     		}
     	}
@@ -87,16 +64,5 @@ public class TileEntityWindVane extends TileEntity implements ITickable
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
     	return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 3, getPos().getZ() + 1);
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound var1)
-    {
-        return super.writeToNBT(var1);
-    }
-
-    public void readFromNBT(NBTTagCompound var1)
-    {
-        super.readFromNBT(var1);
-
     }
 }

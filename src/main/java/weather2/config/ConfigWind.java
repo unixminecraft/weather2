@@ -1,9 +1,5 @@
 package weather2.config;
 
-import java.io.File;
-
-import weather2.Weather;
-
 public class ConfigWind {
 
     public static boolean Misc_windOn = true;
@@ -24,24 +20,4 @@ public class ConfigWind {
     public static double windSpeedMax = 1D;
 
     public static double windSpeedMinGlobalOvercastRaining = 0.3D;
-
-    public String getName() {
-        return "Wind";
-    }
-
-    public String getRegistryName() {
-        return Weather.modID + getName();
-    }
-
-    public String getConfigFileName() {
-        return "Weather2" + File.separator + getName();
-    }
-
-    public String getCategory() {
-        return "Weather2: " + getName();
-    }
-
-    public void hookUpdatedValues() {
-
-    }
 }

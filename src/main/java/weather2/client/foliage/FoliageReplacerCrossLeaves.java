@@ -21,7 +21,7 @@ public class FoliageReplacerCrossLeaves extends FoliageReplacerCross {
             IBlockState stateScan = world.getBlockState(pos);
             if (stateScan.getBlock() == state.getBlock()) {
                 boolean fail = false;
-                for (Map.Entry<IProperty, Comparable> entrySet : lookupPropertiesToComparable.entrySet()) {
+                for (Map.Entry<IProperty<?>, Comparable<?>> entrySet : lookupPropertiesToComparable.entrySet()) {
                     if (stateScan.getValue(entrySet.getKey()) != entrySet.getValue()) {
                         fail = true;
                         break;
@@ -31,15 +31,9 @@ public class FoliageReplacerCrossLeaves extends FoliageReplacerCross {
                     return false;
                 }
                 return true;
-                    /*IProperty asdasd = BlockCrops.AGE;
-                    Comparable realValue = stateScan.getValue(BlockCrops.AGE);
-                    Comparable needValue = EnumFacing.WEST;
-                    needValue = 7;*/
             } else {
                 return false;
             }
-            //return world.getBlockState(pos.up()) == state;
-            //return world.getBlockState(pos.up()).getBlock() == state.getBlock();
         } else {
             return world.getBlockState(pos).getBlock() == state.getBlock();
         }
@@ -51,10 +45,7 @@ public class FoliageReplacerCrossLeaves extends FoliageReplacerCross {
         //TODO: handle multi height cross detection here or make child class based off this one to do it
         int height = expectedHeight;
         if (height == -1) {
-            //Minecraft.getMinecraft().mouseHelper.ungrabMouseCursor();
             Block block = state.getBlock();
-
-            //already verified up 1 == block needed
             height = 0;
 
             while (block == state.getBlock()) {
@@ -62,17 +53,7 @@ public class FoliageReplacerCrossLeaves extends FoliageReplacerCross {
                 block = world.getBlockState(pos.up(height)).getBlock();
             }
         }
-
-
-        /*Vec3 vec = new Vec3(0.1, 0, 0.1);
-        FoliageEnhancerShader.addForPos(this, height, pos, vec, biomeColorize, -1, new Vec3(0.25, 0, 0));
-        FoliageEnhancerShader.addForPos(this, height, pos, vec, biomeColorize, -1, new Vec3(-0.25, 0, 0));
-        FoliageEnhancerShader.addForPos(this, height, pos, vec, biomeColorize, -1, new Vec3(0, 0, 0.25));
-        FoliageEnhancerShader.addForPos(this, height, pos, vec, biomeColorize, -1, new Vec3(0, 0, -0.25));*/
-
         Vec3 vec = new Vec3(0.2, 0, 0.2);
-        //vec = new Vec3(0.0, 0, 0.0);
         FoliageEnhancerShader.addForPos(this, height, pos, vec, biomeColorize, -1, new Vec3(0, 0, 0));
-        //FoliageEnhancerShader.addForPos(this, height, pos, vec, biomeColorize, -1, new Vec3(0, 0, 0));
     }
 }

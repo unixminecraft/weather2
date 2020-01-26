@@ -6,7 +6,6 @@ import extendedrenderer.render.RotatingParticleManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,9 +20,6 @@ public class ExtendedRenderer {
     
     @SidedProxy(clientSide = "extendedrenderer.ClientProxy", serverSide = "extendedrenderer.CommonProxy")
     public static CommonProxy proxy;
-
-    /*@SideOnly(Side.CLIENT)
-    public static RotatingEffectRenderer rotEffRenderer;*/
     
     @SideOnly(Side.CLIENT)
     public static RotatingParticleManager rotEffRenderer;
@@ -38,15 +34,7 @@ public class ExtendedRenderer {
     }
     
     @Mod.EventHandler
-    public void load(FMLInitializationEvent event)
-    {
-    	proxy.init();
-
-    }
-    
-    @Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-    	proxy.postInit();
 
         //setting last state to track after configs load, but before ticking that uses it
     	EventHandler.foliageUseLast = ConfigCoroUtil.foliageShaders;
@@ -55,8 +43,4 @@ public class ExtendedRenderer {
     public ExtendedRenderer() {
     	
     }
-	
-	public static void dbg(Object obj) {
-		if (true) System.out.println(obj);
-	}
 }

@@ -12,7 +12,7 @@ import weather2.entity.AI.ITaskInitializer;
  */
 public class UtilEntityBuffsMini {
 
-    public static boolean replaceTaskIfMissing(EntityCreature ent, Class taskToReplace, Class tasksToReplaceWith, int priorityOfTask) {
+    public static boolean replaceTaskIfMissing(EntityCreature ent, Class<?> taskToReplace, Class<?> tasksToReplaceWith, int priorityOfTask) {
         EntityAITasks.EntityAITaskEntry foundTask = null;
         for (Object entry2 : ent.tasks.taskEntries) {
             EntityAITasks.EntityAITaskEntry entry = (EntityAITasks.EntityAITaskEntry) entry2;
@@ -32,18 +32,14 @@ public class UtilEntityBuffsMini {
 
     }
 
-    public static boolean addTask(EntityCreature ent, Class taskToInject, int priorityOfTask) {
+    private static boolean addTask(EntityCreature ent, Class<?> taskToInject, int priorityOfTask) {
         try {
             Constructor<?> cons = taskToInject.getConstructor();
             Object obj = cons.newInstance();
             if (obj instanceof ITaskInitializer) {
                 ITaskInitializer task = (ITaskInitializer) obj;
                 task.setEntity(ent);
-                //System.out.println("adding task into zombie: " + taskToInject);
                 ent.tasks.addTask(priorityOfTask, (EntityAIBase) task);
-                //aiEnhanced.put(ent.getEntityId(), true);
-
-
                 return true;
             }
         } catch (Exception e) {
@@ -51,5 +47,4 @@ public class UtilEntityBuffsMini {
         }
         return false;
     }
-
 }

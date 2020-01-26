@@ -25,7 +25,4 @@ public class CreativeTabWeather extends CreativeTabs {
 	public ItemStack getTabIconItem() {
 		return getIconItemStack();
 	}
-	
-	
-
 }

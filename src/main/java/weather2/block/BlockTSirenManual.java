@@ -23,7 +23,6 @@ public class BlockTSirenManual extends BlockTSiren {
     public void updateState(World worldIn, BlockPos pos, IBlockState state)
     {
         boolean flag = worldIn.isBlockPowered(pos);
-
         if (flag != ((Boolean)state.getValue(ENABLED)).booleanValue())
         {
             worldIn.setBlockState(pos, state.withProperty(ENABLED, Boolean.valueOf(flag)), 3);

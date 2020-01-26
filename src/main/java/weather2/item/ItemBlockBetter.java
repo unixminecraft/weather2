@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockBetter extends Item
 {
-    public final Block block;
+    protected final Block block;
 
     public ItemBlockBetter(Block block)
     {
@@ -47,7 +47,8 @@ public class ItemBlockBetter extends Item
     /**
      * Called when a Block is right-clicked with this Item
      */
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
@@ -80,7 +81,7 @@ public class ItemBlockBetter extends Item
         }
     }
 
-    public static boolean setTileEntityNBT(World worldIn, @Nullable EntityPlayer player, BlockPos pos, ItemStack stackIn)
+	private static boolean setTileEntityNBT(World worldIn, @Nullable EntityPlayer player, BlockPos pos, ItemStack stackIn)
     {
         MinecraftServer minecraftserver = worldIn.getMinecraftServer();
 
@@ -123,7 +124,7 @@ public class ItemBlockBetter extends Item
     }
 
     @SideOnly(Side.CLIENT)
-    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack)
+    protected boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack)
     {
         Block block = worldIn.getBlockState(pos).getBlock();
 
@@ -140,47 +141,6 @@ public class ItemBlockBetter extends Item
     }
 
     /**
-     * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
-     * different names based on their damage or NBT.
-     */
-    /*public String getUnlocalizedName(ItemStack stack)
-    {
-        return this.block.getUnlocalizedName();
-    }*/
-
-    /**
-     * Returns the unlocalized name of this item.
-     */
-    /*public String getUnlocalizedName()
-    {
-        return this.block.getUnlocalizedName();
-    }*/
-
-    /**
-     * gets the CreativeTab this item is displayed on
-     */
-    /*@SideOnly(Side.CLIENT)
-    public CreativeTabs getCreativeTab()
-    {
-        return this.block.getCreativeTabToDisplayOn();
-    }*/
-
-    /**
-     * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     */
-    /*@SideOnly(Side.CLIENT)
-    @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-    {
-        this.block.getSubBlocks(tab, subItems);
-    }*/
-
-    public Block getBlock()
-    {
-        return this.block;
-    }
-
-    /**
      * Called to actually place the block, after the location is determined
      * and all permission checks have been made.
      *
@@ -188,7 +148,7 @@ public class ItemBlockBetter extends Item
      * @param player The player who is placing the block. Can be null if the block is not being placed by a player.
      * @param side The side the player (or machine) right-clicked on.
      */
-    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)
+    private boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)
     {
         if (!world.setBlockState(pos, newState, 3)) return false;
 

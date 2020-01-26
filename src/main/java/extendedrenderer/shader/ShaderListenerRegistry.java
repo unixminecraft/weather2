@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ShaderListenerRegistry {
 
-    public static List<IShaderListener> listeners = new ArrayList<>();
+	private static List<IShaderListener> listeners = new ArrayList<>();
 
     public static void addListener(IShaderListener listener) {
         listeners.add(listener);
@@ -18,5 +18,4 @@ public class ShaderListenerRegistry {
     public static void postReset() {
         listeners.forEach(entry -> entry.reset());
     }
-
 }

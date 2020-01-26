@@ -21,7 +21,6 @@ public class ItemSandLayer extends ItemBlockBetter
     {
         super(block);
         this.setMaxDamage(0);
-        //this.setHasSubtypes(true);
     }
 
     /**

@@ -7,29 +7,29 @@ import net.minecraft.client.model.ModelRenderer;
 
 public class ModelAnemometer extends ModelBase
 {
-	ModelRenderer Shape1;
-    ModelRenderer Shape22;
-    ModelRenderer Shape2;
-    ModelRenderer Shape3;
-    ModelRenderer Shape44;
-    ModelRenderer Shape4;
-    ModelRenderer Shape55;
-    ModelRenderer Shape5;
-    ModelRenderer Shape444;
-    ModelRenderer Shape5555;
-    ModelRenderer Shape555;
-    ModelRenderer Shape4444;
-    ModelRenderer Shape33;
-    ModelRenderer Shape6;
-    ModelRenderer Shape7;
-    ModelRenderer Shape8;
-    ModelRenderer Shape9;
-    ModelRenderer Shape10;
-    ModelRenderer Shape11;
-    ModelRenderer Shape12;
-    ModelRenderer Shape13;
-    ModelRenderer Shape14;
-    ModelRenderer Shape15;
+	private ModelRenderer Shape1;
+	private ModelRenderer Shape22;
+	private ModelRenderer Shape2;
+	private ModelRenderer Shape3;
+	private ModelRenderer Shape44;
+	private ModelRenderer Shape4;
+	private ModelRenderer Shape55;
+	private ModelRenderer Shape5;
+	private ModelRenderer Shape444;
+	private ModelRenderer Shape5555;
+	private ModelRenderer Shape555;
+	private ModelRenderer Shape4444;
+	private ModelRenderer Shape33;
+	private ModelRenderer Shape6;
+	private ModelRenderer Shape7;
+	private ModelRenderer Shape8;
+	private ModelRenderer Shape9;
+	private ModelRenderer Shape10;
+	private ModelRenderer Shape11;
+	private ModelRenderer Shape12;
+	private ModelRenderer Shape13;
+	private ModelRenderer Shape14;
+	private ModelRenderer Shape15;
     
     public float scaleX = 1f;	
     public float scaleY = 1f;	
@@ -191,9 +191,8 @@ public class ModelAnemometer extends ModelBase
         setRotation(Shape15, 0F, 0F, 0F);
     }
 
-    public void render(float scale, float topPieceRotation)
+	public void render(float scale, float topPieceRotation)
     {
-      //setRotationAngles(entity, f, f1, f2, f3, f4, f5);
       Shape1.renderWithRotation(scale);
       GL11.glRotatef(topPieceRotation, 0, 1, 0);
       Shape22.renderWithRotation(scale);
@@ -226,5 +225,4 @@ public class ModelAnemometer extends ModelBase
       model.rotateAngleY = y;
       model.rotateAngleZ = z;
     }
-
 }

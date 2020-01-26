@@ -10,13 +10,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
  */
 public class MeshBufferManagerFoliage {
 
-    //for prebuffering allowed max
-    public static int numInstances = 10000;
-    //public static int numInstances = 30000;
+	private static int numInstances = 10000;
 
-    public static HashMap<TextureAtlasSprite, InstancedMeshFoliage> lookupParticleToMesh = new HashMap<>();
+	private static HashMap<TextureAtlasSprite, InstancedMeshFoliage> lookupParticleToMesh = new HashMap<>();
 
-    public static void setupMeshForParticle(TextureAtlasSprite sprite) {
+	private static void setupMeshForParticle(TextureAtlasSprite sprite) {
 
         //drawn in order of a U shape starting top left
         float[] positions = null;

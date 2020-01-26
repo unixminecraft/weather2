@@ -1,7 +1,5 @@
 package extendedrenderer;
 
-import java.util.List;
-
 import org.lwjgl.opengl.GL11;
 
 import CoroUtil.config.ConfigCoroUtil;
@@ -17,14 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -36,12 +29,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EventHandler {
 
 	
-	//public long lastWorldTime;
-    public static World lastWorld;
-    //public static Renderer shaderTest;
+    private static World lastWorld;
 
-    public static int mip_min = 0;
-    public static int mip_mag = 0;
+    private static int mip_min = 0;
+    private static int mip_mag = 0;
 
 
     //a hack to enable fog for particles when weather2 sandstorm is active
@@ -50,21 +41,9 @@ public class EventHandler {
     //initialized at post init after configs loaded in
     public static boolean foliageUseLast;
 
-    public static boolean flagFoliageUpdate = false;
+    private static boolean flagFoliageUpdate = false;
 
-    public static boolean lastLightningBoltLightState = false;
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void tickRenderScreen(TickEvent.RenderTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            tickShaderTest();
-        }
-    }
-
-    public static void tickShaderTest() {
-
-    }
+    private static boolean lastLightningBoltLightState = false;
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -84,11 +63,6 @@ public class EventHandler {
 
                     lastLightningBoltLightState = lightningActive;
                 }
-                //if (mc.theWorld.getTotalWorldTime() != lastWorldTime) {
-                    //lastWorldTime = mc.theWorld.getTotalWorldTime();
-
-
-                //}
             }
 
             if (ConfigCoroUtil.foliageShaders != foliageUseLast) {
@@ -112,16 +86,6 @@ public class EventHandler {
             EventHandler.hookRenderShaders(event.getPartialTicks());
         }
     }
-
-    //for test added hook added in EntityRenderer.renderWorldPass, before "if (flag && this.mc.objectMouseOver"
-    /*@SubscribeEvent(priority = EventPriority.HIGHEST)
-    @SideOnly(Side.CLIENT)
-    public void worldRender(RenderWorldBlockEvent event)
-    {
-        if (!ConfigCoroAI.useEntityRenderHookForShaders) {
-            EventHandler.hookRenderShaders(event.getPartialTicks());
-        }
-    }*/
 
     public static boolean queryUseOfShaders() {
         RotatingParticleManager.useShaders = ShaderManager.canUseShadersInstancedRendering();
@@ -154,20 +118,9 @@ public class EventHandler {
 
             er.enableLightmap();
             mc.mcProfiler.endStartSection("litParticles");
-            //particlemanager.renderLitParticles(entity, partialTicks);
             ExtendedRenderer.rotEffRenderer.renderLitParticles((Entity) mc.getRenderViewEntity(), (float) partialTicks);
             RenderHelper.disableStandardItemLighting();
-            //private method, cant use.... for now
-            //er.setupFog(0, event.getPartialTicks());
             mc.mcProfiler.endStartSection("particles");
-            //particlemanager.renderParticles(entity, partialTicks);
-            //GlStateManager.matrixMode(5889);
-            //GlStateManager.loadIdentity();
-            //Project.gluPerspective(90F/*er.getFOVModifier((float)event.getPartialTicks(), true)*/, (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, (float)(mc.gameSettings.renderDistanceChunks * 16) * MathHelper.SQRT_2 * 5);
-            //GlStateManager.matrixMode(5888);
-
-
-
             queryUseOfShaders();
 
             if (RotatingParticleManager.forceShaderReset) {
@@ -186,10 +139,8 @@ public class EventHandler {
 
             if (RotatingParticleManager.useShaders && ShaderEngine.renderer == null) {
 
-                boolean simulateFail = false;
-
                 //currently for if shader compiling fails, which is an ongoing issue for some machines...
-                if (!ShaderEngine.init() || simulateFail) {
+                if (!ShaderEngine.init()) {
 
                     CULog.log("Extended Renderer: Shaders failed to initialize");
 
@@ -218,7 +169,7 @@ public class EventHandler {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void preShaderRender(Entity entityIn, float partialTicks) {
+    private static void preShaderRender(Entity entityIn, float partialTicks) {
 
         Minecraft mc = Minecraft.getMinecraft();
         EntityRenderer er = mc.entityRenderer;
@@ -227,46 +178,10 @@ public class EventHandler {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.004F);
 
-        //TODO: requires AT for EntityRenderer
-        boolean testGLUOverride = false;
-        if (testGLUOverride) {
-	        /*GlStateManager.matrixMode(5889);
-	        GlStateManager.loadIdentity();
-	        Project.gluPerspective(er.getFOVModifier(partialTicks, true), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, er.farPlaneDistance * 4.0F);
-	        GlStateManager.matrixMode(5888);*/
-        }
-
-        boolean fog = true;
-        if (fog) {
-            boolean ATmode = true;
-
-            //TODO: make match other fog states
-
-            if (ATmode) {
-                //TODO: add AT if this will be used
-
-                er.setupFog(0, partialTicks);
-
-                float fogScaleInvert = 1F - sandstormFogAmount;
-
-                //customized
-                //GlStateManager.setFogDensity(0F);
-                //GlStateManager.setFogStart(0F);
-                //GlStateManager.setFogEnd(Math.max(40F, 1000F * fogScaleInvert));
-                //GlStateManager.setFogEnd(30F);
-                /**/
-            }
-
-            /*GlStateManager.setFogStart(0);
-            GlStateManager.setFogEnd(100);*/
-        }
-
+        er.setupFog(0, partialTicks);
         GlStateManager.disableCull();
 
         CoroUtilBlockLightCache.brightnessPlayer = CoroUtilBlockLightCache.getBrightnessFromLightmap(mc.world, (float)entityIn.posX, (float)entityIn.posY, (float)entityIn.posZ);
-
-
-
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         mip_min = 0;
@@ -275,19 +190,15 @@ public class EventHandler {
         //fix mipmapping making low alpha transparency particles dissapear based on distance, window size, particle size
         if (!ConfigCoroUtilAdvanced.disableMipmapFix) {
             mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            //                                  3553                10241
             mip_min = GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER);
-            //                                                      10240
             mip_mag = GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER);
-            //System.out.println(mip_min + " - " + mip_mag);
-            //                                                                                  9728
             GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
             GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    public static void postShaderRender(Entity entityIn, float partialTicks) {
+    private static void postShaderRender(Entity entityIn, float partialTicks) {
 
         //restore original mipmap state
         if (!ConfigCoroUtilAdvanced.disableMipmapFix) {
@@ -298,10 +209,7 @@ public class EventHandler {
 
         GlStateManager.enableCull();
 
-        boolean fog = true;
-        if (fog) {
             GlStateManager.disableFog();
-        }
 
         GlStateManager.depthMask(false);
         GlStateManager.disableBlend();
@@ -309,9 +217,8 @@ public class EventHandler {
     }
 	
 	@SideOnly(Side.CLIENT)
-    public boolean isPaused() {
+	private boolean isPaused() {
         if (FMLClientHandler.instance().getClient().isGamePaused()) return true;
-    	//if (FMLClientHandler.instance().getClient().getIntegratedServer() != null && FMLClientHandler.instance().getClient().getIntegratedServer().getServerListeningThread() != null && FMLClientHandler.instance().getClient().getIntegratedServer().getServerListeningThread().isGamePaused()) return true;
     	return false;
     }
 	
@@ -325,59 +232,5 @@ public class EventHandler {
     @SideOnly(Side.CLIENT)
     public void registerIconsPost(TextureStitchEvent.Post event) {
         ParticleRegistry.initPost(event);
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void modelBake(ModelBakeEvent event) {
-
-        if (true) return;
-
-        /*Map<ModelResourceLocation, IModel> stateModels = ReflectionHelper.getPrivateValue(ModelLoader.class, event.getModelLoader(), "stateModels");
-        for (ModelResourceLocation mrl : event.getModelRegistry().getKeys()) {
-            IModel model = stateModels.get(mrl);
-        }*/
-
-        IBakedModel blank = event.getModelRegistry().getObject(new ModelResourceLocation("coroutil:blank", "normal"));
-
-        for (ModelResourceLocation res : event.getModelRegistry().getKeys()) {
-
-            System.out.println(res.toString());
-
-            IBakedModel model = event.getModelRegistry().getObject(res);
-
-            String domain = res.getResourceDomain();
-            String blockName = res.getResourcePath();
-            String variant = res.getVariant();
-
-            if (blockName.equals("wheat")) {
-
-                if (!res.getVariant().equals("inventory")) {
-
-
-                    //List<BakedQuad> quads = model.getQuads(Blocks.WHEAT.getDefaultState().withProperty(BlockCrops.AGE, 5), null, 0);
-
-
-
-                    //System.out.println(quads);
-
-                    /*for (BakedQuad quad : quads) {
-                        ReflectionHelper.setPrivateValue(BakedQuad.class, quad, new int[1], "field_178215_a", "vertexData");
-                    }*/
-
-                    //System.out.println(quads);
-
-                    event.getModelRegistry().putObject(res, blank);
-                }
-            }
-
-            if (blockName.equals("tall_grass")) {
-                System.out.println(res.toString());
-
-                List<BakedQuad> quads = model.getQuads(Blocks.TALLGRASS.getDefaultState()/*.withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS)*/, null, 0);
-            }
-
-
-        }
     }
 }

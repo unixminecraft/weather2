@@ -20,9 +20,7 @@ public class EntityRendererProxyWeather2Mini extends EntityRenderer
     protected void renderRainSnow(float par1)
     {
     	
-    	boolean overrideOn = ConfigMisc.Misc_proxyRenderOverrideEnabled;
-
-		/**
+    	/**
 		 * why render here? because renderRainSnow provides better context, solves issues:
 		 * - translucent blocks rendered after
 		 * -- shaders are color adjusted when rendering on other side of
@@ -33,7 +31,7 @@ public class EntityRendererProxyWeather2Mini extends EntityRenderer
 			EventHandler.hookRenderShaders(par1);
 		}
     	
-    	if (!overrideOn) {
+    	if (!ConfigMisc.Misc_proxyRenderOverrideEnabled) {
     		super.renderRainSnow(par1);
     		return;
     	} else {

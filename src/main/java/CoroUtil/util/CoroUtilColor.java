@@ -13,7 +13,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class CoroUtilColor {
     
-    @SuppressWarnings("null")
     public static int[] getColors(IBlockState state) {
         if (state instanceof IExtendedBlockState) {
             state = ((IExtendedBlockState) state).getClean();
@@ -36,7 +35,7 @@ public class CoroUtilColor {
         return IntArrays.EMPTY_ARRAY;
     }
 
-    public static int[] getColors(TextureAtlasSprite sprite) {
+    private static int[] getColors(TextureAtlasSprite sprite) {
         int width = sprite.getIconWidth();
         int height = sprite.getIconHeight();
         int frames = sprite.getFrameCount();
@@ -58,9 +57,9 @@ public class CoroUtilColor {
     }
     
     private static int getColor(int[] colorData) {
-        float mr = 1F;//((multiplier >>> 16) & 0xFF) / 255f;
-        float mg = 1F;//((multiplier >>> 8) & 0xFF) / 255f;
-        float mb = 1F;//(multiplier & 0xFF) / 255f;
+        float mr = 1F;
+        float mg = 1F;
+        float mb = 1F;
 
         return 0xFF000000 | (((int) (colorData[0] * mr)) << 16) | (((int) (colorData[1] * mg)) << 8) | (int) (colorData[2] * mb);
     }

@@ -2,26 +2,15 @@ package weather2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import CoroUtil.forge.CULog;
 import CoroUtil.packet.PacketHelper;
-import CoroUtil.util.Vec3;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemSpade;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import weather2.config.ConfigMisc;
-import weather2.entity.EntityLightningBoltCustom;
-import weather2.util.WeatherUtilBlock;
 import weather2.util.WeatherUtilConfig;
 import weather2.weathersystem.WeatherManagerBase;
 import weather2.weathersystem.WeatherManagerServer;
@@ -29,18 +18,16 @@ import weather2.weathersystem.WeatherManagerServer;
 public class ServerTickHandler
 {   
 	//Used for easy iteration, could be replaced
-    public static ArrayList<WeatherManagerServer> listWeatherMans;
+    private static ArrayList<WeatherManagerServer> listWeatherMans;
     
     //Main lookup method for dim to weather systems
     public static HashMap<Integer, WeatherManagerServer> lookupDimToWeatherMan;
     
-	public static World lastWorld;
-    
-	public static NBTTagCompound worldNBT = new NBTTagCompound(); 
-	
+    private static World lastWorld;
+    	
     static {
     	
-    	listWeatherMans = new ArrayList();
+    	listWeatherMans = new ArrayList<WeatherManagerServer>();
     	lookupDimToWeatherMan = new HashMap<Integer, WeatherManagerServer>();
     	
     }
@@ -57,8 +44,6 @@ public class ServerTickHandler
         
         if (world != null && lastWorld != world) {
         	lastWorld = world;
-        	//((ServerCommandManager)FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()).registerCommand(new CommandWaveHeight());
-        	//((ServerCommandManager)FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager()).registerCommand(new CommandWeather());
         }
         
         //regularly save data
@@ -100,80 +85,10 @@ public class ServerTickHandler
 		if (world.getTotalWorldTime() % 200 == 0) {
 			syncServerConfigToClient();
 		}
-        
-        boolean testRainRequest = false;
-        if (testRainRequest) {
-        	
-        	List<IMCMessage> listMsgs = new ArrayList<IMCMessage>();
-	    	listMsgs = FMLInterModComms.fetchRuntimeMessages(Weather.modID);
-	    	for (int i = 0; i < listMsgs.size(); i++) {
-	    		
-	    		//System.out.println("Weather2 side: " + listMsgs.get(i).key + " - modID: " + listMsgs.get(i).getSender() + " - source: " + listMsgs.get(i).toString() + " - " + listMsgs.get(i).getNBTValue());
-	    		
-	    		if (listMsgs.get(i).key.equals("weather.raining")) {
-
-	    			NBTTagCompound nbt = listMsgs.get(i).getNBTValue();
-	    			
-	    			String replyMod = nbt.getString("replymod");
-					nbt.setBoolean("isRaining", true);
-					
-					FMLInterModComms.sendRuntimeMessage(replyMod, replyMod, "weather.raining", nbt);
-	    			
-	    		}
-	    	}
-        	
-        }
-        
-        
-        boolean debugIMC = false;
-        if (debugIMC) {
-	        try {
-		    	List<IMCMessage> listMsgs = new ArrayList<IMCMessage>();
-		    	listMsgs = FMLInterModComms.fetchRuntimeMessages(Weather.modID);
-		    	for (int i = 0; i < listMsgs.size(); i++) {
-		    		
-		    		//System.out.println(listMsgs.get(i).key + " - modID: " + listMsgs.get(i).getSender() + " - source: " + listMsgs.get(i).toString() + " - " + listMsgs.get(i).getNBTValue());
-		    	}
-	    	} catch (Exception ex) {
-	    		ex.printStackTrace();
-	    	}
-        }
-        
-        boolean testCustomLightning = false;
-        if (testCustomLightning) {
-        	if (world.getTotalWorldTime() % 20 == 0) {
-	        	EntityPlayer player = world.getClosestPlayer(0, 0, 0, -1, false);
-	        	if (player != null) {
-	        		EntityLightningBoltCustom lightning = new EntityLightningBoltCustom(world, player.posX, player.posY, player.posZ);
-	        		world.addWeatherEffect(lightning);
-	        		lookupDimToWeatherMan.get(0).syncLightningNew(lightning, true);
-	        	}
-        	}
-        }
-
-        boolean derp = false;
-        if (derp) {
-        	if (world.getTotalWorldTime() % 2 == 0) {
-	        	EntityPlayer player = world.getClosestPlayer(0, 0, 0, -1, false);
-	        	if (player != null) {
-	        		ItemStack is = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-	        		if (is != null && is.getItem() instanceof ItemSpade) {
-	        			int y = world.getHeight(new BlockPos(player.posX, 0, player.posZ)).getY();
-						System.out.println("y " + y);
-	        			//BlockPos airAtPlayer = new BlockPos(player.posX, y, player.posZ);
-		        		//IBlockState state = world.getBlockState(new BlockPos(player.posX, player.getEntityBoundingBox().minY-1, player.posZ));
-		        		//if (state.getBlock() != Blocks.SAND) {
-		        			//WeatherUtilBlock.floodAreaWithLayerableBlock(player.world, new Vec3(player.posX, player.posY, player.posZ), player.rotationYawHead, 15, 5, 2, CommonProxy.blockSandLayer, 4);
-		        			WeatherUtilBlock.fillAgainstWallSmoothly(player.world, new Vec3(player.posX, y + 0.5D, player.posZ/*player.posX, player.posY, player.posZ*/), player.rotationYawHead, 15, 2, CommonProxy.blockSandLayer);
-		        		//}
-	        		}
-	        	}
-        	}
-        }
     }
     
     //must only be used when world is active, soonest allowed is TickType.WORLDLOAD
-    public static void addWorldToWeather(int dim) {
+    private static void addWorldToWeather(int dim) {
     	Weather.dbg("Registering Weather2 manager for dim: " + dim);
     	WeatherManagerServer wm = new WeatherManagerServer(dim);
     	
@@ -183,7 +98,7 @@ public class ServerTickHandler
     	wm.readFromFile();
     }
     
-    public static void removeWorldFromWeather(int dim) {
+    private static void removeWorldFromWeather(int dim) {
     	Weather.dbg("Weather2: Unregistering manager for dim: " + dim);
     	WeatherManagerServer wm = lookupDimToWeatherMan.get(dim);
     	
@@ -191,9 +106,6 @@ public class ServerTickHandler
 	    	listWeatherMans.remove(wm);
 	    	lookupDimToWeatherMan.remove(dim);
     	}
-    	
-    	
-    	//wm.readFromFile();
     	wm.writeToFile();
     }
 
@@ -208,15 +120,10 @@ public class ServerTickHandler
     	if (ServerTickHandler.lookupDimToWeatherMan.get(0) == null) {
     		ServerTickHandler.addWorldToWeather(0);
     	}
-    	
-    	//redundant
-    	//ServerTickHandler.lookupDimToWeatherMan.get(0).readFromFile();
     }
     
     public static void reset() {
 		Weather.dbg("Weather2: ServerTickHandler resetting");
-    	//World worlds[] = DimensionManager.getWorlds();
-    	//for (int i = 0; i < worlds.length; i++) {
     	for (int i = 0; i < listWeatherMans.size(); i++) {
     		WeatherManagerBase wm = listWeatherMans.get(i);
     		int dim = wm.dim;
@@ -242,7 +149,6 @@ public class ServerTickHandler
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("packetCommand", "ClientConfigData");
 		data.setString("command", "syncUpdate");
-		//data.setTag("data", parManager.nbtSyncForClient());
 
 		ClientConfigData.writeNBT(data);
 
@@ -254,7 +160,6 @@ public class ServerTickHandler
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("packetCommand", "ClientConfigData");
 		data.setString("command", "syncUpdate");
-		//data.setTag("data", parManager.nbtSyncForClient());
 
 		ClientConfigData.writeNBT(data);
 

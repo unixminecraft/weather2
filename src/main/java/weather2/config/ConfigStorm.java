@@ -1,10 +1,5 @@
 package weather2.config;
 
-import java.io.File;
-
-import weather2.Weather;
-
-
 public class ConfigStorm {
 
 
@@ -22,14 +17,10 @@ public class ConfigStorm {
 	public static int Storm_Rain_WaterBuildUpOddsTo1FromSource = 15;
 	public static int Storm_Rain_WaterBuildUpOddsTo1FromNothing = 100;
 	public static int Storm_Rain_WaterBuildUpOddsTo1FromOvercastRaining = 30;
-	//public static int Storm_Rain_WaterBuildUp = 150;
 	public static double Storm_TemperatureAdjustRate = 0.1D;
-	//public static double Storm_Deadly_MinIntensity = 5.3D;
 	public static int Storm_HailPerTick = 10;
 	public static int Storm_OddsTo1OfOceanBasedStorm = 300;
 	public static int Storm_OddsTo1OfLandBasedStorm = -1;
-	//public static int Storm_OddsTo1OfProgressionBase = 15;
-	//public static int Storm_OddsTo1OfProgressionStageMultiplier = 3;
 	public static int Storm_PercentChanceOf_HighWind = 90;
 	public static int Storm_PercentChanceOf_Hail = 80;
 	public static int Storm_PercentChanceOf_F0_Tornado = 70;
@@ -74,24 +65,4 @@ public class ConfigStorm {
 	public static int Storm_Rain_OddsTo1 = 150;
 
 	public static int Storm_Rain_TrackAndExtinguishEntitiesRate = 200;
-
-    public String getName() {
-        return "Storm";
-    }
-
-    public String getRegistryName() {
-        return Weather.modID + getName();
-    }
-
-    public String getConfigFileName() {
-        return "Weather2" + File.separator + getName();
-    }
-
-    public String getCategory() {
-        return "Weather2: " + getName();
-    }
-
-    public void hookUpdatedValues() {
-
-    }
 }

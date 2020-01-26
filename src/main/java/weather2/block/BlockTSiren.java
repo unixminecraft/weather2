@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class BlockTSiren extends BlockContainer
 {
 
-    public static final PropertyBool ENABLED = PropertyBool.create("enabled");
+    protected static final PropertyBool ENABLED = PropertyBool.create("enabled");
 
     public BlockTSiren()
     {
@@ -67,7 +67,6 @@ public class BlockTSiren extends BlockContainer
         {
             i |= 8;
         }
-
         return i;
     }
 
@@ -88,7 +87,7 @@ public class BlockTSiren extends BlockContainer
         this.updateState(worldIn, pos, state);
     }
 
-    public void updateState(World worldIn, BlockPos pos, IBlockState state)
+    protected void updateState(World worldIn, BlockPos pos, IBlockState state)
     {
         boolean flag = !worldIn.isBlockPowered(pos);
 

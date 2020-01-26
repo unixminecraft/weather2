@@ -11,9 +11,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 public class MeshBufferManagerParticle {
 
     //for prebuffering allowed max
-    public static int numInstances = 50000;
+	private static int numInstances = 50000;
 
-    private static HashMap<TextureAtlasSprite, InstancedMeshParticle> lookupParticleToMesh = new HashMap<>();
+	private static HashMap<TextureAtlasSprite, InstancedMeshParticle> lookupParticleToMesh = new HashMap<>();
 
     public static void setupMeshForParticle(TextureAtlasSprite sprite) {
 
@@ -37,9 +37,7 @@ public class MeshBufferManagerParticle {
         };
 
 
-        int[] indices = new int[] {
-                0, 1, 3, 3, 1, 2
-        };
+        int[] indices = new int[] { 0, 1, 3, 3, 1, 2 };
 
         InstancedMeshParticle mesh = new InstancedMeshParticle(positions, texCoords, indices, numInstances);
 

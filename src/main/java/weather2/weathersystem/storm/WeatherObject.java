@@ -24,17 +24,15 @@ public class WeatherObject {
 	
 	public Vec3 pos = new Vec3(0, 0, 0);
 	public Vec3 posGround = new Vec3(0, 0, 0);
-	public Vec3 motion = new Vec3(0, 0, 0);
+	protected Vec3 motion = new Vec3(0, 0, 0);
 
 	//used as radius
 	public int size = 50;
-	public int maxSize = 0;
+	protected int maxSize = 0;
 	
-	public EnumWeatherObjectType weatherObjectType = EnumWeatherObjectType.CLOUD;
+	protected EnumWeatherObjectType weatherObjectType = EnumWeatherObjectType.CLOUD;
 
 	private CachedNBTTagCompound nbtCache;
-
-	//private NBTTagCompound cachedClientNBTState;
 
 	public WeatherObject(WeatherManagerBase parManager) {
 		manager = parManager;
@@ -59,7 +57,6 @@ public class WeatherObject {
 	}
 	
 	public void setDead() {
-		//Weather.dbg("storm killed, ID: " + ID);
 		
 		isDead = true;
 		
@@ -71,7 +68,7 @@ public class WeatherObject {
 		cleanup();
 	}
 	
-	public void cleanup() {
+	protected void cleanup() {
 		manager = null;
 	}
 	
@@ -94,11 +91,8 @@ public class WeatherObject {
 	
 	public void nbtSyncFromServer() {
 		CachedNBTTagCompound parNBT = this.getNbtCache();
-		ID = parNBT.getLong("ID");
-		//Weather.dbg("StormObject " + ID + " receiving sync");
-		
+		ID = parNBT.getLong("ID");		
 		pos = new Vec3(parNBT.getDouble("posX"), parNBT.getDouble("posY"), parNBT.getDouble("posZ"));
-		//motion = new Vec3(parNBT.getDouble("motionX"), parNBT.getDouble("motionY"), parNBT.getDouble("motionZ"));
 		motion = new Vec3(parNBT.getDouble("vecX"), parNBT.getDouble("vecY"), parNBT.getDouble("vecZ"));
 		size = parNBT.getInteger("size");
 		maxSize = parNBT.getInteger("maxSize");
@@ -110,16 +104,11 @@ public class WeatherObject {
 		nbt.setDouble("posX", pos.xCoord);
 		nbt.setDouble("posY", pos.yCoord);
 		nbt.setDouble("posZ", pos.zCoord);
-
-		/*nbt.setDouble("motionX", motion.xCoord);
-		nbt.setDouble("motionY", motion.yCoord);
-		nbt.setDouble("motionZ", motion.zCoord);*/
 		nbt.setDouble("vecX", motion.xCoord);
 		nbt.setDouble("vecY", motion.yCoord);
 		nbt.setDouble("vecZ", motion.zCoord);
 
 		nbt.setLong("ID", ID);
-		//just blind set ID into non cached data so client always has it, no need to check for forced state and restore orig state
 		nbt.getNewNBT().setLong("ID", ID);
 
 		nbt.setInteger("size", size);
@@ -130,9 +119,4 @@ public class WeatherObject {
 	public CachedNBTTagCompound getNbtCache() {
 		return nbtCache;
 	}
-
-	public void setNbtCache(CachedNBTTagCompound nbtCache) {
-		this.nbtCache = nbtCache;
-	}
-	
 }

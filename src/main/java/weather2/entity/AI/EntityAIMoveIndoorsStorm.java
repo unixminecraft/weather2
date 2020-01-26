@@ -102,8 +102,7 @@ public class EntityAIMoveIndoorsStorm extends EntityAIBase implements ITaskIniti
      */
 
     @Override
-    public boolean shouldContinueExecuting()
-    {
+    public boolean shouldContinueExecuting() {
         return !this.entityObj.getNavigator().noPath();
     }
 

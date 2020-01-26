@@ -23,7 +23,7 @@ import weather2.weathersystem.storm.StormObject;
 public class BlockTSensor extends Block
 {
 	
-	public static final PropertyInteger POWER = PropertyInteger.create("power", 0, 15);
+	private static final PropertyInteger POWER = PropertyInteger.create("power", 0, 15);
 	
     public BlockTSensor()
     {
@@ -45,7 +45,7 @@ public class BlockTSensor extends Block
     	WeatherManagerServer wms = ServerTickHandler.lookupDimToWeatherMan.get(world.provider.getDimension());
     	if (wms != null) {
     		StormObject so = wms.getClosestStorm(new Vec3(pos.getX(), pos.getY(), pos.getZ()), ConfigMisc.sensorActivateDistance, StormObject.STATE_FORMING);
-    		if (so != null/* && so.attrib_tornado_severity > 0*/) {
+    		if (so != null) {
     			enable = true;
     		}
     	}
@@ -62,7 +62,8 @@ public class BlockTSensor extends Block
         world.scheduleBlockUpdate(pos, this, 100, 1);
     }
     
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos,
     		EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
     		EntityLivingBase placer) {

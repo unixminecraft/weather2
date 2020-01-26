@@ -45,7 +45,7 @@ public class SoundRegistry {
 		
 	}
 
-	public static void register(String soundPath) {
+	private static void register(String soundPath) {
 		ResourceLocation resLoc = new ResourceLocation(Weather.modID, soundPath);
 		SoundEvent event = new SoundEvent(resLoc).setRegistryName(resLoc);
 		ForgeRegistries.SOUND_EVENTS.register(event);
@@ -58,5 +58,4 @@ public class SoundRegistry {
 	public static SoundEvent get(String soundPath) {
 		return lookupStringToEvent.get(soundPath);
 	}
-
 }

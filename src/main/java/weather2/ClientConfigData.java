@@ -49,8 +49,5 @@ public class ClientConfigData {
         data.setBoolean("Storm_Tornado_grabVillagers", ConfigTornado.Storm_Tornado_grabVillagers);
         data.setBoolean("Storm_Tornado_grabItems", ConfigTornado.Storm_Tornado_grabItems);
         data.setBoolean("Aesthetic_Only_Mode", ConfigMisc.Aesthetic_Only_Mode);
-
-
     }
-
 }

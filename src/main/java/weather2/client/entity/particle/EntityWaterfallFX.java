@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -20,8 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
 {
-    public int age;
-    public float brightness;
+	private float brightness;
 
     public EntityWaterfallFX(World var1, double var2, double var4, double var6, double var8, double var10, double var12, double var14, int var16)
     {
@@ -42,7 +40,6 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         else if (var16 == 2)
         {
             var17 = new Color(0x0000FF);
-            //var17 = new Color(0xFFFFFF);
         }
         else if (var16 == 3)
         {
@@ -66,7 +63,6 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
             this.particleBlue = (float)var17.getBlue() / 255.0F;
         }
 
-        //this.particleScale = this.rand.nextFloat() * this.rand.nextFloat() * 6.0F + 1.0F;
         this.particleMaxAge = 18;
         this.particleMaxAge = (int)((double)((float)this.particleMaxAge) * var14);
         
@@ -88,16 +84,7 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         float var15 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)var2 - interpPosZ);
         float var16 = this.getBrightnessForRender(var2) * this.brightness;
         var16 = (1F + FMLClientHandler.instance().getClient().gameSettings.gammaSetting) - (this.world.calculateSkylightSubtracted(var2) * 0.13F);
-        
-        
-        
-        /*var1.setColorOpaque_F(this.particleRed * var16, this.particleGreen * var16, this.particleBlue * var16);
-        var1.addVertexWithUV((double)(var13 - var3 * var12 - var6 * var12), (double)(var14 - var4 * var12), (double)(var15 - var5 * var12 - var7 * var12), (double)var9, (double)var11);
-        var1.addVertexWithUV((double)(var13 - var3 * var12 + var6 * var12), (double)(var14 + var4 * var12), (double)(var15 - var5 * var12 + var7 * var12), (double)var9, (double)var10);
-        var1.addVertexWithUV((double)(var13 + var3 * var12 + var6 * var12), (double)(var14 + var4 * var12), (double)(var15 + var5 * var12 + var7 * var12), (double)var8, (double)var10);
-        var1.addVertexWithUV((double)(var13 + var3 * var12 - var6 * var12), (double)(var14 - var4 * var12), (double)(var15 + var5 * var12 - var7 * var12), (double)var8, (double)var11);*/
-        
-        int i = 65535;//this.getBrightnessForRender(partialTicks);
+        int i = 65535;
         int j = i >> 16 & 65535;
         int k = i & 65535;
         
@@ -114,31 +101,14 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         .color(this.particleRed * var16, this.particleGreen * var16, this.particleBlue * var16, this.particleAlpha).lightmap(j, k).endVertex();
     }
 
-    public void renderParticle(Tessellator var1, float var2, float var3, float var4, float var5, float var6, float var7)
-    {
-    	//GL11.glBindTexture(GL11.GL_TEXTURE_2D, RenderManager.instance.renderEngine.getTexture("/particles.png"));
-    	
-        
-    }
-    
-    @Override
-    public int getFXLayer()
-    {
-        return 0;
-    }
-
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onUpdate()
     {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
         
-        float adj = 0.08F * rand.nextFloat();
-        //this.motionX += adj * Math.sin(world.getWorldTime());
-        //this.motionZ += adj * Math.sin(world.getWorldTime());
-        //this.motionY += adj * Math.cos(world.getWorldTime());
-
         if (particleRed < 255) particleRed += 0.01F;
         if (particleGreen < 255) particleGreen += 0.01F;
         if (particleBlue < 255) particleBlue += 0.01F;
@@ -150,13 +120,8 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         }
         
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-        //this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
         
         Block id = this.world.getBlockState(new BlockPos((int)Math.floor(posX), (int)Math.floor(posY), (int)Math.floor(posZ))).getBlock();
-        //int id2 = this.world.getBlockId((int)Math.floor(posX), (int)Math.floor(posY-1), (int)Math.floor(posZ));
-        
-        
-        
         int meta = 0;
         
         if (id.getMaterial(id.getDefaultState()) == Material.WATER/*id == 9 || id == 8*/) {
@@ -169,13 +134,7 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         	if (vec3.x != 0 && vec3.z != 0) {
         		dir = Math.atan2(vec3.z, vec3.x) - (Math.PI / 2D);
         	}
-        	
-        	
-        	//double dir = BlockLiquid.getFlowDirection(world, pos, Material.WATER);
-        	
         	if (dir != -1000) {
-            	//System.out.println("uhhhh: " + dir);
-        		
         		float speed = 0.005F;
         		
         		this.motionX -= Math.sin(dir) * speed;
@@ -185,39 +144,22 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         	float range = 0.03F;
     		
     		this.motionX += (rand.nextFloat() * range) - (range/2);
-    		//this.motionY += (rand.nextFloat() * range/2) - (range/4);
     		this.motionZ += (rand.nextFloat() * range) - (range/2);
         	
     		IBlockState state = this.world.getBlockState(pos);
     		
     		meta = state.getBlock().getMetaFromState(state);
-    		
-        	//meta = this.world.getBlockMetadata((int)Math.floor(posX), (int)Math.floor(posY), (int)Math.floor(posZ));
-        	
-        	if ((meta & 8) != 0/* && (id2 == 8 || id2 == 9)*/) {
+        	if ((meta & 8) != 0) {
         		this.motionY -= 0.05000000074505806D * this.particleGravity;
         		
         		
         		
         	} else {
-        		//double remain = ((this.boundingBox.minY) - ((int)Math.floor(this.boundingBox.minY)));
-        		//System.out.println("remain: " + remain);
-        		//if (remain < 0.3D) {
-        		//this.handleWaterMovement();
-        		//this.handleWaterMovement();
-        		//if (remain <= 0.5D) {
         			this.motionY += (0.05F * this.particleGravity * 0.2F);/* * (remain / 4);*/
-        			
-        			//meta >= 4 && 
-        		//}
-        		//}
         	}
         	
         } else {
-        	//setDead();
-        	
         	this.motionY -= 0.05000000074505806D * this.particleGravity * 1.5F;
-        	//if (this.onGround) this.setDead();
         }
         
         if (this.motionY > 0.03F) this.motionY = 0.03F;
@@ -233,13 +175,7 @@ public class EntityWaterfallFX extends EntityRotFX implements IWindHandler
         if (meta2 > 9) meta2 = 9;
         
         float height = ((10-meta2) * 0.1F);
-        
-        //System.out.println("adjusted height: " + height);
-        
         if ((id.getMaterial(id.getDefaultState()) == Material.WATER) && motionY > 0F && this.posY > ((int)Math.floor(this.posY)) + height) {
-        	//System.out.println("meta: " + meta);
-        	//this.posY = ((int)Math.floor(this.posY)) + height;
-        	//this.setPosition(posX, posY, posZ);
         	this.motionY = -0.05F;
         }
     }

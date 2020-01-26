@@ -30,7 +30,7 @@ public class FoliageReplacerCross extends FoliageReplacerBase {
                 IBlockState stateScan = world.getBlockState(pos.up());
                 if (stateScan.getBlock() == state.getBlock()) {
                     boolean fail = false;
-                    for (Map.Entry<IProperty, Comparable> entrySet : lookupPropertiesToComparable.entrySet()) {
+                    for (Map.Entry<IProperty<?>, Comparable<?>> entrySet : lookupPropertiesToComparable.entrySet()) {
                         if (stateScan.getValue(entrySet.getKey()) != entrySet.getValue()) {
                             fail = true;
                             break;
@@ -40,15 +40,9 @@ public class FoliageReplacerCross extends FoliageReplacerBase {
                         return false;
                     }
                     return true;
-                    /*IProperty asdasd = BlockCrops.AGE;
-                    Comparable realValue = stateScan.getValue(BlockCrops.AGE);
-                    Comparable needValue = EnumFacing.WEST;
-                    needValue = 7;*/
                 } else {
                     return false;
                 }
-                //return world.getBlockState(pos.up()) == state;
-                //return world.getBlockState(pos.up()).getBlock() == state.getBlock();
             } else {
                 return world.getBlockState(pos.up()).getBlock() == state.getBlock();
             }

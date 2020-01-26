@@ -1,7 +1,5 @@
 package CoroUtil.config;
 
-import java.io.File;
-
 public class ConfigCoroUtil {
 
 	public static String mobSpawnsProfile = "mob_spawns";
@@ -28,20 +26,4 @@ public class ConfigCoroUtil {
 	public static boolean useLoggingError = true;
 
 	public static boolean enableAdvancedDeveloperConfigFiles = false;
-
-	public String getName() {
-		return "General";
-	}
-
-	public String getRegistryName() {
-		return "coroutil_general";
-	}
-
-	public String getConfigFileName() {
-		return "CoroUtil" + File.separator + getName();
-	}
-
-	public String getCategory() {
-		return getName();
-	}
 }

@@ -71,22 +71,22 @@ public class WindReader {
 	}
 	
 	public static float getWindSpeed(World parWorld, Vec3 parLocation, WindType parWindType) {
-		WeatherManagerBase wMan = null;
+		WeatherManagerBase weatherManagerBase = null;
 		if (parWorld.isRemote) {
-			wMan = getWeatherManagerClient();
+			weatherManagerBase = getWeatherManagerClient();
 		} else {
-			wMan = ServerTickHandler.lookupDimToWeatherMan.get(parWorld.provider.getDimension());
+			weatherManagerBase = ServerTickHandler.lookupDimToWeatherMan.get(parWorld.provider.getDimension());
 		}
 		
-		if (wMan != null) {
+		if (weatherManagerBase != null) {
 			if (parWindType == WindType.PRIORITY) {
-				return wMan.windMan.getWindSpeedForPriority();
+				return weatherManagerBase.windMan.getWindSpeedForPriority();
 			} else if (parWindType == WindType.EVENT) {
-				return wMan.windMan.getWindSpeedForEvents();
+				return weatherManagerBase.windMan.getWindSpeedForEvents();
 			} else if (parWindType == WindType.GUST) {
-				return wMan.windMan.getWindSpeedForGusts();
+				return weatherManagerBase.windMan.getWindSpeedForGusts();
 			} else if (parWindType == WindType.CLOUD) {
-				return wMan.windMan.getWindSpeedForClouds();
+				return weatherManagerBase.windMan.getWindSpeedForClouds();
 			} else {
 				return 0;
 			}

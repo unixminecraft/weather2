@@ -32,45 +32,27 @@ import weather2.weathersystem.storm.StormObject;
 public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnData
 {
     public Block tile;
-    public static final int falling = 0;
-    public static final int grabbed = 1;
     //mode 0 = use gravity
     public int mode;
-    public static final float slowdown = 0.98F;
-    public static final float curvature = 0.05F;
     public int metadata;
-    public TileEntity tileentity;
-    public Material material;
+    private TileEntity tileentity;
+    private Material material;
     public int age;
     //i think type was used to change behavior between tornado based ones and hostile worlds ones?
     //currently nothing in weather2 sets it to 1, always 0
-    public int type;
-    public boolean noCollision;
+    private int type;
+    private boolean noCollision;
     public boolean collideFalling = false;
-    public double vecX;
-    public double vecY;
-    public double vecZ;
-    public double lastPosX;
-    public double lastPosZ;
     //public Entity controller;
-    public StormObject owner;
-    public int gravityDelay;
+    private StormObject owner;
+    private int gravityDelay;
 
-    public boolean killNextTick = false;
+    private boolean killNextTick = false;
 
     public IBlockState stateCached = null;
 
-    public EntityMovingBlock(World var1)
-    {
-        super(var1);
-        this.mode = 1;
-        this.age = 0;
-        this.tile = Blocks.STONE;
-        this.noCollision = true;
-        this.gravityDelay = 60;
-    }
-
-    public EntityMovingBlock(World var1, int var2, int var3, int var4, IBlockState state, StormObject parOwner)
+    @SuppressWarnings("deprecation")
+	public EntityMovingBlock(World var1, int var2, int var3, int var4, IBlockState state, StormObject parOwner)
     {
         super(var1);
         this.mode = 1;
@@ -80,7 +62,6 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
         this.gravityDelay = 60;
         this.noCollision = true;
         this.setSize(0.9F, 0.9F);
-        //this.yOffset = this.height / 2.0F;
         this.setPosition(var2 + 0.5D, var3 + 0.5D, var4 + 0.5D);
         this.motionX = 0.0D;
         this.motionY = 0.0D;
@@ -93,15 +74,7 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
         this.metadata = state.getBlock().getMetaFromState(state);
         this.material = tile.getMaterial(tile.getDefaultState());
         this.stateCached = state;
-        //this.tileentity = var1.getTileEntity(new BlockPos(var2, var3, var4));
-
         owner = parOwner;
-        
-        if (this.tileentity != null)
-        {
-            //var1.setBlockStateTileEntity(var2, var3, var4, ((BlockContainer)Block.blocksList[this.tile]).createNewTileEntity(var1));
-            //var1.setBlockState(new BlockPos(var2, var3, var4), Blocks.AIR.getDefaultState(), 2);
-        }
     }
 
     @Override
@@ -143,14 +116,12 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
             }
 	    	if (this.world.getClosestPlayer(this.posX, 50, this.posZ, 512, false) == null) {
 				setDead();
-				//return;
 			}
     	}
     	
         if (CoroUtilBlock.isAir(this.tile))
         {
             this.setDead();
-            //return;
         }
         else
         {
@@ -163,26 +134,11 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
                 if (this.tileentity == null && ConfigTornado.Storm_Tornado_rarityOfDisintegrate != -1 && this.rand.nextInt((ConfigTornado.Storm_Tornado_rarityOfDisintegrate + 1 + (owner != null && owner.isFirenado ? 100 : 0)) * 20) == 0)
                 {
                     this.setDead();
-                    //return;
                 }
-
-                /*if (this.tileentity == null && ConfigTornado.Storm_Tornado_rarityOfFirenado != -1 && this.rand.nextInt((ConfigTornado.Storm_Tornado_rarityOfFirenado + 1) * 20) == 0)
-                {
-                    this.tile = Blocks.FIRE;
-                }*/
             }
 
             if (this.type == 0)
             {
-            	/*if (this.controller != null) {
-	                this.vecX = this.controller.posX - this.posX;
-	                this.vecY = this.controller.boundingBox.minY + (double)(this.controller.height / 2.0F) - (this.posY + (double)(this.height / 2.0F));
-	                this.vecZ = this.controller.posZ - this.posZ;
-            	} else {*/
-            		this.vecX++;
-	                this.vecY++;
-	                this.vecZ++;
-            	//}
             }
 
             if (this.mode == 1)
@@ -190,24 +146,6 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
                 this.fallDistance = 0.0F;
                 this.isCollidedHorizontally = false;
             }
-
-            /*Field fire = null;
-            int fireInt = 0;
-            try {
-             fire = Entity.class.getDeclaredField("c");
-             fire.setAccessible(true);
-             fireInt = (int)fire.get(ent);
-            } catch (Exception ex) {
-             try {
-              fire = Entity.class.getDeclaredField("fire");
-                 fire.setAccessible(true);
-                 fireInt = (int)fire.get(ent);
-             } catch (Exception ex2) {
-             }
-            }*/
-            /*if(this.fire > 0) {
-               --this.fire;
-            }*/
             Vec3d var1 = new Vec3d(this.posX, this.posY, this.posZ);
             Vec3d var2 = new Vec3d(this.posX + this.motionX * 1.3D, this.posY + this.motionY * 1.3D, this.posZ + this.motionZ * 1.3D);
             RayTraceResult var3 = this.world.rayTraceBlocks(var1, var2);
@@ -219,7 +157,7 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
             }
 
             Entity var4 = null;
-            List var5 = null;
+            List<Entity> var5 = null;
 
             if (this.age > this.gravityDelay / 4)
             {
@@ -244,8 +182,6 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
                 	}
                     
                     if (ConfigStorm.Storm_FlyingBlocksHurt && Math.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ) > 0.4F) {
-                    	//System.out.println("damaging with block: " + var10);
-                    	
                     	DamageSource ds = DamageSource.causeThrownDamage(this, this);
                 		ds.damageType = "wm.movingblock";
                 		var10.attackEntityFrom(ds, 4);
@@ -365,9 +301,6 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
                     {
                         this.blockify(var8, var17, var9, var3.sideHit);
                     }
-
-                    this.lastPosX = this.posX;
-                    this.lastPosZ = this.posZ;
                 }
                 else
                 {
@@ -428,12 +361,13 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
         }
     }
 
-    public boolean canEntityBeSeen(Entity par1Entity)
+    private boolean canEntityBeSeen(Entity par1Entity)
     {
         return this.world.rayTraceBlocks(new Vec3d(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ), new Vec3d(par1Entity.posX, par1Entity.posY + (double)par1Entity.getEyeHeight(), par1Entity.posZ)) == null;
     }
 
-    private void blockify(int var1, int var2, int var3, EnumFacing var4)
+    @SuppressWarnings("deprecation")
+	private void blockify(int var1, int var2, int var3, EnumFacing var4)
     {
         //TODO: this was the only thing killing off moving blocks on client side, syncing is broken server to client?
 
@@ -448,34 +382,6 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
             if (!WeatherUtil.shouldRemoveBlock(var5) && !WeatherUtil.isOceanBlock(var5) && var2 < 255)
             {
                 this.world.setBlockState(new BlockPos(var1, var2 + 1, var3), this.tile.getStateFromMeta(this.metadata), 3);
-            }
-
-            boolean var6 = false;
-
-            if (!WeatherUtil.isOceanBlock(var5))
-            {
-                if (this.world.setBlockState(new BlockPos(var1, var2, var3), this.tile.getStateFromMeta(this.metadata), 3))
-                {
-                    var6 = true;
-                }
-            }/*
-            else
-            {
-                this.world.setBlockState(new BlockPos(var1, var2, var3), WeatherMod.finiteWaterId.getDefaultState(), this.metadata, 3);
-
-                if (var2 < 255)
-                {
-                    this.world.setBlockState(new BlockPos(var1, var2 + 1, var3), WeatherMod.finiteWaterId.getDefaultState(), this.metadata, 3);
-                }
-            }*/
-
-            if (var6)
-            {
-                //Block.blocksList[this.tile].onBlockPlacedBy(this.world, var1, var2, var3, var4, this);
-                /*if (this.tileentity != null)
-                {
-                    this.world.setTileEntity(new BlockPos(var1, var2, var3), this.tileentity);
-                }*/
             }
         }
     }
@@ -519,31 +425,13 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
         }
         
         if (type == 0) {
-            //setDead(); //kill flying block on reload for tornado spazing fix
             killNextTick = true;
         }
     }
 
     @Override
-    public boolean isInRangeToRender3d(double x, double y, double z) {
-        return super.isInRangeToRender3d(x, y, z);
-    }
-
-    @Override
     public void setDead()
     {
-    	/*if (!world.isRemote) {
-    		if (owner != null && owner.tornadoHelper != null) {
-    			--owner.tornadoHelper.blockCount;
-    			
-    	        if (owner.tornadoHelper.blockCount < 0)
-    	        {
-    	        	owner.tornadoHelper.blockCount = 0;
-    	        }
-    		}
-	        
-    	}*/
-    	
     	owner = null;
         super.setDead();
     }
@@ -559,7 +447,8 @@ public class EntityMovingBlock extends Entity implements IEntityAdditionalSpawnD
         data.writeInt(metadata);
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void readSpawnData(ByteBuf data)
     {
         String str = ByteBufUtils.readUTF8String(data);

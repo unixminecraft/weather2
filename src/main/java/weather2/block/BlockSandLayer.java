@@ -28,7 +28,7 @@ import weather2.CommonProxy;
 public class BlockSandLayer extends Block
 {
     public static final PropertyInteger LAYERS = PropertyInteger.create("layers", 1, 8);
-    protected static final AxisAlignedBB[] SAND_AABB = new AxisAlignedBB[] {
+    private static final AxisAlignedBB[] SAND_AABB = new AxisAlignedBB[] {
     	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.0D, 1.0D), 
     	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D), 
     	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.25D, 1.0D), 
@@ -76,7 +76,6 @@ public class BlockSandLayer extends Block
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
         int i = ((Integer)blockState.getValue(LAYERS)).intValue();
-        float f = 0.125F;
         AxisAlignedBB axisalignedbb = blockState.getBoundingBox(worldIn, pos);
         return new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.maxX, (double)((float)i * 0.125F), axisalignedbb.maxZ);
     }
@@ -95,19 +94,13 @@ public class BlockSandLayer extends Block
     {
         return ((Integer)state.getValue(LAYERS)).intValue() >= 8;
     }
-    
-    //TODO: for testing heightmap issue
-    /*@Override
-    public boolean isFullBlock(IBlockState state) {
-    	return ((Integer)state.getValue(LAYERS)).intValue() >= 8;
-    }*/
 
     @Override
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos.down());
         Block block = iblockstate.getBlock();
-        return /*block != Blocks.ICE && block != Blocks.PACKED_ICE ? */(iblockstate.getBlock().isLeaves(iblockstate, worldIn, pos.down()) ? true : (block == this && ((Integer)iblockstate.getValue(LAYERS)).intValue() >= 7 ? true : iblockstate.isOpaqueCube() && iblockstate.getMaterial().blocksMovement()))/* : false*/;
+        return (iblockstate.getBlock().isLeaves(iblockstate, worldIn, pos.down()) ? true : (block == this && ((Integer)iblockstate.getValue(LAYERS)).intValue() >= 7 ? true : iblockstate.isOpaqueCube() && iblockstate.getMaterial().blocksMovement()));
     }
 
     /**
@@ -118,9 +111,6 @@ public class BlockSandLayer extends Block
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
-    	/*if (!worldIn.isRemote) {
-    		WeatherUtilBlock.divideToNeighborCheck(state, worldIn, pos, blockIn);
-    	}*/
         this.checkAndDropBlock(worldIn, pos, state);
     }
 
@@ -160,16 +150,8 @@ public class BlockSandLayer extends Block
         return CommonProxy.itemSandLayer;
     }
 
-
-    /*public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-    {
-        if (worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) > 11)
-        {
-            worldIn.setBlockToAir(pos);
-        }
-    }*/
-
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
@@ -218,14 +200,6 @@ public class BlockSandLayer extends Block
     {
         return new BlockStateContainer(this, new IProperty[] {LAYERS});
     }
-    
-    //TODO: why did i add this
-    /*@Override
-    public boolean isSideSolid(IBlockState base_state, IBlockAccess world,
-    		BlockPos pos, EnumFacing side) {
-    	IBlockState state = this.getActualState(base_state, world, pos);
-        return ((Integer)state.getValue(LAYERS)) >= 8;
-    }*/
 
     @Override
     public boolean causesSuffocation(IBlockState state) {

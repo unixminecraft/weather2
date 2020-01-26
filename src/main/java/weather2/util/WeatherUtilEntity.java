@@ -19,10 +19,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import weather2.ClientTickHandler;
 import weather2.api.WeatherUtilData;
 import weather2.entity.EntityMovingBlock;
-import weather2.weathersystem.wind.WindManager;
 
 public class WeatherUtilEntity {
 	
@@ -61,7 +59,6 @@ public class WeatherUtilEntity {
             }
             else
             {
-                //System.out.println(playerInAirTime);
                 playerInAirTime++;
             }
 
@@ -106,17 +103,9 @@ public class WeatherUtilEntity {
             return 400F;
         }
 
-        /*if (entity1 instanceof EntityPlayerProxy) {
-        	return 50F;
-        }*/
-
         if (entity1 instanceof EntityLivingBase)
         {
         	EntityLivingBase livingEnt = (EntityLivingBase) entity1;
-            //if (entity1.onGround || entity1.handleWaterMovement())
-            //{
-                //entity1.onGround = false;
-                //c_CoroWeatherUtil.setEntityAge((EntityLivingBase)entity1, -150);
         	int airTime = livingEnt.getEntityData().getInteger("timeInAir");
         	if (livingEnt.onGround || livingEnt.handleWaterMovement())
             {
@@ -125,17 +114,7 @@ public class WeatherUtilEntity {
             else {
             	airTime++;
             }
-        	
-        	//test
-        	//airTime = 0;
-        	
         	livingEnt.getEntityData().setInteger("timeInAir", airTime);
-            //}
-
-            //System.out.println(((EntityLivingBase)entity1).entityAge+150);
-            //int age = ((Integer)entToAge.get(entity1)).intValue();
-            //System.out.println(age);
-            
         }
 
         if (entity1 instanceof Entity) {
@@ -155,7 +134,7 @@ public class WeatherUtilEntity {
             }
         }
 
-        if (/*entity1 instanceof EntitySurfboard || */entity1 instanceof EntityBoat || entity1 instanceof EntityItem/* || entity1 instanceof EntityTropicalFishHook*/ || entity1 instanceof EntityFishHook)
+        if (entity1 instanceof EntityBoat || entity1 instanceof EntityItem || entity1 instanceof EntityFishHook)
         {
             return 4000F;
         }
@@ -168,7 +147,7 @@ public class WeatherUtilEntity {
         return 1F;
     }
     
-    public static boolean isParticleRotServerSafe(World world, Object obj) {
+    private static boolean isParticleRotServerSafe(World world, Object obj) {
     	if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
     		return false;
     	}
@@ -176,32 +155,11 @@ public class WeatherUtilEntity {
     	return isParticleRotClientCheck(obj);
     }
     
-    public static boolean isParticleRotClientCheck(Object obj) {
+    private static boolean isParticleRotClientCheck(Object obj) {
     	return obj instanceof EntityRotFX;
     }
     
-	public static boolean canPushEntity(Entity ent)
-    {
-    	
-    	//weather2: shouldnt be needed since its particles only now, ish
-    	//if (!WeatherUtil.canUseWindOn(ent)) return false;
-    	
-    	WindManager windMan = ClientTickHandler.weatherManager.windMan;
-    	
-        double speed = 10.0D;
-        int startX = (int)(ent.posX - speed * (double)(-MathHelper.sin(windMan.getWindAngleForPriority(null) / 180.0F * (float)Math.PI) * MathHelper.cos(0F/*weatherMan.wind.yDirection*/ / 180.0F * (float)Math.PI)));
-        int startZ = (int)(ent.posZ - speed * (double)(MathHelper.cos(windMan.getWindAngleForPriority(null) / 180.0F * (float)Math.PI) * MathHelper.cos(0F/*weatherMan.wind.yDirection*/ / 180.0F * (float)Math.PI)));
-
-        if (ent instanceof EntityPlayer)
-        {
-            boolean bool = true;
-        }
-
-        return ent.world.rayTraceBlocks((new Vec3(ent.posX, ent.posY + (double)ent.getEyeHeight(), ent.posZ)).toMCVec(), (new Vec3(startX, ent.posY + (double)ent.getEyeHeight(), startZ)).toMCVec()) == null;
-        //return true;
-    }
-	
-	public static boolean isEntityOutside(Entity parEnt) {
+    public static boolean isEntityOutside(Entity parEnt) {
 		return isEntityOutside(parEnt, false);
 	}
 	
@@ -213,7 +171,7 @@ public class WeatherUtilEntity {
 		return isPosOutside(parWorld, parPos, false);
 	}
 	
-	public static boolean isPosOutside(World parWorld, Vec3 parPos, boolean cheapCheck) {
+	private static boolean isPosOutside(World parWorld, Vec3 parPos, boolean cheapCheck) {
 		int rangeCheck = 5;
 		int yOffset = 1;
 		
@@ -236,7 +194,7 @@ public class WeatherUtilEntity {
 		return false;
 	}
 	
-	public static boolean checkVecOutside(World parWorld, Vec3 parPos, Vec3 parCheckPos) {
+	private static boolean checkVecOutside(World parWorld, Vec3 parPos, Vec3 parCheckPos) {
 		boolean dirNorth = parWorld.rayTraceBlocks(parPos.toMCVec(), parCheckPos.toMCVec()) == null;
 		if (dirNorth) {
 			if (WeatherUtilBlock.getPrecipitationHeightSafe(parWorld, new BlockPos(MathHelper.floor(parCheckPos.xCoord), 0, MathHelper.floor(parCheckPos.zCoord))).getY() < parCheckPos.yCoord) return true;
@@ -252,9 +210,6 @@ public class WeatherUtilEntity {
         for (int i = 0; i < world.playerEntities.size(); ++i)
         {
             EntityPlayer entityplayer1 = (EntityPlayer)world.playerEntities.get(i);
-
-            //if ((EntitySelectors.CAN_AI_TARGET.apply(entityplayer1) || !spectator) && (EntitySelectors.NOT_SPECTATING.apply(entityplayer1) || spectator))
-            //{
             double d1 = entityplayer1.getDistanceSq(posX, posY, posZ);
 
             if ((distance < 0.0D || d1 < distance * distance) && (d0 == -1.0D || d1 < d0))
@@ -262,9 +217,7 @@ public class WeatherUtilEntity {
                 d0 = d1;
                 entityplayer = entityplayer1;
             }
-            //}
         }
-
         return entityplayer;
     }
 }

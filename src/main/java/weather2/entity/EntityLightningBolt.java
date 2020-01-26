@@ -1,10 +1,8 @@
 package weather2.entity;
 
 import java.util.List;
-import java.util.Random;
 
 import CoroUtil.util.CoroUtilBlock;
-import CoroUtil.util.Vec3;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -41,12 +39,8 @@ public class EntityLightningBolt extends EntityWeatherEffect
      */
     private int boltLivingTime;
 
-    public int fireLifeTime = ConfigStorm.Lightning_lifetimeOfFire;
-    public int fireChance = ConfigStorm.Lightning_OddsTo1OfFire;
-
-    public EntityLightningBolt(World par1World) {
-        super(par1World);
-    }
+    private int fireLifeTime = ConfigStorm.Lightning_lifetimeOfFire;
+    private int fireChance = ConfigStorm.Lightning_OddsTo1OfFire;
 
     public EntityLightningBolt(World par1World, double par2, double par4, double par6)
     {
@@ -56,9 +50,6 @@ public class EntityLightningBolt extends EntityWeatherEffect
         this.boltVertex = this.rand.nextLong();
         this.boltLivingTime = this.rand.nextInt(3) + 1;
 
-        Random rand = new Random();
-        
-        
         if (ConfigStorm.Lightning_StartsFires) {
             if (!par1World.isRemote && par1World.getGameRules().getBoolean("doFireTick") && (par1World.getDifficulty() == EnumDifficulty.NORMAL || par1World.getDifficulty() == EnumDifficulty.HARD) && par1World.isAreaLoaded(new BlockPos(MathHelper.floor(par2), MathHelper.floor(par4), MathHelper.floor(par6)), 10)) {
                 int i = MathHelper.floor(par2);
@@ -66,7 +57,6 @@ public class EntityLightningBolt extends EntityWeatherEffect
                 int k = MathHelper.floor(par6);
 
                 if (CoroUtilBlock.isAir(par1World.getBlockState(new BlockPos(i, j, k)).getBlock()) && Blocks.FIRE.canPlaceBlockAt(par1World, new BlockPos(i, j, k))) {
-                    //par1World.setBlockState(new BlockPos(i, j, k), Blocks.fire, fireLifeTime, 3);
                     par1World.setBlockState(new BlockPos(i, j, k), Blocks.FIRE.getDefaultState().withProperty(BlockFire.AGE, fireLifeTime));
                 }
 
@@ -76,7 +66,6 @@ public class EntityLightningBolt extends EntityWeatherEffect
                     int l = MathHelper.floor(par6) + this.rand.nextInt(3) - 1;
 
                     if (CoroUtilBlock.isAir(par1World.getBlockState(new BlockPos(j, k, l)).getBlock()) && Blocks.FIRE.canPlaceBlockAt(par1World, new BlockPos(j, k, l))) {
-                        //par1World.setBlockState(new BlockPos(j, k, l), Blocks.fire.getDefaultState(), fireLifeTime, 3);
                         par1World.setBlockState(new BlockPos(i, j, k), Blocks.FIRE.getDefaultState().withProperty(BlockFire.AGE, fireLifeTime));
                     }
                 }
@@ -90,10 +79,6 @@ public class EntityLightningBolt extends EntityWeatherEffect
     public void onUpdate()
     {
         super.onUpdate();
-        
-        //System.out.println("remote: " + world.isRemote);
-
-        //making client side only to fix cauldron issue
         if (world.isRemote) {
 	        if (this.lightningState == 2)
 	        {
@@ -140,7 +125,7 @@ public class EntityLightningBolt extends EntityWeatherEffect
                 net.minecraft.entity.effect.EntityLightningBolt vanillaBolt =
                         new net.minecraft.entity.effect.EntityLightningBolt(world, this.posX, this.posY, this.posZ, true);
                 double d0 = 3.0D;
-                List list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(this.posX - d0, this.posY - d0, this.posZ - d0, this.posX + d0, this.posY + 6.0D + d0, this.posZ + d0));
+                List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(this.posX - d0, this.posY - d0, this.posZ - d0, this.posX + d0, this.posY + 6.0D + d0, this.posZ + d0));
 
                 for (int l = 0; l < list.size(); ++l)
                 {
@@ -152,7 +137,7 @@ public class EntityLightningBolt extends EntityWeatherEffect
     }
     
     @SideOnly(Side.CLIENT)
-    public void updateFlashEffect() {
+    private void updateFlashEffect() {
     	Minecraft mc = FMLClientHandler.instance().getClient();
     	//only flash sky if player is within 256 blocks of lightning
     	if (mc.player != null && mc.player.getDistanceToEntity(this) < ConfigStorm.Lightning_DistanceToPlayerForEffects) {
@@ -161,7 +146,7 @@ public class EntityLightningBolt extends EntityWeatherEffect
     }
     
     @SideOnly(Side.CLIENT)
-    public void updateSoundEffect() {
+    private void updateSoundEffect() {
     	Minecraft mc = FMLClientHandler.instance().getClient();
     	if (mc.player != null && mc.player.getDistanceToEntity(this) < ConfigStorm.Lightning_DistanceToPlayerForEffects) {
     		this.world.playSound(this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.WEATHER, 64.0F * (float)ConfigMisc.volWindLightningScale, 0.8F + this.rand.nextFloat() * 0.2F, false);
@@ -180,14 +165,4 @@ public class EntityLightningBolt extends EntityWeatherEffect
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
     protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {}
-
-    @SideOnly(Side.CLIENT)
-
-    /**
-     * Checks using a Vec3d to determine if this entity is within range of that vector to be rendered. Args: vec3D
-     */
-    public boolean isInRangeToRenderVec3D(Vec3 par1Vec3)
-    {
-        return this.lightningState >= 0;
-    }
 }

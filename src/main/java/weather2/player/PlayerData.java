@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import CoroUtil.util.CoroUtilFile;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -14,7 +15,7 @@ import weather2.Weather;
 
 public class PlayerData {
 
-	public static HashMap<String, NBTTagCompound> playerNBT = new HashMap<String, NBTTagCompound>();
+	private static HashMap<String, NBTTagCompound> playerNBT = new HashMap<String, NBTTagCompound>();
 	
 	public static NBTTagCompound getPlayerNBT(String username) {
 		if (!playerNBT.containsKey(username)) {
@@ -23,7 +24,7 @@ public class PlayerData {
 		return playerNBT.get(username);
 	}
 	
-	public static void tryLoadPlayerNBT(String username) {
+	private static void tryLoadPlayerNBT(String username) {
 		//try read from hw/playerdata/player.dat
 		//init with data, if fail, init default blank
 		
@@ -43,15 +44,13 @@ public class PlayerData {
 	}
 	
 	public static void writeAllPlayerNBT(boolean resetData) {
-		//Weather.dbg("writing out all player nbt");
 		
 		String fileURL = CoroUtilFile.getWorldSaveFolderPath() + CoroUtilFile.getWorldFolderName() + File.separator + "weather2" + File.separator + "PlayerData";
 		if (!new File(fileURL).exists()) new File(fileURL).mkdir();
 		
-		Iterator it = playerNBT.entrySet().iterator();
+		Iterator<Entry<String, NBTTagCompound>> it = playerNBT.entrySet().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        //Weather.dbg(pairs.getKey() + " = " + pairs.getValue());
+	        Map.Entry<String, NBTTagCompound> pairs = (Map.Entry<String, NBTTagCompound>)it.next();
 	        writePlayerNBT((String)pairs.getKey(), (NBTTagCompound)pairs.getValue());
 	    }
 	    
@@ -60,8 +59,7 @@ public class PlayerData {
 	    }
 	}
 	
-	public static void writePlayerNBT(String username, NBTTagCompound parData) {
-		//Weather.dbg("writing " + username);
+	private static void writePlayerNBT(String username, NBTTagCompound parData) {
 		
 		String fileURL = CoroUtilFile.getWorldSaveFolderPath() + CoroUtilFile.getWorldFolderName() + File.separator + "weather2" + File.separator + "PlayerData" + File.separator + username + ".dat";
 		
@@ -74,5 +72,4 @@ public class PlayerData {
 			Weather.dbg("Error writing Weather2 player data for " + username);
 		}
 	}
-	
 }

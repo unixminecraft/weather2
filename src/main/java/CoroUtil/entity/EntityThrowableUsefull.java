@@ -2,7 +2,6 @@ package CoroUtil.entity;
 
 import java.util.List;
 
-import CoroUtil.util.CoroUtilEntity;
 import CoroUtil.util.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -51,7 +50,9 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         this.setSize(0.25F, 0.25F);
     }
 
-    protected void entityInit() {}
+    protected void entityInit() {
+    	
+    }
 
     @SideOnly(Side.CLIENT)
 
@@ -114,18 +115,12 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         
         this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, (float)parSpeed, 0.0F);
     }
-    
-    @Override
-    public double getYOffset() {
-    	return super.getYOffset();
-    }
 
     public EntityThrowableUsefull(World par1World, double par2, double par4, double par6)
     {
         super(par1World);
         this.setSize(0.25F, 0.25F);
         this.setPosition(par2, par4, par6);
-        //this.yOffset = 0.0F;
     }
     
     public Vec3 getTargetVector(EntityLivingBase target) {
@@ -257,10 +252,6 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         {
             this.onImpact(movingobjectposition);
         }
-
-        /*this.posX += this.motionX;
-        this.posY += this.motionY;
-        this.posZ += this.motionZ;*/
         
         this.move(MoverType.SELF, motionX, motionY, motionZ);
         
@@ -289,10 +280,6 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
 
         this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
         this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-
-        /*if (targetSeeking && target != null) {
-        	adjustSeekMotion();
-        }*/
         
         float f2 = 1F;//0.99F;
         float f3 = this.getGravityVelocity();
@@ -314,98 +301,10 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         this.motionY -= (double)f3;
         this.setPosition(this.posX, this.posY, this.posZ);
     }
-    
-    public void adjustSeekMotion() {
-    	//since code is motion based not angle based, we must use the recently updated rotationYaw, adjust it, then apply a new motionX and Z based on previous sqrt speed of prev motionX Z
-    	double speedOld = Math.sqrt(motionX * motionX + motionZ * motionZ);
-    	
-    	double vecX = target.posX - this.posX;
-    	double vecZ = target.posZ - this.posZ;
-    	
-    	float aimAngle = (float)(Math.atan2(vecZ, vecX) * 180.0D / Math.PI) - 90.0F;
-    	
-    	//rotationYaw = this.updateRotation(rotationYaw, aimAngle, targetSeekAngleLimit);
-    	
-    	//this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * /*MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * */speedOld);
-        //this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * /*MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * */speedOld);
-        
-    	float maxSpeed = 0.01F;
-    	float adjRate = 0.03F;
-    	
-        if (this.posY < target.posY) {
-        	if (motionY < 0) this.motionY += 0.01F;
-        } else {
-        	if (motionY > 0) this.motionY -= 0.01F;
-        }
-        
-        if (Math.abs(motionX) > maxSpeed) {
-        	motionX *= 0.85F;
-        }
-        
-        if (Math.abs(motionZ) > maxSpeed) {
-        	motionZ *= 0.85F;
-        }
-        
-        //lazy way
-        if (this.posX < target.posX) {
-        	this.motionX += adjRate;
-        } else {
-        	this.motionX -= adjRate;
-        }
-        
-        if (this.posZ < target.posZ) {
-        	this.motionZ += adjRate;
-        } else {
-        	this.motionZ -= adjRate;
-        }
-    }
-    
-    public void faceEntity(Entity p_70625_1_, float p_70625_2_, float p_70625_3_)
-    {
-        double d0 = p_70625_1_.posX - this.posX;
-        double d2 = p_70625_1_.posZ - this.posZ;
-        double d1;
 
-        if (p_70625_1_ instanceof EntityLivingBase)
-        {
-            EntityLivingBase entitylivingbase = (EntityLivingBase)p_70625_1_;
-            d1 = entitylivingbase.posY + (double)entitylivingbase.getEyeHeight() - (this.posY + (double)this.getEyeHeight());
-        }
-        else
-        {
-            d1 = (p_70625_1_.getEntityBoundingBox().minY + p_70625_1_.getEntityBoundingBox().maxY) / 2.0D - (this.posY + (double)this.getEyeHeight());
-        }
-
-        double d3 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
-        float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-        float f3 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
-        this.rotationPitch = this.updateRotation(this.rotationPitch, f3, p_70625_3_);
-        this.rotationYaw = this.updateRotation(this.rotationYaw, f2, p_70625_2_);
-    }
-
-    /**
-     * Arguments: current rotation, intended rotation, max increment.
-     */
-    private float updateRotation(float p_70663_1_, float p_70663_2_, float p_70663_3_)
-    {
-        float f3 = MathHelper.wrapDegrees(p_70663_2_ - p_70663_1_);
-
-        if (f3 > p_70663_3_)
-        {
-            f3 = p_70663_3_;
-        }
-
-        if (f3 < -p_70663_3_)
-        {
-            f3 = -p_70663_3_;
-        }
-
-        return p_70663_1_ + f3;
-    }
-    
     public RayTraceResult tickEntityCollision(Vec3 vec3, Vec3 vec31) {
     	Entity entity = null;
-        List list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D, 1.0D, 1.0D));
+        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D, 1.0D, 1.0D));
         double d0 = 0.0D;
         EntityLivingBase entityliving = this.getThrower();
 
@@ -468,7 +367,7 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
 
         if ((this.throwerName == null || this.throwerName.length() == 0) && this.thrower != null && this.thrower instanceof EntityPlayer)
         {
-            this.throwerName = CoroUtilEntity.getName(thrower);
+            this.throwerName = thrower.getName();
         }
 
         par1NBTTagCompound.setString("ownerName", this.throwerName == null ? "" : this.throwerName);
@@ -491,12 +390,6 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         {
             this.throwerName = null;
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public float getShadowSize()
-    {
-        return 0.0F;
     }
 
     public EntityLivingBase getThrower()

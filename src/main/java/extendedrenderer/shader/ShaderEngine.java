@@ -2,7 +2,7 @@ package extendedrenderer.shader;
 
 public class ShaderEngine {
 
-    public static Renderer renderer;
+	public static Renderer renderer;
 
     public static boolean init() {
         try {
@@ -13,7 +13,6 @@ public class ShaderEngine {
             excp.printStackTrace();
         }
         return false;
-
     }
 
     public static void cleanup() {

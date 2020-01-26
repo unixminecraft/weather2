@@ -6,7 +6,8 @@ import java.util.Map;
 
 public enum EnumWeatherObjectType {
 	
-	CLOUD, SAND;
+	CLOUD,
+	SAND;
 	
 	private static final Map<Integer, EnumWeatherObjectType> lookup = new HashMap<Integer, EnumWeatherObjectType>();
     static { for(EnumWeatherObjectType e : EnumSet.allOf(EnumWeatherObjectType.class)) { lookup.put(e.ordinal(), e); } }

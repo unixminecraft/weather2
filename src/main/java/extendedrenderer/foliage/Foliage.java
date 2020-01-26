@@ -29,9 +29,6 @@ public class Foliage implements IShaderRenderedEntity {
     public double prevPosY;
     public double prevPosZ;
 
-    public float width = 1F;
-    public float height = 1F;
-
     public float particleScale = 1F;
 
     /** The red amount of color. Used as a percentage, 1.0 = 255 and 0.0 = 0. */
@@ -46,21 +43,20 @@ public class Foliage implements IShaderRenderedEntity {
     public TextureAtlasSprite particleTexture;
 
     public float rotationYaw;
-    public float rotationPitch;
+    private float rotationPitch;
 
-    public Quaternion rotation = new Quaternion();
+    private Quaternion rotation = new Quaternion();
 
-    public boolean rotateOrderXY = false;
+    private boolean rotateOrderXY = false;
 
     public float brightnessCache = 0.5F;
 
-    public int animationID = 0;
+    private int animationID = 0;
     public int heightIndex = 0;
     public float looseness = 1;
 
     private static final Random rand = new Random(439875L);
 
-    private static final NoiseGeneratorPerlin angleNoise = new NoiseGeneratorPerlin(rand, 1);
     private static final NoiseGeneratorPerlin delayNoise = new NoiseGeneratorPerlin(rand, 3);
 
     public Foliage(TextureAtlasSprite sprite) {
@@ -76,10 +72,6 @@ public class Foliage implements IShaderRenderedEntity {
         prevPosZ = posZ;
     }
 
-    public BlockPos getBlockPosition() {
-        return new BlockPos(posX, posY, posZ);
-    }
-
     @Override
     public Vector3f getPosition() {
         return new Vector3f((float)posX, (float)posY, (float)posZ);
@@ -93,7 +85,6 @@ public class Foliage implements IShaderRenderedEntity {
     //TODO: implement prev quat
     @Override
     public Quaternion getQuaternionPrev() {
-        //return rotation;
         return null;
     }
 
@@ -103,13 +94,6 @@ public class Foliage implements IShaderRenderedEntity {
     }
 
     public void updateQuaternion(Entity camera) {
-
-        /*if (this.facePlayer) {
-            this.rotationYaw = camera.rotationYaw;
-            this.rotationPitch = camera.rotationPitch;
-        } else if (facePlayerYaw) {
-            this.rotationYaw = camera.rotationYaw;
-        }*/
 
         Quaternion qY = new Quaternion();
         Quaternion qX = new Quaternion();
@@ -129,28 +113,10 @@ public class Foliage implements IShaderRenderedEntity {
             return;
         }
 
-        mesh.instanceDataBufferVBO1.put(mesh.INSTANCE_SIZE_FLOATS * (mesh.curBufferPosVBO1), particleAlpha);
-
-        //TEMP
-        //mesh.instanceDataBuffer.put(mesh.INSTANCE_SIZE_FLOATS * (mesh.curBufferPos), (float)Minecraft.getMinecraft().player.getDistance(this.posX, this.posY, this.posZ) - 2.5F);
-
+        mesh.instanceDataBufferVBO1.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS * (mesh.curBufferPosVBO1), particleAlpha);
         float brightness;
         brightness = CoroUtilBlockLightCache.getBrightnessCached(Minecraft.getMinecraft().world, (float)this.posX, (float)this.posY, (float)this.posZ);
-        //brightness = brightnessCache;
-        //brightness = CoroUtilBlockLightCache.brightnessPlayer;
-
-        /*int r = (int)(0.2F * 255.0F);
-        int g = (int)(0.2F * 255.0F);
-        int b = (int)(1F * 255.0F);
-        float brightnessTest = -16777216 | r << 16 | g << 8 | b;*/
-
-        //brightness = -0.1F;
-        //brightness = brightnessTest;
-
-        //System.out.println(brightnessTest);
-        //System.out.println(String.format("%.12f", brightnessTest));
-
-        mesh.instanceDataBufferVBO1.put(mesh.INSTANCE_SIZE_FLOATS * (mesh.curBufferPosVBO1) + 1, brightness);
+        mesh.instanceDataBufferVBO1.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS * (mesh.curBufferPosVBO1) + 1, brightness);
 
         mesh.curBufferPosVBO1++;
 
@@ -167,28 +133,17 @@ public class Foliage implements IShaderRenderedEntity {
             if (autoGrowBuffer) {
                 mesh.numInstances *= 2;
                 System.out.println("hit max mesh count, doubling in size to " + mesh.numInstances);
-                //double vbo2 and copy data
                 FloatBuffer newBuffer = BufferUtils.createFloatBuffer(mesh.numInstances * InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM);
-                //newBuffer.clear();
-                //doesnt actually clear
                 mesh.instanceDataBufferVBO2.rewind();
                 newBuffer.put(mesh.instanceDataBufferVBO2);
                 mesh.instanceDataBufferVBO2.rewind();
                 newBuffer.flip();
                 mesh.instanceDataBufferVBO2 = newBuffer;
                 mesh.instanceDataBufferVBO2.position(mesh.curBufferPosVBO2 * InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM);
-
-                //double vbo1 and copy data
-
                 newBuffer = BufferUtils.createFloatBuffer(mesh.numInstances * InstancedMeshFoliage.INSTANCE_SIZE_FLOATS);
                 newBuffer.clear();
-                //doesnt actually clear
-                //mesh.instanceDataBufferVBO1.position(0);
-                //newBuffer.put(mesh.instanceDataBufferVBO1);
                 mesh.instanceDataBufferVBO1 = newBuffer;
-                //mesh.instanceDataBufferVBO1.position(mesh.curBufferPosVBO1 * InstancedMeshFoliage.INSTANCE_SIZE_FLOATS);
             } else {
-                //System.out.println("hitting max mesh count");
                 return;
             }
         }
@@ -197,7 +152,6 @@ public class Foliage implements IShaderRenderedEntity {
         float posX = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - mesh.interpPosXThread);
         float posY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - mesh.interpPosYThread);
         float posZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - mesh.interpPosZThread);
-        //Vector3f pos = new Vector3f((float) (entityIn.posX - particle.posX), (float) (entityIn.posY - particle.posY), (float) (entityIn.posZ - particle.posZ));
         Vector3f pos = new Vector3f(posX, posY, posZ);
 
         Matrix4fe modelMatrix = transformation.buildModelMatrix(this, pos, partialTicks);
@@ -205,35 +159,31 @@ public class Foliage implements IShaderRenderedEntity {
         //adjust to perspective and camera
         //Matrix4fe modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
         //upload to buffer
-        modelMatrix.get(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2), mesh.instanceDataBufferVBO2);
+        modelMatrix.get(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2), mesh.instanceDataBufferVBO2);
 
         int floatIndex = 0;
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), this.particleRed);
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), this.particleGreen);
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), this.particleBlue);
         //using yaw here instead, alpha in other VBO
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), this.rotationYaw);
 
         //index, aka buffer pos?
-        /*mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
-                + (rgbaIndex++), mesh.curBufferPosVBO2);*/
-        /*mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
-                + (rgbaIndex++), (((MathHelper.floor(this.posX) * 15)+(MathHelper.floor(this.posX) * 15))));*/
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), (float)delayNoise.getValue(this.posX, this.posZ));
 
 
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), animationID);
 
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), heightIndex);
 
-        mesh.instanceDataBufferVBO2.put(mesh.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + mesh.MATRIX_SIZE_FLOATS
+        mesh.instanceDataBufferVBO2.put(InstancedMeshFoliage.INSTANCE_SIZE_FLOATS_SELDOM * (mesh.curBufferPosVBO2) + InstancedMeshFoliage.MATRIX_SIZE_FLOATS
                 + (floatIndex++), looseness);
 
         mesh.curBufferPosVBO2++;

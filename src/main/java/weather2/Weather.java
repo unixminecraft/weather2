@@ -1,11 +1,9 @@
 package weather2;
 
-import CoroUtil.util.CoroUtilFile;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
@@ -31,13 +29,9 @@ public class Weather {
     @SidedProxy(clientSide = "weather2.ClientProxy", serverSide = "weather2.CommonProxy")
     public static CommonProxy proxy;
     
-    public static boolean initProperNeededForWorld = true;
-    
     public static String eventChannelName = "weather2";
 	public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(eventChannelName);
 
-
-	public static ConfigMisc configMisc = null;
 
 	@Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -47,7 +41,6 @@ public class Weather {
     	MinecraftForge.EVENT_BUS.register(new EventHandlerFML());
 		MinecraftForge.EVENT_BUS.register(new EventHandlerForge());
 
-		configMisc = new ConfigMisc();
     	WeatherUtilConfig.nbtLoadDataAll();
 
 		proxy.preInit();
@@ -82,21 +75,9 @@ public class Weather {
     public void serverStop(FMLServerStoppedEvent event) {
     	writeOutData(true);
     	resetStates();
-    	
-    	initProperNeededForWorld = true;
     }
     
-    public static void initTry() {
-    	if (initProperNeededForWorld) {
-    		System.out.println("Weather2: being reinitialized");
-    		initProperNeededForWorld = false;
-	    	CoroUtilFile.getWorldFolderName();
-	    	
-	    	ServerTickHandler.initialize();
-    	}
-    }
-    
-    public static void resetStates() {
+    private static void resetStates() {
     	ServerTickHandler.reset();
     }
     
@@ -111,21 +92,9 @@ public class Weather {
     		//doesnt cover all needs, client connected to server needs this called from gui close too
     		//maybe dont call this from here so client connected to server doesnt override what a client wants his 'server' settings to be in his singleplayer world
     		//factoring in we dont do per world settings for this
-    		//WeatherUtilConfig.nbtSaveDataAll();
     	} catch (Exception ex) {
     		ex.printStackTrace();
     	}
-    }
-
-	/**
-	 * Triggered when communicating with other mods
-	 * @param event
-	 */
-    @Mod.EventHandler
-    public void handleIMCMessages(FMLInterModComms.IMCEvent event) {
-
-    	
-    	
     }
 	
 	public static void dbg(Object obj) {
@@ -142,5 +111,4 @@ public class Weather {
 			}
 		}
 	}
-
 }

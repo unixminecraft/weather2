@@ -4,7 +4,6 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
 import extendedrenderer.particle.ShaderManager;
@@ -20,7 +19,7 @@ public abstract class ShaderProgram {
 
     private int fragmentShaderId;
 
-    public Map<String, Integer> uniforms;
+    private Map<String, Integer> uniforms;
 
     public ShaderProgram(String name) throws Exception {
         this.name = name;
@@ -35,31 +34,11 @@ public abstract class ShaderProgram {
         int uniformLocation = OpenGlHelper.glGetUniformLocation(programId, uniformName);
         if (uniformLocation < 0) {
             System.out.println("!!!!!!!! GLSL OPTIMIZATION WARNING MAYBE: " + "Could not find uniform:" + uniformName);
-            //throw new Exception("Could not find uniform:" + uniformName);
         }
         uniforms.put(uniformName, uniformLocation);
     }
 
-    public void setUniform(String uniformName, Matrix4fe value) {
-        /*try (MemoryStack stack = MemoryStack.stackPush()) {
-            // Dump the matrix into a float buffer
-            FloatBuffer fb = stack.mallocFloat(16);
-            value.get(fb);
-            glUniformMatrix4fv(uniforms.get(uniformName), false, fb);
-        }*/
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        value.get(fb);
-        OpenGlHelper.glUniformMatrix4(uniforms.get(uniformName), false, fb);
-    }
-
     public void setUniformEfficient(String uniformName, Matrix4fe value, FloatBuffer buffer) {
-        /*try (MemoryStack stack = MemoryStack.stackPush()) {
-            // Dump the matrix into a float buffer
-            FloatBuffer fb = stack.mallocFloat(16);
-            value.get(fb);
-            glUniformMatrix4fv(uniforms.get(uniformName), false, fb);
-        }*/
-        //FloatBuffer fb = BufferUtils.createFloatBuffer(16);
         value.get(buffer);
         OpenGlHelper.glUniformMatrix4(uniforms.get(uniformName), false, buffer);
     }
@@ -70,7 +49,6 @@ public abstract class ShaderProgram {
 
     public void setUniform(String uniformName, float value) {
         GL20.glUniform1f(uniforms.get(uniformName), value);
-        //OpenGlHelper.glUniform(uniforms.get(uniformName), value);
     }
 
     public void createVertexShader(String shaderCode) throws Exception {
@@ -81,7 +59,7 @@ public abstract class ShaderProgram {
         fragmentShaderId = createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
     }
 
-    protected int createShader(String shaderCode, int shaderType) throws Exception {
+    private int createShader(String shaderCode, int shaderType) throws Exception {
         int shaderId = OpenGlHelper.glCreateShader(shaderType);
         if (shaderId == 0) {
             throw new Exception("Error creating shader. Type: " + shaderType);

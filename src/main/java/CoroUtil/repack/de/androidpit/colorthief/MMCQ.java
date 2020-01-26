@@ -84,15 +84,14 @@ public class MMCQ {
                     + " / b2: " + b2;
         }
 
-        public int volume(boolean force) {
+        private int volume(boolean force) {
             if (_volume == null || force) {
                 _volume = ((r2 - r1 + 1) * (g2 - g1 + 1) * (b2 - b1 + 1));
             }
 
             return _volume;
         }
-
-        public int count(boolean force) {
+        private int count(boolean force) {
             if (_count == null || force) {
                 int npix = 0;
                 int i, j, k, index;
@@ -117,7 +116,7 @@ public class MMCQ {
             return new VBox(r1, r2, g1, g2, b1, b2, histo);
         }
 
-        public int[] avg(boolean force) {
+        private int[] avg(boolean force) {
             if (_avg == null || force) {
                 int ntot = 0;
 
@@ -147,19 +146,8 @@ public class MMCQ {
                             ~~(MULT * (b1 + b2 + 1) / 2)};
                 }
             }
-
             return _avg;
         }
-
-        public boolean contains(int[] pixel) {
-            int rval = pixel[0] >> RSHIFT;
-            int gval = pixel[1] >> RSHIFT;
-            int bval = pixel[2] >> RSHIFT;
-
-            return (rval >= r1 && rval <= r2 && gval >= g1 && gval <= g2 && bval >= b1
-                    && bval <= b2);
-        }
-
     }
 
     /**
@@ -167,9 +155,9 @@ public class MMCQ {
      */
     public static class CMap {
 
-        public final ArrayList<VBox> vboxes = new ArrayList<>();
+    	private final ArrayList<VBox> vboxes = new ArrayList<>();
 
-        public void push(VBox box) {
+    	private void push(VBox box) {
             vboxes.add(box);
         }
 
@@ -181,41 +169,6 @@ public class MMCQ {
             }
             return palette;
         }
-
-        public int size() {
-            return vboxes.size();
-        }
-
-        public int[] map(int[] color) {
-            int numVBoxes = vboxes.size();
-            for (int i = 0; i < numVBoxes; i++) {
-                VBox vbox = vboxes.get(i);
-                if (vbox.contains(color)) {
-                    return vbox.avg(false);
-                }
-            }
-            return nearest(color);
-        }
-
-        public int[] nearest(int[] color) {
-            double d1 = Double.MAX_VALUE;
-            double d2;
-            int[] pColor = null;
-
-            int numVBoxes = vboxes.size();
-            for (int i = 0; i < numVBoxes; i++) {
-                int[] vbColor = vboxes.get(i).avg(false);
-                d2 = Math.sqrt(
-                        Math.pow(color[0] - vbColor[0], 2) + Math.pow(color[1] - vbColor[1], 2)
-                                + Math.pow(color[2] - vbColor[2], 2));
-                if (d2 < d1) {
-                    d1 = d2;
-                    pColor = vbColor;
-                }
-            }
-            return pColor;
-        }
-
     }
 
     /**
@@ -524,5 +477,4 @@ public class MMCQ {
             return Long.compare((long) aCount * aVolume, (long) bCount * bVolume);
         }
     };
-
 }

@@ -41,5 +41,4 @@ public class CULog {
             LOGGER.info(string);
         }
     }
-
 }

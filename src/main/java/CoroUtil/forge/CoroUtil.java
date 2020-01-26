@@ -10,7 +10,8 @@ import java.util.List;
 import CoroUtil.config.ConfigCoroUtil;
 import CoroUtil.config.ConfigCoroUtilAdvanced;
 import CoroUtil.util.CoroUtilFile;
-import CoroUtil.util.CoroUtilMisc;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -33,7 +34,6 @@ public class CoroUtil {
 	public static final String modID_HWInvasions = "hw_inv";
 
 
-	//public static final String version = "${version}";
 	//when we definitely need to enforce a new CoroUtil version outside dev, use this for production
 	//TODO: find a way to perminently do this for dev only
 	public static final String version = "1.12.1-1.2.36";
@@ -53,9 +53,6 @@ public class CoroUtil {
     public void preInit(FMLPreInitializationEvent event)
     {
 		migrateOldConfig();
-
-    	//for good measure
-		configDev.hookUpdatedValues();
     	
     	eventChannel.register(new EventHandlerPacket());
     }
@@ -105,13 +102,8 @@ public class CoroUtil {
     @Mod.EventHandler
     public void load(FMLInitializationEvent event)
     {
-    	//TickRegistry.registerTickHandler(new ServerTickHandler(this), Side.SERVER);
 		MinecraftForge.EVENT_BUS.register(new EventHandlerFML());
     	MinecraftForge.EVENT_BUS.register(new EventHandlerForge());
-    	//MinecraftForge.EVENT_BUS.register(new EventHandler());
-    	proxy.init(this);
-
-    	//petsManager = new PetsManager();
     }
     
     @Mod.EventHandler
@@ -121,7 +113,7 @@ public class CoroUtil {
 
             CULog.log("fixBadBiomeEntitySpawnEntries enabled, scanning and fixing all biome entity spawn lists for potential crash risks");
 
-            CoroUtilMisc.fixBadBiomeEntitySpawns();
+            fixBadBiomeEntitySpawns();
         }
 	}
     
@@ -146,8 +138,49 @@ public class CoroUtil {
 	    	CoroUtilFile.getWorldFolderName();
     	}
     }
-    
-	public static void dbg(String obj) {
-    	CULog.dbg(obj);
-	}
+	
+    /**
+     * Game likes to force an exception and crash out if a mod adds a zero weight spawn entry to a biome+enum ceature type when the total weight is zero for all entries in the list
+     * this method checks for this and removes them
+     */
+    private static void fixBadBiomeEntitySpawns() {
+        for (Biome biome : Biome.REGISTRY) {
+
+            for (EnumCreatureType type : EnumCreatureType.values()) {
+
+                List<Biome.SpawnListEntry> list = biome.getSpawnableList(type);
+                boolean found = false;
+                String str = "";
+                int totalWeight = 0;
+
+                for (Biome.SpawnListEntry entry : list) {
+                    totalWeight += entry.itemWeight;
+                    if (entry.itemWeight == 0) {
+                        found = true;
+                        str += entry.entityClass.getName() + ", ";
+                    }
+                }
+
+                if (found) {
+                    if (totalWeight == 0) {
+                        CULog.log("Detected issue for entity(s)" + str);
+                        CULog.log("Biome '" + biome.biomeName + "' for EnumCreatureType '" + type.name() + "', SpawnListEntry size: " + list.size());
+                        CULog.log("Clearing relevant spawnableList to fix issue");
+                        //detected crashable state of data, clear out spawnlist then
+                        if (type == EnumCreatureType.MONSTER) {
+                            biome.getSpawnableList(EnumCreatureType.MONSTER).clear();
+                        } else if (type == EnumCreatureType.CREATURE) {
+                            biome.getSpawnableList(EnumCreatureType.CREATURE).clear();
+                        } else if (type == EnumCreatureType.WATER_CREATURE) {
+                            biome.getSpawnableList(EnumCreatureType.WATER_CREATURE).clear();
+                        } else if (type == EnumCreatureType.AMBIENT) {
+                            biome.getSpawnableList(EnumCreatureType.AMBIENT).clear();
+                        } else {
+                            //theres also Biome.modSpawnableLists for modded entries, but ive decided not to care about this one
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

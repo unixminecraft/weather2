@@ -12,9 +12,9 @@ import weather2.weathersystem.storm.StormObject;
 public class MovingSoundStreamingSource extends MovingSound {
 
 	private StormObject storm = null;
-	public float cutOffRange = 128;
-	public Vec3 realSource = null;
-    public boolean lockToPlayer = false;
+	private float cutOffRange = 128;
+	private Vec3 realSource = null;
+	private boolean lockToPlayer = false;
 
     public MovingSoundStreamingSource(Vec3 parPos, SoundEvent event, SoundCategory category, float parVolume, float parPitch, boolean lockToPlayer) {
         super(event, category);
@@ -84,12 +84,11 @@ public class MovingSoundStreamingSource extends MovingSound {
 
     }
     
-    public double getDistanceFrom(Vec3 source, Vec3 targ)
+    private double getDistanceFrom(Vec3 source, Vec3 targ)
     {
         double d3 = source.xCoord - targ.xCoord;
         double d4 = source.yCoord - targ.yCoord;
         double d5 = source.zCoord - targ.zCoord;
         return d3 * d3 + d4 * d4 + d5 * d5;
     }
-
 }

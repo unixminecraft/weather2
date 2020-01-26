@@ -7,22 +7,22 @@ import net.minecraft.client.model.ModelRenderer;
 
 public class ModelWindVane extends ModelBase
 {
-    ModelRenderer bottom;
-    ModelRenderer cross;
-    ModelRenderer cross2;
-    ModelRenderer N;
-    ModelRenderer S;
-    ModelRenderer E;
-    ModelRenderer W;
-    ModelRenderer Block2;
-    ModelRenderer Block3;
-    ModelRenderer top1;
-    ModelRenderer chicken;
-    ModelRenderer Block4;
-    ModelRenderer Block5;
-    ModelRenderer arrow;
-    ModelRenderer point;
-    ModelRenderer feather;
+    private ModelRenderer bottom;
+    private ModelRenderer cross;
+    private ModelRenderer cross2;
+    private ModelRenderer N;
+    private ModelRenderer S;
+    private ModelRenderer E;
+    private ModelRenderer W;
+    private ModelRenderer Block2;
+    private ModelRenderer Block3;
+    private ModelRenderer top1;
+    private ModelRenderer chicken;
+    private ModelRenderer Block4;
+    private ModelRenderer Block5;
+    private ModelRenderer arrow;
+    private ModelRenderer point;
+    private ModelRenderer feather;
     
     public float scaleX = 1f;	
     public float scaleY = 1f;	
@@ -147,7 +147,6 @@ public class ModelWindVane extends ModelBase
         W.rotateAngleZ = 0F;
         W.renderWithRotation(scale);
 
-        //GL11.glRotatef(0, 180, 0, 1);
         GL11.glRotatef(-180, 0, 1, 0);
         
         Block2.rotateAngleX = 0F;
@@ -196,7 +195,5 @@ public class ModelWindVane extends ModelBase
         feather.rotateAngleY = -1.570796F;
         feather.rotateAngleZ = 0F;
         feather.renderWithRotation(scale);
-
     }
-
 }

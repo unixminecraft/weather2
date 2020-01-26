@@ -2,7 +2,6 @@ package weather2;
 
 import extendedrenderer.shader.IShaderListener;
 import extendedrenderer.shader.ShaderListenerRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
@@ -10,13 +9,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.block.TileEntityAnemometer;
@@ -62,39 +59,22 @@ public class ClientProxy extends CommonProxy
     	super.init();
     	
     	WeatherUtilSound.init();
-    	
-    	//MinecraftForge.EVENT_BUS.register(new SoundLoader());
-    	
-    	//TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
         
         addMapping(EntityIceBall.class, new RenderFlyingBlock(Minecraft.getMinecraft().getRenderManager(), Blocks.ICE));
         addMapping(EntityMovingBlock.class, new RenderFlyingBlock(Minecraft.getMinecraft().getRenderManager(), null));
         addMapping(EntityLightningBolt.class, new RenderLightningBolt(Minecraft.getMinecraft().getRenderManager()));
         addMapping(EntityLightningBoltCustom.class, new RenderLightningBoltCustom(Minecraft.getMinecraft().getRenderManager()));
-        /*addMapping(EntityFallingRainFX.class, new RenderNull(Minecraft.getMinecraft().getRenderManager()));
-        addMapping(EntityFallingSnowFX.class, new RenderNull(Minecraft.getMinecraft().getRenderManager()));*/
         
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTSiren.class, new TileEntityTSirenRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWindVane.class, new TileEntityWindVaneRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWeatherForecast.class, new TileEntityWeatherForecastRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAnemometer.class, new TileEntityAnemometerRenderer());
     }
-
-    @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event) {
-
-    }
     
-    private static void addMapping(Class<? extends Entity> entityClass, Render render) {
+    @SuppressWarnings("deprecation")
+	private static void addMapping(Class<? extends Entity> entityClass, Render<? extends Entity> render) {
 		RenderingRegistry.registerEntityRenderingHandler(entityClass, render);
 	}
-    
-    @Override
-    public void addBlock(RegistryEvent.Register<Block> event, Block parBlock, String name, boolean creativeTab) {
-    	super.addBlock(event, parBlock, name, creativeTab);
-
-        //addItemModel(Item.getItemFromBlock(parBlock), 0, new ModelResourceLocation(Weather.modID + ":" + name, "inventory"));
-    }
 
     @Override
     public void addItemBlock(RegistryEvent.Register<Item> event, Item item) {
@@ -112,30 +92,7 @@ public class ClientProxy extends CommonProxy
 
     public void addItemModel(Item item, int meta, ModelResourceLocation location) {
 
-        //1.11: doesnt work currently for our method of loading, try it again in 1.12
         ModelLoader.setCustomModelResourceLocation(item, meta, location);
-
-        //using this for now
-        //Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, location);
-    }
-    
-    /*@Override
-	public void registerItemVariantModel(Item item, String name, int metadata) {
-		if (item != null) {
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, metadata, new ModelResourceLocation(Weather.modID + ":" + name, "inventory"));
-		}
-	}
-
-	@Override
-	public void registerItemVariantModel(Item item, String registryName, int metadata, String variantName) {
-		if (item != null) {
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, metadata, new ModelResourceLocation(Weather.modID + ":" + variantName, null));
-		}
-	}*/
-
-    @Override
-    public void postInit() {
-        super.postInit();
     }
 
     @Override
@@ -152,7 +109,5 @@ public class ClientProxy extends CommonProxy
                 FoliageEnhancerShader.shadersReset();
             }
         });
-
-        //IReload
     }
 }

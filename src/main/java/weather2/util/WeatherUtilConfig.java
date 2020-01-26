@@ -10,8 +10,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import CoroUtil.config.ConfigCoroUtil;
-import CoroUtil.forge.CoroUtil;
 import CoroUtil.util.CoroUtilFile;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,7 +19,6 @@ import net.minecraftforge.common.DimensionManager;
 import weather2.ServerTickHandler;
 import weather2.Weather;
 import weather2.config.ConfigMisc;
-import weather2.config.ConfigParticle;
 import weather2.config.ConfigSand;
 import weather2.config.ConfigSnow;
 import weather2.config.ConfigStorm;
@@ -35,47 +32,39 @@ public class WeatherUtilConfig {
 	public static List<Integer> listDimensionsStorms = new ArrayList<Integer>();
 	public static List<Integer> listDimensionsWindEffects = new ArrayList<Integer>();
 	
-	public static int CMD_BTN_PERF_STORM = 2;
-	public static int CMD_BTN_PERF_NATURE = 3;
-	public static int CMD_BTN_PERF_PRECIPRATE = 12;
-	public static int CMD_BTN_PERF_SHADERS_PARTICLE = 18;
-	public static int CMD_BTN_PERF_SHADERS_FOLIAGE = 19;
+	private static int CMD_BTN_PERF_STORM = 2;
+	private static int CMD_BTN_PERF_NATURE = 3;
+	private static int CMD_BTN_PERF_PRECIPRATE = 12;
+	private static int CMD_BTN_PERF_SHADERS_PARTICLE = 18;
+	private static int CMD_BTN_PERF_SHADERS_FOLIAGE = 19;
 	
-	public static int CMD_BTN_COMP_STORM = 4;
-	public static int CMD_BTN_COMP_LOCK = 5;
-	public static int CMD_BTN_COMP_PARTICLEPRECIP = 6;
-	public static int CMD_BTN_COMP_SNOWFALLBLOCKS = 7;
-	public static int CMD_BTN_COMP_LEAFFALLBLOCKS = 8;
-	public static int CMD_BTN_COMP_PARTICLESNOMODS = 13;
+	private static int CMD_BTN_COMP_STORM = 4;
+	private static int CMD_BTN_COMP_LOCK = 5;
+	private static int CMD_BTN_COMP_PARTICLEPRECIP = 6;
+	private static int CMD_BTN_COMP_SNOWFALLBLOCKS = 7;
+	private static int CMD_BTN_COMP_LEAFFALLBLOCKS = 8;
+	private static int CMD_BTN_COMP_PARTICLESNOMODS = 13;
 	
-	public static int CMD_BTN_PREF_RATEOFSTORM = 9;
-	public static int CMD_BTN_PREF_CHANCEOFSTORM = 14;
-	public static int CMD_BTN_PREF_CHANCEOFRAIN = 10;
-	public static int CMD_BTN_PREF_BLOCKDESTRUCTION = 11;
-	public static int CMD_BTN_PREF_TORNADOANDCYCLONES = 15;
-	public static int CMD_BTN_PREF_SANDSTORMS = 16;
-	public static int CMD_BTN_PREF_GLOBALRATE = 17;
+	private static int CMD_BTN_PREF_RATEOFSTORM = 9;
+	private static int CMD_BTN_PREF_CHANCEOFSTORM = 14;
+	private static int CMD_BTN_PREF_CHANCEOFRAIN = 10;
+	private static int CMD_BTN_PREF_BLOCKDESTRUCTION = 11;
+	private static int CMD_BTN_PREF_TORNADOANDCYCLONES = 15;
+	private static int CMD_BTN_PREF_SANDSTORMS = 16;
+	private static int CMD_BTN_PREF_GLOBALRATE = 17;
 	
-	public static int CMD_BTN_HIGHEST_ID = 19;
+	private static int CMD_BTN_HIGHEST_ID = 19;
 
-	public static List<String> LIST_RATES = new ArrayList<String>(Arrays.asList("High", "Medium", "Low"));
-	public static List<String> LIST_RATES2 = new ArrayList<String>(Arrays.asList("High", "Medium", "Low", "None"));
-	public static List<String> LIST_TOGGLE = new ArrayList<String>(Arrays.asList("Off", "On"));
-	public static List<String> LIST_CHANCE = new ArrayList<String>(Arrays.asList("1/2 Day", "1 Day", "2 Days", "3 Days", "4 Days", "5 Days", "6 Days", "7 Days", "8 Days", "9 Days", "10 Days", "Never"));
+	private static List<String> LIST_RATES2 = new ArrayList<String>(Arrays.asList("High", "Medium", "Low", "None"));
+	private static List<String> LIST_TOGGLE = new ArrayList<String>(Arrays.asList("Off", "On"));
 	
-	public static List<String> LIST_STORMSWHEN = new ArrayList<String>(Arrays.asList("Local Biomes", "Global Overcast"));
-	public static List<String> LIST_LOCK = new ArrayList<String>(Arrays.asList("Always Off", "Always On", "Don't lock"));
-	public static List<String> LIST_GLOBALRATE = new ArrayList<String>(Arrays.asList("Rand player", "Each player"));
+	private static List<String> LIST_STORMSWHEN = new ArrayList<String>(Arrays.asList("Local Biomes", "Global Overcast"));
 	
-	public static List<Integer> listSettingsClient = new ArrayList<Integer>();
-	public static List<Integer> listSettingsServer = new ArrayList<Integer>();
-	
-	//for caching server data on client side (does not pertain to client only settings)
-	public static NBTTagCompound nbtClientCache = new NBTTagCompound();
+	private static List<Integer> listSettingsClient = new ArrayList<Integer>();
+	private static List<Integer> listSettingsServer = new ArrayList<Integer>();
 	
 	//actual data that gets written out to disk
 	public static NBTTagCompound nbtServerData = new NBTTagCompound();
-	public static NBTTagCompound nbtClientData = new NBTTagCompound();
 	
 	static {
 		listSettingsClient.add(CMD_BTN_PERF_STORM);
@@ -100,135 +89,13 @@ public class WeatherUtilConfig {
 		listSettingsServer.add(CMD_BTN_PREF_GLOBALRATE);
 	}
 	
-	//client should call this on detecting a close/save of GUI
-	public static void processNBTToModConfigClient() {
-		nbtSaveDataClient();
-		
-		Weather.dbg("processNBTToModConfigClient");
-		
-		Weather.dbg("nbtClientData: " + nbtClientData);
-		
-		String modIDWeather = Weather.configMisc.getRegistryName();
-		String modIDCoroUtil = CoroUtil.configCoroUtil.getRegistryName();
-		
-		try {
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_COMP_PARTICLEPRECIP)) {
-				ConfigParticle.Particle_RainSnow = LIST_TOGGLE.get(nbtClientData.getInteger("btn_" + CMD_BTN_COMP_PARTICLEPRECIP)).equalsIgnoreCase("on");
-			}
-			
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_PERF_STORM)) {
-				if (LIST_RATES.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_STORM)).equalsIgnoreCase("high")) {
-					ConfigMisc.Cloud_ParticleSpawnDelay = 0;
-					ConfigStorm.Storm_ParticleSpawnDelay = 1;
-					ConfigParticle.Sandstorm_Particle_Debris_effect_rate = 1;
-					ConfigParticle.Sandstorm_Particle_Dust_effect_rate = 1;
-				} else if (LIST_RATES.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_STORM)).equalsIgnoreCase("medium")) {
-					ConfigMisc.Cloud_ParticleSpawnDelay = 2;
-					ConfigStorm.Storm_ParticleSpawnDelay = 3;
-					ConfigParticle.Sandstorm_Particle_Debris_effect_rate = 0.6D;
-					ConfigParticle.Sandstorm_Particle_Dust_effect_rate = 0.6D;
-				} else if (LIST_RATES.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_STORM)).equalsIgnoreCase("low")) {
-					ConfigMisc.Cloud_ParticleSpawnDelay = 5;
-					ConfigStorm.Storm_ParticleSpawnDelay = 5;
-					ConfigParticle.Sandstorm_Particle_Debris_effect_rate = 0.3D;
-					ConfigParticle.Sandstorm_Particle_Dust_effect_rate = 0.3D;
-				}
-			}
-			
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_PERF_NATURE)) {
-				if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_NATURE)).equalsIgnoreCase("high")) {
-					ConfigParticle.Wind_Particle_effect_rate = 1F;
-				} else if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_NATURE)).equalsIgnoreCase("medium")) {
-					ConfigParticle.Wind_Particle_effect_rate = 0.7F;
-				} else if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_NATURE)).equalsIgnoreCase("low")) {
-					ConfigParticle.Wind_Particle_effect_rate = 0.3F;
-				} else if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_NATURE)).equalsIgnoreCase("none")) {
-					ConfigParticle.Wind_Particle_effect_rate = 0.0F;
-				}
-			}
-			
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_PERF_PRECIPRATE)) {
-				//ConfigMisc.Particle_RainSnow = true;
-				if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_PRECIPRATE)).equalsIgnoreCase("high")) {
-					ConfigParticle.Precipitation_Particle_effect_rate = 1D;
-				} else if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_PRECIPRATE)).equalsIgnoreCase("medium")) {
-					ConfigParticle.Precipitation_Particle_effect_rate = 0.7D;
-				} else if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_PRECIPRATE)).equalsIgnoreCase("low")) {
-					ConfigParticle.Precipitation_Particle_effect_rate = 0.3D;
-				} else if (LIST_RATES2.get(nbtClientData.getInteger("btn_" + CMD_BTN_PERF_PRECIPRATE)).equalsIgnoreCase("none")) {
-					ConfigParticle.Precipitation_Particle_effect_rate = 0D;
-					//ConfigMisc.Particle_RainSnow = false;
-				}
-			}
-			
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_COMP_PARTICLESNOMODS)) {
-				ConfigParticle.Particle_VanillaAndWeatherOnly = LIST_TOGGLE.get(nbtClientData.getInteger("btn_" + CMD_BTN_COMP_PARTICLESNOMODS)).equalsIgnoreCase("on");
-			}
-
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_PERF_SHADERS_PARTICLE)) {
-				int val = nbtClientData.getInteger("btn_" + CMD_BTN_PERF_SHADERS_PARTICLE);
-				if (val == 0) {
-					ConfigCoroUtil.particleShaders = false;
-				} else if (val == 1) {
-					ConfigCoroUtil.particleShaders = true;
-				}
-			}
-
-			if (nbtClientData.hasKey("btn_" + CMD_BTN_PERF_SHADERS_FOLIAGE)) {
-				int val = nbtClientData.getInteger("btn_" + CMD_BTN_PERF_SHADERS_FOLIAGE);
-				if (val == 0) {
-					ConfigCoroUtil.foliageShaders = false;
-				} else if (val == 1) {
-					ConfigCoroUtil.foliageShaders = true;
-				}
-			}
-			
-			NBTTagCompound nbtDims = nbtClientData.getCompoundTag("dimData");
-			//Iterator it = nbtDims.getTags().iterator();
-			
-			Weather.dbg("before cl: " + listDimensionsWindEffects);
-			
-			Iterator it = nbtDims.getKeySet().iterator();
-			while (it.hasNext()) {
-			 	String tagName = (String) it.next();
-			 	NBTTagInt entry = (NBTTagInt) nbtDims.getTag(tagName);
-				String[] vals = tagName.split("_");
-				
-				if (vals[2].equals("3")) {
-					int dimID = Integer.parseInt(vals[1]);
-					if (entry.getInt() == 0) {
-						//if off			
-						if (listDimensionsWindEffects.contains(dimID)) {
-							listDimensionsWindEffects.remove((Object)dimID);
-						}
-					} else {
-						//if on
-						if (!listDimensionsWindEffects.contains(dimID)) {
-							listDimensionsWindEffects.add(dimID);
-						}
-					}					
-				}
-			}
-			
-			Weather.dbg("after cl: " + listDimensionsWindEffects);
-			
-			processListsReverse();
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
 	//server should call this on detecting of a save request (close of GUI packet send)
-	public static void processNBTToModConfigServer() {
+	private static void processNBTToModConfigServer() {
 		nbtSaveDataServer();
 		
 		Weather.dbg("processNBTToModConfigServer");
 		
 		Weather.dbg("nbtServerData: " + nbtServerData);
-		
-		//String modID = "weather2Misc";
-		
 		try {
 			if (nbtServerData.hasKey("btn_" + CMD_BTN_COMP_STORM)) {
 				ConfigMisc.overcastMode = LIST_STORMSWHEN.get(nbtServerData.getInteger("btn_" + CMD_BTN_COMP_STORM)).equalsIgnoreCase("Global Overcast");
@@ -248,7 +115,6 @@ public class WeatherUtilConfig {
 			if (nbtServerData.hasKey("btn_" + CMD_BTN_COMP_SNOWFALLBLOCKS)) {
 				boolean val = nbtServerData.getInteger("btn_" + CMD_BTN_COMP_SNOWFALLBLOCKS) == 1;
 				ConfigSnow.Snow_PerformSnowfall = val;
-				//ConfigSnow.Snow_ExtraPileUp = val;
 			}
 			
 			if (nbtServerData.hasKey("btn_" + CMD_BTN_PREF_RATEOFSTORM)) {
@@ -317,11 +183,10 @@ public class WeatherUtilConfig {
 			}
 			
 			NBTTagCompound nbtDims = nbtServerData.getCompoundTag("dimData");
-			//Iterator it = nbtDims.getTags().iterator();
 			
 			Weather.dbg("before: " + listDimensionsWeather);
 			
-			Iterator it = nbtDims.getKeySet().iterator();
+			Iterator<String> it = nbtDims.getKeySet().iterator();
 			while (it.hasNext()) {
 			 	String tagName = (String) it.next();
 			 	NBTTagInt entry = (NBTTagInt) nbtDims.getTag(tagName);
@@ -366,20 +231,7 @@ public class WeatherUtilConfig {
 							listDimensionsStorms.add(dimID);
 						}
 					}					
-				}/* else if (vals[2].equals("3")) {
-					int dimID = Integer.parseInt(vals[1]);
-					if (tag.data == 0) {
-						//if off			
-						if (listDimensionsWindEffects.contains(dimID)) {
-							listDimensionsWindEffects.remove(dimID);
-						}
-					} else {
-						//if on
-						if (!listDimensionsWindEffects.contains(dimID)) {
-							listDimensionsWindEffects.add(dimID);
-						}
-					}					
-				}*/
+				}
 				Weather.dbg("dim: " + vals[1] + " - setting ID: " + vals[2] + " - data: " + entry.getInt());
 			}
 			
@@ -415,30 +267,15 @@ public class WeatherUtilConfig {
 		processNBTToModConfigServer();
 	}
 	
-	public static void nbtReceiveServerDataForCache(NBTTagCompound parNBT) {
-		nbtClientCache = parNBT;
-		
-		Weather.dbg("nbtClientCache: " + nbtServerData);
-	}
-	
-	public static void nbtSaveDataClient() {
-		nbtWriteNBTToDisk(nbtClientData, true);
-	}
-	
-	public static void nbtSaveDataServer() {
+	private static void nbtSaveDataServer() {
 		nbtWriteNBTToDisk(nbtServerData, false);
 	}
 	
 	public static void nbtLoadDataAll() {
-		nbtLoadDataClient();
 		nbtLoadDataServer();
 	}
-
-	public static void nbtLoadDataClient() {
-		nbtClientData = nbtReadNBTFromDisk(true);
-	}
 	
-	public static void nbtLoadDataServer() {
+	private static void nbtLoadDataServer() {
 		nbtServerData = nbtReadNBTFromDisk(false);
 	}
 	
@@ -456,10 +293,7 @@ public class WeatherUtilConfig {
 			nbtDim.setBoolean("clouds", listDimensionsClouds.contains(dimID));
 			nbtDim.setBoolean("storms", listDimensionsStorms.contains(dimID));
 			
-			//PROCESS ME ELSEWHERE!!! - must be done in EZGUI post receiving of this data because client still needs this server created dimension listing first
-			//nbtDim.setBoolean("effects", listDimensionsWindEffects.contains(dimID));
 			data.setTag("" + dimID, nbtDim);
-			///data.setString("" + worlds[i].provider.dimensionId, worlds[i].provider.getDimensionName());
 		}
 		
 		return data;
@@ -472,14 +306,14 @@ public class WeatherUtilConfig {
 		listDimensionsWindEffects = parseList(ConfigMisc.Dimension_List_WindEffects);
 	}
 	
-	public static void processListsReverse() {
+	private static void processListsReverse() {
 		ConfigMisc.Dimension_List_Weather = StringUtils.join(listDimensionsWeather, " ");
 		ConfigMisc.Dimension_List_Clouds = StringUtils.join(listDimensionsClouds, " ");
 		ConfigMisc.Dimension_List_Storms = StringUtils.join(listDimensionsStorms, " ");
 		ConfigMisc.Dimension_List_WindEffects = StringUtils.join(listDimensionsWindEffects, " ");
 	}
 	
-	public static List<Integer> parseList(String parData) {
+	private static List<Integer> parseList(String parData) {
 		String listStr = parData;
 		listStr = listStr.replace(",", " ");
 		String[] arrStr = listStr.split(" ");
@@ -491,10 +325,10 @@ public class WeatherUtilConfig {
 				arrInt[i] = -999999; //set to -999999, hope no dimension id of this exists
 			}
 		}
-		return new ArrayList(Arrays.asList(arrInt));
+		return new ArrayList<Integer>(Arrays.asList(arrInt));
 	}
 	
-	public static void nbtWriteNBTToDisk(NBTTagCompound parData, boolean saveForClient) {
+	private static void nbtWriteNBTToDisk(NBTTagCompound parData, boolean saveForClient) {
 		String fileURL = null;
 		if (saveForClient) {
 			fileURL = CoroUtilFile.getMinecraftSaveFolderPath() + File.separator + "Weather2" + File.separator + "EZGUIConfigClientData.dat";
@@ -512,7 +346,7 @@ public class WeatherUtilConfig {
 		}
 	}
 	
-	public static NBTTagCompound nbtReadNBTFromDisk(boolean loadForClient) {
+	private static NBTTagCompound nbtReadNBTFromDisk(boolean loadForClient) {
 		NBTTagCompound data = new NBTTagCompound();
 		String fileURL = null;
 		if (loadForClient) {

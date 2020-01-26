@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Random;
 
 import CoroUtil.packet.PacketHelper;
-import CoroUtil.util.CoroUtilEntity;
 import CoroUtil.util.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,10 +31,6 @@ import weather2.weathersystem.wind.WindManager;
 
 public class WeatherManagerServer extends WeatherManagerBase {
 
-	//storm logic, syncing to client
-	
-	public int syncRange = 256;
-
 	public WeatherManagerServer(int parDim) {
 		super(parDim);
 	}
@@ -50,8 +45,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		super.tick();
 		
 		World world = getWorld();
-		
-		//wrap back to ID 0 just in case someone manages to hit 9223372036854775807 O_o
 		if (WeatherObject.lastUsedStormID >= Long.MAX_VALUE) {
 			WeatherObject.lastUsedStormID = 0;
 		}
@@ -59,11 +52,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		tickWeatherCoverage();
 		
 		if (world != null) {
-			
-			//sync storms
-			
-			//System.out.println("getStormObjects().size(): " + getStormObjects().size());
-			
 			for (int i = 0; i < getStormObjects().size(); i++) {
 				WeatherObject wo = getStormObjects().get(i);
 				int updateRate = wo.getUpdateRateForNetwork();
@@ -81,9 +69,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 			if (world.getTotalWorldTime() % 60 == 0) {
 				nbtStormsForIMC();
 			}
-			
-			//temp
-			//getVolcanoObjects().clear();
 			
 			//sim box work
 			int rate = 20;
@@ -112,49 +97,13 @@ public class WeatherManagerServer extends WeatherManagerBase {
 				}
 
 				Random rand = new Random();
-
-				//test with high wind to maximize movement/recycling
-				//cloud data:
-				//0.6: 19-20/20
-				//0.5: 17-18/20
-				//0.4: 16-17/20
-				//0.3: 16-18/20?
-				//0.2: 12/20?
-
-				/**
-				 * max size of cloud sets = 300 radius
-				 * sim box size = 1024 radius
-				 *
-				 * ~9 cloud sets in a player simbox
-				 */
-
-				//TEMP!!!
-				/*windMan.startHighWindEvent();
-				cloudIntensity = 0.3F;
-				int countDbg = 0;
-				int countDbg2 = 0;
-				for (StormObject so : getStormObjectsByLayer(0)) {
-					if (!so.isCloudlessStorm()) {
-						countDbg++;
-					} else {
-						countDbg2++;
-					}
-				}
-				System.out.println("cloud/cloudless/max count: " + countDbg + "/" + countDbg2 + "/" + (ConfigStorm.Storm_MaxPerPlayerPerLayer * world.playerEntities.size()));*/
-				
 				//cloud formation spawning - REFINE ME!
 				if (!ConfigMisc.Aesthetic_Only_Mode && WeatherUtilConfig.listDimensionsClouds.contains(world.provider.getDimension())) {
 					for (int i = 0; i < world.playerEntities.size(); i++) {
 						EntityPlayer entP = world.playerEntities.get(i);
-
-						//Weather.dbg("getStormObjects().size(): " + getStormObjects().size());
-
-						//layer 0
 						if (getStormObjectsByLayer(0).size() < ConfigStorm.Storm_MaxPerPlayerPerLayer * world.playerEntities.size()) {
 							if (rand.nextInt(5) == 0) {
-								//if (rand.nextFloat() <= cloudIntensity) {
 								trySpawnStormCloudNearPlayerForLayer(entP, 0);
-								//}
 							}
 						}
 
@@ -162,9 +111,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 						if (getStormObjectsByLayer(1).size() < ConfigStorm.Storm_MaxPerPlayerPerLayer * world.playerEntities.size()) {
 							if (ConfigMisc.Cloud_Layer1_Enable) {
 								if (rand.nextInt(5) == 0) {
-									//if (rand.nextFloat() <= cloudIntensity) {
 									trySpawnStormCloudNearPlayerForLayer(entP, 1);
-									//}
 								}
 							}
 						}
@@ -189,7 +136,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 					} else {
 						for (int i = 0; i < world.playerEntities.size(); i++) {
 							EntityPlayer entP = world.playerEntities.get(i);
-							NBTTagCompound playerNBT = PlayerData.getPlayerNBT(CoroUtilEntity.getName(entP));
+							NBTTagCompound playerNBT = PlayerData.getPlayerNBT(entP.getName());
 							boolean sandstormMade = trySandstormForPlayer(entP, playerNBT.getLong("lastSandstormTime"));
 							if (sandstormMade) {
 								playerNBT.setLong("lastSandstormTime", world.getTotalWorldTime());
@@ -201,7 +148,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		}
 	}
 
-	public void tickWeatherCoverage() {
+	private void tickWeatherCoverage() {
 		World world = this.getWorld();
 		if (world != null) {
 			if (!ConfigMisc.overcastMode) {
@@ -211,30 +158,16 @@ public class WeatherManagerServer extends WeatherManagerBase {
 				}
 			}
 
-			boolean test = world.getWorldInfo().isRaining();
-
 			if (ConfigStorm.preventServerThunderstorms) {
 				world.getWorldInfo().setThundering(false);
 			}
 
-			//if (ConfigMisc.overcastMode) {
 			if (world.getTotalWorldTime() % 40 == 0) {
 				isVanillaRainActiveOnServer = getWorld().isRaining();
 				isVanillaThunderActiveOnServer = getWorld().isThundering();
 				vanillaRainTimeOnServer = getWorld().getWorldInfo().getRainTime();
 				syncWeatherVanilla();
 			}
-			//}
-
-			if (world.getTotalWorldTime() % 400 == 0) {
-				//Weather.dbg("for dim: " + world.provider.dimensionId + " - is server dimension raining?: " + world.isRaining() + " time: " + world.getWorldInfo().getRainTime());
-			}
-
-			//tick partial cloud cover variation
-			//windMan.startHighWindEvent();
-			//windMan.stopLowWindEvent();
-			//cloudIntensity = 0.3F;
-
 			if (world.getTotalWorldTime() % 200 == 0) {
 				Random rand = new Random();
 				cloudIntensity += (float)((rand.nextDouble() * ConfigMisc.Cloud_Coverage_Random_Change_Amount) - (rand.nextDouble() * ConfigMisc.Cloud_Coverage_Random_Change_Amount));
@@ -247,21 +180,11 @@ public class WeatherManagerServer extends WeatherManagerBase {
 						cloudIntensity = (float) ConfigMisc.Cloud_Coverage_Max_Percent / 100F;
 					}
 				}
-				if (world.getTotalWorldTime() % 2000 == 0) {
-					//Weather.dbg("cloudIntensity FORCED MAX: " + cloudIntensity);
-				}
-
-				//force full cloudIntensity if server side raining
-				//note: storms also revert to clouded storms for same condition
-
 			}
-
-			//temp lock to max for fps comparisons
-			//cloudIntensity = 1F;
 		}
 	}
 
-	public boolean trySandstormForPlayer(EntityPlayer player, long lastSandstormTime) {
+	private boolean trySandstormForPlayer(EntityPlayer player, long lastSandstormTime) {
 		boolean sandstormMade = false;
 		if (lastSandstormTime == 0 || lastSandstormTime + ConfigSand.Sandstorm_TimeBetweenInTicks < player.getEntityWorld().getTotalWorldTime()) {
 			sandstormMade = trySpawnSandstormNearPos(player.getEntityWorld(), new Vec3(player.getPositionVector()));
@@ -303,7 +226,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 			if (WeatherObjectSandstorm.isDesert(biomeIn, true)) {
 				//found
 				foundPos = pos;
-				//break;
 				
 				//check left and right about 20 blocks, if its not still desert, force retry
 				double dirXLeft = -Math.sin(Math.toRadians(angle-90));
@@ -375,16 +297,9 @@ public class WeatherManagerServer extends WeatherManagerBase {
 
 		Weather.dbg("couldnt spawn sandstorm");
 		return false;
-		
-		/*if (foundPos != null) {
-			
-		} else {
-			System.out.println("couldnt spawn sandstorm");
-			return false;
-		}*/
 	}
 	
-	public void trySpawnStormCloudNearPlayerForLayer(EntityPlayer entP, int layer) {
+	private void trySpawnStormCloudNearPlayerForLayer(EntityPlayer entP, int layer) {
 		
 		Random rand = new Random();
 		
@@ -413,7 +328,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		}
 		
 		if (soClose == null) {
-			//Weather.dbg("spawning storm at: " + spawnX + " - " + spawnZ);
 			
 			StormObject so = new StormObject(this);
 			so.initFirstTime();
@@ -423,14 +337,17 @@ public class WeatherManagerServer extends WeatherManagerBase {
 			if (layer != 0) {
 				so.canBeDeadly = false;
 			}
-			so.userSpawnedFor = CoroUtilEntity.getName(entP);
+			if(entP == null) {
+				so.userSpawnedFor = "nullObject";
+			}
+			else {
+				so.userSpawnedFor = entP.getName();
+			}
 			if (rand.nextFloat() >= cloudIntensity) {
 				so.setCloudlessStorm(true);
 			}
 			addStormObject(so);
 			syncStormNew(so);
-		} else {
-			//Weather.dbg("couldnt find space to spawn cloud formation");
 		}
 	}
 	
@@ -515,7 +432,6 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		} else {
 			Weather.eventChannel.sendTo(PacketHelper.getNBTPacket(data, Weather.eventChannelName), entP);
 		}
-		//PacketDispatcher.sendPacketToAllAround(parStorm.pos.xCoord, parStorm.pos.yCoord, parStorm.pos.zCoord, syncRange, getWorld().provider.dimensionId, WeatherPacketHelper.createPacketForServerToClientSerialization("WeatherData", data));
 	}
 	
 	public void syncStormUpdate(WeatherObject parStorm) {
@@ -538,7 +454,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 				}
 			}
 
-			Iterator iterator = parStorm.getNbtCache().getNewNBT().getKeySet().iterator();
+			Iterator<String> iterator = parStorm.getNbtCache().getNewNBT().getKeySet().iterator();
 			String keys = "";
 			while (iterator.hasNext()) {
 				keys = keys.concat((String) iterator.next() + "; ");
@@ -555,13 +471,11 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		data.setString("command", "syncStormRemove");
 		parStorm.nbtSyncForClient();
 		data.setTag("data", parStorm.getNbtCache().getNewNBT());
-		//data.setTag("data", parStorm.nbtSyncForClient(new NBTTagCompound()));
-		//fix for client having broken states
 		data.getCompoundTag("data").setBoolean("isDead", true);
 		Weather.eventChannel.sendToDimension(PacketHelper.getNBTPacket(data, Weather.eventChannelName), getWorld().provider.getDimension());
 	}
 	
-	public void syncWeatherVanilla() {
+	private void syncWeatherVanilla() {
 		
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("packetCommand", "WeatherData");

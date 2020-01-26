@@ -26,7 +26,7 @@ import weather2.entity.EntityMovingBlock;
 @SideOnly(Side.CLIENT)
 public class RenderFlyingBlock extends Render<Entity>
 {
-	Block renderBlock;
+	private Block renderBlock;
 	
     public RenderFlyingBlock(RenderManager manager, Block parBlock)
     {
@@ -87,7 +87,6 @@ public class RenderFlyingBlock extends Render<Entity>
 
 						bufferbuilder.begin(7, DefaultVertexFormats.BLOCK);
 						BlockPos blockpos = new BlockPos(entity.posX, entity.getEntityBoundingBox().maxY, entity.posZ);
-						//GlStateManager.translate((float)(x - (double)blockpos.getX() - 0.5D), (float)(y - (double)blockpos.getY()), (float)(z - (double)blockpos.getZ() - 0.5D));
 						GlStateManager.translate((float)(x), (float)(y), (float)(z));
 						bufferbuilder.setTranslation((double)((float)(-blockpos.getX()) - 0.5F), (double)(-blockpos.getY()), (double)((float)(-blockpos.getZ()) - 0.5F));
 						GlStateManager.rotate((float)(age * 0.1F * 180.0D / 12.566370964050293D - 0.0D), 1.0F, 0.0F, 0.0F);
@@ -119,7 +118,5 @@ public class RenderFlyingBlock extends Render<Entity>
 				ex.printStackTrace();
 			}
 		}
-
-
     }
 }

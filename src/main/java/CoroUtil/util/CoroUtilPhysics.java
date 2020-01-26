@@ -81,7 +81,7 @@ public class CoroUtilPhysics {
      * @param y2
      * @return
      */
-    public static double distBetweenPointAndLine(double x, double y, double x1, double y1, double x2, double y2) {
+    private static double distBetweenPointAndLine(double x, double y, double x1, double y1, double x2, double y2) {
     	// A - the standalone point (x, y)
     	// B - start point of the line segment (x1, y1)
     	// C - end point of the line segment (x2, y2)
@@ -103,11 +103,10 @@ public class CoroUtilPhysics {
     	return AD;
     }
 
-    public static double distBetween(double x, double y, double x1, double y1) {
+    private static double distBetween(double x, double y, double x1, double y1) {
     	double xx = x1 - x;
     	double yy = y1 - y;
 
     	return Math.sqrt(xx * xx + yy * yy);
     }
-	
 }

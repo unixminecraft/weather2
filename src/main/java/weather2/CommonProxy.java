@@ -1,18 +1,17 @@
 package weather2;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import weather2.block.BlockAnemometer;
@@ -39,22 +38,22 @@ import weather2.util.WeatherUtil;
 import weather2.util.WeatherUtilConfig;
 
 @Mod.EventBusSubscriber
-public class CommonProxy implements IGuiHandler
+public class CommonProxy
 {
 
-	public static final String tornado_sensor = "tornado_sensor";
-	public static final String tornado_siren = "tornado_siren";
-	public static final String tornado_siren_manual = "tornado_siren_manual";
-	public static final String wind_vane = "wind_vane";
-	public static final String weather_forecast = "weather_forecast";
-	public static final String weather_machine = "weather_machine";
-	public static final String weather_deflector = "weather_deflector";
-	public static final String anemometer = "anemometer";
-	public static final String sand_layer = "sand_layer";
+	private static final String tornado_sensor = "tornado_sensor";
+	private static final String tornado_siren = "tornado_siren";
+	private static final String tornado_siren_manual = "tornado_siren_manual";
+	private static final String wind_vane = "wind_vane";
+	private static final String weather_forecast = "weather_forecast";
+	private static final String weather_machine = "weather_machine";
+	private static final String weather_deflector = "weather_deflector";
+	private static final String anemometer = "anemometer";
+	private static final String sand_layer = "sand_layer";
 
-	public static final String sand_layer_placeable = "sand_layer_placeable";
-	public static final String weather_item = "weather_item";
-	public static final String pocket_sand = "pocket_sand";
+	private static final String sand_layer_placeable = "sand_layer_placeable";
+	private static final String weather_item = "weather_item";
+	private static final String pocket_sand = "pocket_sand";
 
 	@GameRegistry.ObjectHolder(Weather.modID + ":" + tornado_sensor)
 	public static Block blockTSensor;
@@ -92,7 +91,7 @@ public class CommonProxy implements IGuiHandler
 	@GameRegistry.ObjectHolder(Weather.modID + ":" + pocket_sand)
 	public static Item itemPocketSand;
 	
-	public static CreativeTabWeather tab;
+	private static CreativeTabWeather tab;
 	
     public CommonProxy()
     {
@@ -128,8 +127,6 @@ public class CommonProxy implements IGuiHandler
 
     public void init()
     {
-
-    	//Weather.dbg("block list processing disabled");
     	WeatherUtil.doBlockList();
     	WeatherUtilConfig.processLists();
 
@@ -139,9 +136,6 @@ public class CommonProxy implements IGuiHandler
     	addMapping(EntityMovingBlock.class, "moving_block", 1, 128, 5, true);
     	addMapping(EntityLightningBolt.class, "weather2_lightning_bolt", 2, 512, 5, true);
     	addMapping(EntityLightningBoltCustom.class, "weather2_lightning_bolt_custom", 2, 512, 5, true);
-
-		/*registerBlocks(null);
-		registerItems(null);*/
     }
 
     public void preInit() {
@@ -183,42 +177,23 @@ public class CommonProxy implements IGuiHandler
 				new ItemStack(itemPocketSand, 8), new Object[] {"DDD", "DID", "DDD", 'D', itemSandLayer, 'I', itemWeatherRecipe});
 	}
     
-    /*public void addItem(Item is, String unlocalizedName) {
-		addItem(is, unlocalizedName, "");
-	}
-	
-	public void addItem(Item is, String unlocalizedName, String itemNameBase) {
-		
-		Item item = is;//.getItem();
-		
-		//vanilla calls
-		item.setUnlocalizedName(Weather.modID + ":" + unlocalizedName);
-		//item.setTextureName(Weather.modID + ":" + unlocalizedName);
-		item.setCreativeTab(tab);
-		//LanguageRegistry.addName(item, itemNameBase); //really not usefull, since its dynamic from nbt
-		
-		
-	}*/
-    
-	public void addBlock(RegistryEvent.Register<Block> event, Block block, Class tEnt, String unlocalizedName) {
+	private void addBlock(RegistryEvent.Register<Block> event, Block block, Class<? extends TileEntity> tEnt, String unlocalizedName) {
 		addBlock(event, block, tEnt, unlocalizedName, true);
 	}
 	
-    public void addBlock(RegistryEvent.Register<Block> event, Block block, Class tEnt, String unlocalizedName, boolean creativeTab) {
+	private void addBlock(RegistryEvent.Register<Block> event, Block block, Class<? extends TileEntity> tEnt, String unlocalizedName, boolean creativeTab) {
 		addBlock(event, block, unlocalizedName, creativeTab);
 		GameRegistry.registerTileEntity(tEnt, unlocalizedName);
 	}
 	
-    public void addBlock(RegistryEvent.Register<Block> event, Block parBlock, String unlocalizedName) {
+	private void addBlock(RegistryEvent.Register<Block> event, Block parBlock, String unlocalizedName) {
     	addBlock(event, parBlock, unlocalizedName, true);
     }
     
-	public void addBlock(RegistryEvent.Register<Block> event, Block parBlock, String unlocalizedName, boolean creativeTab) {
-		//vanilla calls
-		//GameRegistry.registerBlock(parBlock, unlocalizedName);
+	private void addBlock(RegistryEvent.Register<Block> event, Block parBlock, String unlocalizedName, boolean creativeTab) {
 		
 		parBlock.setUnlocalizedName(Weather.modID + "." + unlocalizedName);
-		parBlock.setRegistryName(/*Weather.modID + ":" + */unlocalizedName);
+		parBlock.setRegistryName(unlocalizedName);
 		
 		if (creativeTab) {
 			parBlock.setCreativeTab(tab);
@@ -227,61 +202,24 @@ public class CommonProxy implements IGuiHandler
 		}
 		if (event != null) {
 			event.getRegistry().register(parBlock);
-		} else {
-			//GameRegistry.register(parBlock);
 		}
-
-		//ForgeRegistries.BLOCKS.register(parBlock);
-		//LanguageRegistry.addName(parBlock, blockNameBase);
 	}
 
-	public void addItemBlock(RegistryEvent.Register<Item> event, Item item) {
+	protected void addItemBlock(RegistryEvent.Register<Item> event, Item item) {
 		event.getRegistry().register(item);
 	}
 	
-	public void addItem(RegistryEvent.Register<Item> event, Item item, String name) {
+	protected void addItem(RegistryEvent.Register<Item> event, Item item, String name) {
 		item.setUnlocalizedName(Weather.modID + "." + name);
-		//item.setRegistryName(new ResourceLocation(Weather.modID, name));
 		item.setRegistryName(name);
-
-		//GameRegistry.register(item);
 		item.setCreativeTab(tab);
 
 		if (event != null) {
 			event.getRegistry().register(item);
-		} else {
-			//GameRegistry.register(item);
 		}
-
-		//registerItemVariantModel(item, name, 0);
-
-		//return item;
 	}
     
-    public void addMapping(Class par0Class, String par1Str, int entityId, int distSync, int tickRateSync, boolean syncMotion) {
+	private void addMapping(Class<? extends Entity> par0Class, String par1Str, int entityId, int distSync, int tickRateSync, boolean syncMotion) {
     	EntityRegistry.registerModEntity(new ResourceLocation(Weather.modID, par1Str), par0Class, par1Str, entityId, Weather.instance, distSync, tickRateSync, syncMotion);
-        //EntityList.addMapping(par0Class, par1Str, entityId);
     }
-
-    @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world,
-            int x, int y, int z)
-    {
-        return null;
-    }
-
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world,
-            int x, int y, int z)
-    {
-        return null;
-    }
-
-	/*public void registerItemVariantModel(Item item, String name, int metadata) {}
-	public void registerItemVariantModel(Item item, String registryName, int metadata, String variantName) {}
-
-	public ResourceLocation getResource(String name) {
-		return new ResourceLocation(Weather.modID, name);
-	}*/
-
 }

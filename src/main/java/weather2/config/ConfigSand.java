@@ -1,10 +1,5 @@
 package weather2.config;
 
-import java.io.File;
-
-import weather2.Weather;
-
-
 public class ConfigSand {
 
 
@@ -22,24 +17,4 @@ public class ConfigSand {
     public static boolean Sandstorm_Sand_Buildup_AllowOutsideDesert = true;
 
     public static boolean Sandstorm_Siren_PleaseNoDarude = false;
-
-    public String getName() {
-        return "Sand";
-    }
-
-    public String getRegistryName() {
-        return Weather.modID + getName();
-    }
-
-    public String getConfigFileName() {
-        return "Weather2" + File.separator + getName();
-    }
-
-    public String getCategory() {
-        return "Weather2: " + getName();
-    }
-
-    public void hookUpdatedValues() {
-
-    }
 }

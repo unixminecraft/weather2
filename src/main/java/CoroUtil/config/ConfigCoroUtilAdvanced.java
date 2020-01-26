@@ -1,8 +1,5 @@
 package CoroUtil.config;
 
-import java.io.File;
-
-
 public class ConfigCoroUtilAdvanced {
 
 	public static boolean repairBlockNextRandomTick = false;
@@ -48,25 +45,4 @@ public class ConfigCoroUtilAdvanced {
 	public static boolean minersPushAwayOnlyOtherBuffedMobs = true;
 
 	public static boolean enableDebugRenderer = false;
-
-	public String getName() {
-		return "Advanced";
-	}
-
-	public String getRegistryName() {
-		return "coroutil_advanced";
-	}
-
-	public String getConfigFileName() {
-		return "CoroUtil" + File.separator + getName();
-	}
-
-	public String getCategory() {
-		return getName();
-	}
-
-	public void hookUpdatedValues() {
-
-	}
-
 }

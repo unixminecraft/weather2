@@ -55,9 +55,6 @@ public class WeatherUtilSound {
         snd_rand[3] = rand.nextInt(snd_sandstorm_high.length);
         snd_rand[4] = rand.nextInt(snd_sandstorm_med.length);
         snd_rand[5] = rand.nextInt(snd_sandstorm_low.length);
-        /*soundID[0] = -1;
-        soundID[1] = -1;
-        soundID[2] = -1;*/
         soundToLength.put(snd_tornado_dmg_close[0], 2515);
         soundToLength.put(snd_tornado_dmg_close[1], 2580);
         soundToLength.put(snd_tornado_dmg_close[2], 2741);
@@ -83,9 +80,6 @@ public class WeatherUtilSound {
     @SideOnly(Side.CLIENT)
     public static void playNonMovingSound(Vec3 parPos, String var1, float var5, float var6, float parCutOffRange)
     {
-    	//String prefix = "streaming.";
-    	String affix = ".ogg";
-    	//ResourceLocation res = new ResourceLocation(var1);
     	SoundEvent event = SoundRegistry.get(var1);
     	MovingSoundStreamingSource sound = new MovingSoundStreamingSource(parPos, event, SoundCategory.WEATHER, var5, var6, parCutOffRange);
     	FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
@@ -94,14 +88,8 @@ public class WeatherUtilSound {
     @SideOnly(Side.CLIENT)
     public static void playMovingSound(StormObject parStorm, String var1, float var5, float var6, float parCutOffRange)
     {
-    	//String prefix = "streaming.";
-    	String affix = ".ogg";
-    	
-    	//ResourceLocation res = new ResourceLocation(var1);
     	SoundEvent event = SoundRegistry.get(var1);
-    	
     	MovingSoundStreamingSource sound = new MovingSoundStreamingSource(parStorm, event, SoundCategory.WEATHER, var5, var6, parCutOffRange);
-    	
     	FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
 
     }
@@ -113,6 +101,4 @@ public class WeatherUtilSound {
         MovingSoundStreamingSource sound = new MovingSoundStreamingSource(parPos, event, SoundCategory.WEATHER, var5, var6, true);
         FMLClientHandler.instance().getClient().getSoundHandler().playSound(sound);
     }
-	
-    
 }

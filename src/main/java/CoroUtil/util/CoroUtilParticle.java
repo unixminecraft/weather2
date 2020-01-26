@@ -8,7 +8,7 @@ public class CoroUtilParticle {
     public static Vec3[] rainPositions;
     public static int maxRainDrops = 2000;
     
-    public static Random rand = new Random();
+    private static Random rand = new Random();
     
     static {
     	rainPositions = new Vec3[maxRainDrops];
@@ -19,5 +19,4 @@ public class CoroUtilParticle {
         	rainPositions[i] = new Vec3((rand.nextFloat() * range) - (range/2), (rand.nextFloat() * range/1) - (range/2), (rand.nextFloat() * range) - (range/2));
         }
     }
-	
 }

@@ -7,7 +7,7 @@ public class ShaderProgramFoliage extends ShaderProgram {
     public ShaderProgramFoliage(String name) throws Exception {
         super(name);
     }
-
+    
     @Override
     public void setupAttribLocations() {
         int index = 0;

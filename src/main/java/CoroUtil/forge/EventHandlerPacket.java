@@ -63,9 +63,7 @@ public class EventHandlerPacket {
 						entity.motionY += nbt.getDouble("motionY");
 						entity.motionZ += nbt.getDouble("motionZ");
 					}
-
 				});
-
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

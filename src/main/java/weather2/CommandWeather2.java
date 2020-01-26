@@ -3,7 +3,6 @@ package weather2;
 import java.util.List;
 import java.util.Random;
 
-import CoroUtil.util.CoroUtilEntity;
 import CoroUtil.util.Vec3;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -42,10 +41,6 @@ public class CommandWeather2 extends CommandBase {
 		Vec3d posVec = var1.getPositionVector();
 		
 		try {
-			/*if(var1 instanceof EntityPlayerMP)
-			{*/
-				//EntityPlayer player = getCommandSenderAsPlayer(var1);
-				
 				if (var2[0].equals("testLightning")) {
 					Random rand = new Random();
 					EntityLightningBolt ent = new EntityLightningBolt(world, posBlock.getX() + rand.nextInt(2) -  + rand.nextInt(2)
@@ -102,7 +97,7 @@ public class CommandWeather2 extends CommandBase {
 							WeatherManagerServer wm = ServerTickHandler.lookupDimToWeatherMan.get(dimension);
 							StormObject so = new StormObject(wm);
 							so.layer = 0;
-							so.userSpawnedFor = CoroUtilEntity.getName(player);
+							so.userSpawnedFor = player.getName();
 							so.naturallySpawned = false;
 							so.levelTemperature = 0.1F;
 							so.pos = new Vec3(posVec.x, StormObject.layers.get(so.layer), posVec.z);
@@ -170,9 +165,6 @@ public class CommandWeather2 extends CommandBase {
 							} else if (var2[2].equalsIgnoreCase("sandstormUpwind")) {
 								
 								WeatherObjectSandstorm sandstorm = new WeatherObjectSandstorm(wm);
-								
-								//sandstorm.pos = new Vec3(player.posX, player.world.getHeight(new BlockPos(player.posX, 0, player.posZ)).getY() + 1, player.posZ);
-
 								Vec3 pos = new Vec3(posVec.x, world.getHeight(new BlockPos(posVec.x, 0, posVec.z)).getY() + 1, posVec.z);
 
 								
@@ -236,7 +228,6 @@ public class CommandWeather2 extends CommandBase {
 						sendCommandSenderMsg(var1, helpMsgStorm);
 					}
 				} else if (var2[0].equals("testderp") && player != null) {
-					//EntityPlayerMP player = var1;
 					WeatherUtilBlock.floodAreaWithLayerableBlock(player.world, new Vec3(player.posX, player.posY, player.posZ), player.rotationYawHead, 1, 1, CommonProxy.blockSandLayer, 30);
 				} else if (var2[0].equals("wind")) {
 					if (var2[1].equals("high")) {
@@ -287,7 +278,6 @@ public class CommandWeather2 extends CommandBase {
 				} else {
 					sendCommandSenderMsg(var1, helpMsgStorm);
 				}
-			/*}*/
 		} catch (Exception ex) {
 			System.out.println("Exception handling Weather2 command");
 			sendCommandSenderMsg(var1, helpMsgStorm);
@@ -312,8 +302,7 @@ public class CommandWeather2 extends CommandBase {
 		return 2;
 	}
 
-	public static void sendCommandSenderMsg(ICommandSender entP, String msg) {
+	private static void sendCommandSenderMsg(ICommandSender entP, String msg) {
 		entP.sendMessage(new TextComponentString(msg));
 	}
-
 }
