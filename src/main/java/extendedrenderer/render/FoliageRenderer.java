@@ -36,9 +36,7 @@ import net.minecraft.entity.Entity;
 
 public class FoliageRenderer {
 
-
-    public static FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
-    public static FloatBuffer viewMatrixBuffer = BufferUtils.createFloatBuffer(16);
+	private static FloatBuffer viewMatrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public Transformation transformation;
 

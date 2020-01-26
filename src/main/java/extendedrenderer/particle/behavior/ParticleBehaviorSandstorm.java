@@ -7,10 +7,6 @@ import net.minecraft.util.math.BlockPos;
 
 public class ParticleBehaviorSandstorm extends ParticleBehaviors {
 
-	//Externally updated variables, adjusting how templated behavior works
-	public int curTick = 0;
-	public int ticksMax = 1;
-	
 	public ParticleBehaviorSandstorm(Vec3 source) {
 		super(source);
 	}

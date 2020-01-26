@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,8 +50,6 @@ public class WeatherManagerBase {
 	//0 = none, 1 = usual max overcast
 	public float cloudIntensity = 1F;
 
-	private HashSet<Long> listWeatherBlockDamageDeflector = new HashSet<>();
-
 	public WeatherManagerBase(int parDim) {
 		dim = parDim;
 		windMan = new WindManager(this);
@@ -61,7 +58,7 @@ public class WeatherManagerBase {
 		lookupStormObjectsByLayer.put(2, new ArrayList<>());
 	}
 	
-	public void reset() {
+	protected void reset() {
 		for (int i = 0; i < getStormObjects().size(); i++) {
 			WeatherObject so = getStormObjects().get(i);
 			
@@ -85,7 +82,7 @@ public class WeatherManagerBase {
 		return null;
 	}
 	
-	public void tick() {
+	protected void tick() {
 		World world = getWorld();
 		if (world != null) {
 			//tick storms
@@ -133,7 +130,7 @@ public class WeatherManagerBase {
 		return listStormObjects;
 	}
 	
-	public List<StormObject> getStormObjectsByLayer(int layer) {
+	protected List<StormObject> getStormObjectsByLayer(int layer) {
 		return lookupStormObjectsByLayer.get(layer);
 	}
 	
@@ -168,7 +165,7 @@ public class WeatherManagerBase {
 		}
 	}
 	
-	public StormObject getClosestStormAny(Vec3 parPos, double maxDist) {
+	protected StormObject getClosestStormAny(Vec3 parPos, double maxDist) {
 		return getClosestStorm(parPos, maxDist, -1, true);
 	}
 	
@@ -397,9 +394,5 @@ public class WeatherManagerBase {
 	
 	public WindManager getWindManager() {
 		return this.windMan;
-	}
-
-	public HashSet<Long> getListWeatherBlockDamageDeflector() {
-		return listWeatherBlockDamageDeflector;
 	}
 }

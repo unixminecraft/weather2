@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CoroUtilFile {
 	
-	public static String lastWorldFolder = "";
+	private static String lastWorldFolder = "";
 	
 	//this must be used while server is active
     public static String getWorldFolderName() {
@@ -50,7 +50,7 @@ public class CoroUtilFile {
     }
     
     @SideOnly(Side.CLIENT)
-	public static String getClientSidePath() {
+    private static String getClientSidePath() {
 		return FMLClientHandler.instance().getClient().mcDataDir/*getAppDir("minecraft")*/.getPath();
 	}
 

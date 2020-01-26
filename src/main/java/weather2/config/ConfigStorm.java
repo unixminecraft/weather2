@@ -53,12 +53,6 @@ public class ConfigStorm {
 
 	public static boolean Lightning_StartsFires = false;
 
-	public static int Storm_Deflector_RadiusOfStormRemoval = 150;
-
-    public static int Storm_Deflector_MinStageRemove = 1;
-    public static boolean Storm_Deflector_RemoveRainstorms = false;
-    public static boolean Storm_Deflector_RemoveSandstorms = true;
-
     public static double Storm_Rain_Overcast_Amount = 0.01D;
 	public static int Storm_Rain_Overcast_OddsTo1 = 50;
 

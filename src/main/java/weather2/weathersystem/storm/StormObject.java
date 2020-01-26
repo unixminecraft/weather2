@@ -114,7 +114,7 @@ public class StormObject extends WeatherObject {
 	
 	//revision, ints for each stage of intensity, and a float for the intensity of THAT current stage
 	public int levelCurIntensityStage = 0; //since we want storms to build up to a climax still, this will start from 0 and peak to levelStormIntensityMax
-	public float levelCurStagesIntensity = 0;
+	private float levelCurStagesIntensity = 0;
 	public boolean hasStormPeaked = false;
 	
 	private int maxIntensityStage = STATE_STAGE5;

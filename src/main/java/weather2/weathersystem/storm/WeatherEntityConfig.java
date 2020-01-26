@@ -4,8 +4,6 @@ package weather2.weathersystem.storm;
 public class WeatherEntityConfig {
 	
     public static int TYPE_SPOUT = 0;
-    public static int TYPE_TORNADO = 1;
-    public static int TYPE_HURRICANE = 2;
     public int type = 1;
     public float tornadoInitialSpeed;
     public float tornadoPullRate;

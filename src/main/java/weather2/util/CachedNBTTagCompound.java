@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * revisions made to further integrate it into the newer design of WeatherObjects
  */
 public class CachedNBTTagCompound {
+	
 	private NBTTagCompound newData;
 	private NBTTagCompound cachedData;
 	private boolean forced = false;

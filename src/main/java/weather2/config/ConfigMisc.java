@@ -33,7 +33,6 @@ public class ConfigMisc {
 	
 	public static int Thread_Particle_Process_Delay = 400;
 	// sound
-	public static double volWindScale = 0.05D;
 	public static double volWaterfallScale = 0.5D;
 	public static double volWindTreesScale = 0.5D;
 	public static double volWindLightningScale = 1D;
@@ -41,16 +40,13 @@ public class ConfigMisc {
 	// blocks
 	public static double sirenActivateDistance = 256D;
 	public static double sensorActivateDistance = 256D;
-	public static boolean Block_WeatherMachineNoTornadosOrCyclones = false;
 	
-	public static boolean Block_WeatherMachineNoRecipe = false;
 	public static boolean Block_SensorNoRecipe = false;
 	public static boolean Block_SirenNoRecipe = false;
 	public static boolean Block_SirenManualNoRecipe = false;
 	public static boolean Block_WindVaneNoRecipe = false;
 	public static boolean Block_AnemometerNoRecipe = false;
 	public static boolean Block_WeatherForecastNoRecipe = false;
-	public static boolean Block_WeatherDeflectorNoRecipe = false;
 	public static boolean Block_SandLayerNoRecipe = false;
 	public static boolean Block_SandNoRecipe = false;
 	public static boolean Item_PocketSandNoRecipe = false;
@@ -74,8 +70,4 @@ public class ConfigMisc {
 	public static boolean Client_PotatoPC_Mode = false;
 	
 	public static boolean Aesthetic_Only_Mode = false;
-	
-	public ConfigMisc() {
-		
-	}
 }

@@ -74,7 +74,7 @@ public class RotatingParticleManager {
 	
 	public static boolean useShaders;
 	
-	public static FloatBuffer viewMatrixBuffer = BufferUtils.createFloatBuffer(16);
+	private static FloatBuffer viewMatrixBuffer = BufferUtils.createFloatBuffer(16);
 	
 	public static boolean forceShaderReset = false;
 	

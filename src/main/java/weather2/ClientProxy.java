@@ -90,7 +90,7 @@ public class ClientProxy extends CommonProxy
         addItemModel(item, 0, new ModelResourceLocation(Weather.modID + ":" + name, "inventory"));
     }
 
-    public void addItemModel(Item item, int meta, ModelResourceLocation location) {
+    private void addItemModel(Item item, int meta, ModelResourceLocation location) {
 
         ModelLoader.setCustomModelResourceLocation(item, meta, location);
     }

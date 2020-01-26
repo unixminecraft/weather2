@@ -131,7 +131,7 @@ public class WindManager {
 		return windAngleEvent;
 	}
 
-	public float getWindAngleForEvents(Vec3 pos) {
+	private float getWindAngleForEvents(Vec3 pos) {
 		if (pos != null && !windOriginEvent.equals(BlockPos.ORIGIN)) {
 			double var11 = windOriginEvent.getX() + 0.5D - pos.xCoord;
 			double var15 = windOriginEvent.getZ() + 0.5D - pos.zCoord;

@@ -2,15 +2,12 @@ package weather2;
 
 import CoroUtil.packet.PacketHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.item.ItemPocketSand;
 import weather2.util.WeatherUtilConfig;
 
@@ -105,15 +102,4 @@ public class EventHandlerPacket {
 			ex.printStackTrace();
 		}
 	}
-    
-    @SideOnly(Side.CLIENT)
-    public String getSelfUsername() {
-    	EntityPlayerSP player = Minecraft.getMinecraft().player;
-    	if(player == null) {
-    		return "nullObject";
-    	}
-    	else {
-    		return player.getName();
-    	}
-    }
 }

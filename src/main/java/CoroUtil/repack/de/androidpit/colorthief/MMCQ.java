@@ -46,14 +46,14 @@ public class MMCQ {
      * 
      * @return the color index
      */
-    static int getColorIndex(int r, int g, int b) {
+    private static int getColorIndex(int r, int g, int b) {
         return (r << (2 * SIGBITS)) + (g << SIGBITS) + b;
     }
 
     /**
      * 3D color space box.
      */
-    public static class VBox {
+    private static class VBox {
         int r1;
         int r2;
         int g1;

@@ -21,28 +21,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class EntityThrowableUsefull extends Entity implements IProjectile
 {
-     int xTile = -1;
+	private int xTile = -1;
     private int yTile = -1;
     private int zTile = -1;
     private Block inTile = null;
-    protected boolean inGround = false;
-    public int throwableShake = 0;
+    private boolean inGround = false;
+    private int throwableShake = 0;
 
     /**
      * Is the entity that throws this 'thing' (snowball, ender pearl, eye of ender or potion)
      */
-    public EntityLivingBase thrower;
-    public EntityLivingBase target;
-    
-    //adding in this feature failed horribly, retry next time when this class is recoded to base motions off of rotations and force isntead of its current opposite
-    public boolean targetSeeking = false;
-    public float targetSeekAngleLimit = 5F; //max angle adjustment per tick
-    
+    private EntityLivingBase thrower;
     private String throwerName = null;
-    public int ticksInGround;
-    public int ticksInAir = 0;
+    private int ticksInGround;
+    private int ticksInAir = 0;
     
-    public int ticksMaxAlive = 120;
+    private int ticksMaxAlive = 120;
 
     public EntityThrowableUsefull(World par1World)
     {
@@ -65,76 +59,6 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         double d1 = this.getEntityBoundingBox().getAverageEdgeLength() * 4.0D;
         d1 *= 64.0D;
         return par1 < d1 * d1;
-    }
-
-    public EntityThrowableUsefull(World par1World, EntityLivingBase par2EntityLivingBase, EntityLivingBase parTarget, double parSpeed)
-    {
-    	super(par1World);
-    	this.thrower = par2EntityLivingBase;
-        this.setSize(0.25F, 0.25F);
-        target = parTarget;
-    	Vec3 vec = getTargetVector(target);
-    	
-    	
-    	this.motionX = vec.xCoord * parSpeed;
-    	this.motionY = vec.yCoord * parSpeed;
-    	this.motionZ = vec.zCoord * parSpeed;
-    	
-    	this.setPosition(par2EntityLivingBase.posX, par2EntityLivingBase.posY + (double)par2EntityLivingBase.getEyeHeight(), par2EntityLivingBase.posZ);
-    	this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, (float)parSpeed, 0.0F);
-    	
-    	//move it out of source a bit
-    	this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-        this.posY -= 0.10000000149011612D;
-        this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-        this.setPosition(this.posX, this.posY, this.posZ);
-    }
-    
-    public EntityThrowableUsefull(World par1World, EntityLivingBase par2EntityLivingBase)
-    {
-    	this(par1World, par2EntityLivingBase, 1);
-    }
-    
-    public EntityThrowableUsefull(World par1World, EntityLivingBase par2EntityLivingBase, double parSpeed)
-    {
-        super(par1World);
-        this.thrower = par2EntityLivingBase;
-        this.setSize(0.25F, 0.25F);
-        this.setLocationAndAngles(par2EntityLivingBase.posX, par2EntityLivingBase.posY + (double)par2EntityLivingBase.getEyeHeight(), par2EntityLivingBase.posZ, par2EntityLivingBase.rotationYaw, par2EntityLivingBase.rotationPitch);
-        this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-        this.posY -= 0.10000000149011612D;
-        this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-        this.setPosition(this.posX, this.posY, this.posZ);
-        //this.yOffset = 0.0F;
-        float f = 0.4F;
-        this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
-        this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
-        this.motionY = (double)(-MathHelper.sin((this.rotationPitch + this.func_70183_g()) / 180.0F * (float)Math.PI) * f);
-        
-        
-        
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, (float)parSpeed, 0.0F);
-    }
-
-    public EntityThrowableUsefull(World par1World, double par2, double par4, double par6)
-    {
-        super(par1World);
-        this.setSize(0.25F, 0.25F);
-        this.setPosition(par2, par4, par6);
-    }
-    
-    public Vec3 getTargetVector(EntityLivingBase target) {
-    	double vecX = target.posX - thrower.posX;
-    	double vecY = target.posY - thrower.posY;
-    	double vecZ = target.posZ - thrower.posZ;
-    	double dist = Math.sqrt(vecX * vecX + vecY * vecY + vecZ * vecZ);
-    	Vec3 vec3 = new Vec3(vecX / dist, vecY / dist, vecZ / dist);
-    	return vec3;
-    }
-
-    protected float func_70183_g()
-    {
-        return 0.0F;
     }
 
     /**
@@ -302,7 +226,7 @@ public abstract class EntityThrowableUsefull extends Entity implements IProjecti
         this.setPosition(this.posX, this.posY, this.posZ);
     }
 
-    public RayTraceResult tickEntityCollision(Vec3 vec3, Vec3 vec31) {
+    protected RayTraceResult tickEntityCollision(Vec3 vec3, Vec3 vec31) {
     	Entity entity = null;
         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D, 1.0D, 1.0D));
         double d0 = 0.0D;

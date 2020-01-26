@@ -1,6 +1,5 @@
 package CoroUtil.util;
 
-import java.awt.Color;
 import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
@@ -21,8 +20,8 @@ public class CoroUtilBlockLightCache {
      * triple hashmap lookups = 105 fps
      */
 
-    public static HashMap<Long, Float> lookupPosToBrightness = new HashMap<>();
-    public static HashMap<Integer, HashMap<Integer, HashMap<Integer, Float>>> lookupPosToBrightness2 = new HashMap<>();
+	private static HashMap<Long, Float> lookupPosToBrightness = new HashMap<>();
+	private static HashMap<Integer, HashMap<Integer, HashMap<Integer, Float>>> lookupPosToBrightness2 = new HashMap<>();
 
     private static final int NUM_X_BITS = 1 + MathHelper.log2(MathHelper.smallestEncompassingPowerOfTwo(30000000));
     private static final int NUM_Z_BITS = NUM_X_BITS;
@@ -34,8 +33,6 @@ public class CoroUtilBlockLightCache {
     private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
 
     public static float brightnessPlayer = 0F;
-
-    public static Color[] lightmapColors = new Color[255];
 
     public static float getBrightnessCached(World world, float x, float y, float z) {
 

@@ -35,8 +35,8 @@ public class ParticleTexLeafColor extends ParticleTexFX {
 	}
 
 	//only use positives for now
-	public float rotationYawMomentum = 0;
-	public float rotationPitchMomentum = 0;
+	private float rotationYawMomentum = 0;
+	private float rotationPitchMomentum = 0;
 
 	@SuppressWarnings("unchecked")
 	public ParticleTexLeafColor(World worldIn, double posXIn, double posYIn,
@@ -144,5 +144,4 @@ public class ParticleTexLeafColor extends ParticleTexFX {
 	private final boolean hasColor(IBlockState state) {
 		return blockColorMap.containsKey(state.getBlock().delegate);
 	}
-
 }

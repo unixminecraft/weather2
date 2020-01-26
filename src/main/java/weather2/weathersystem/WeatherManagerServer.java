@@ -364,7 +364,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 	}
 	
 	//populate data with rain storms and deadly storms
-	public void nbtStormsForIMC() {
+	private void nbtStormsForIMC() {
 		NBTTagCompound data = new NBTTagCompound();
 		
 		for (int i = 0; i < getStormObjects().size(); i++) {
@@ -416,7 +416,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		syncStormNew(parStorm, null);
 	}
 	
-	public void syncStormNew(WeatherObject parStorm, EntityPlayerMP entP) {
+	private void syncStormNew(WeatherObject parStorm, EntityPlayerMP entP) {
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("packetCommand", "WeatherData");
 		data.setString("command", "syncStormNew");
@@ -434,7 +434,7 @@ public class WeatherManagerServer extends WeatherManagerBase {
 		}
 	}
 	
-	public void syncStormUpdate(WeatherObject parStorm) {
+	private void syncStormUpdate(WeatherObject parStorm) {
 		//packets
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("packetCommand", "WeatherData");

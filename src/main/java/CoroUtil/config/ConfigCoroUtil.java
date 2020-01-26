@@ -2,10 +2,6 @@ package CoroUtil.config;
 
 public class ConfigCoroUtil {
 
-	public static String mobSpawnsProfile = "mob_spawns";
-
-	public static String mobSpawnsWaveToForceUse = "";
-
 	public static boolean forceShadersOff = false;
 
 	public static boolean useEntityRenderHookForShaders = true;
@@ -24,6 +20,4 @@ public class ConfigCoroUtil {
 	public static boolean useLoggingDebug = false;
 
 	public static boolean useLoggingError = true;
-
-	public static boolean enableAdvancedDeveloperConfigFiles = false;
 }

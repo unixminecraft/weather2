@@ -34,13 +34,10 @@ public class ModelAnemometer extends ModelBase
     public float scaleX = 1f;	
     public float scaleY = 1f;	
     public float scaleZ = 1f;
-    public float scaleItem = 1;
     public float offsetX = 0;
     public float offsetY = 0;
     public float offsetZ = 0;
-    public float offsetInvX = 0;
-    public float offsetInvY = 0; 
-
+    
     public ModelAnemometer()
     {
         this( 0.0f );

@@ -7,7 +7,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import CoroUtil.config.ConfigCoroUtil;
 import CoroUtil.config.ConfigCoroUtilAdvanced;
 import CoroUtil.util.CoroUtilFile;
 import net.minecraft.entity.EnumCreatureType;
@@ -41,14 +40,11 @@ public class CoroUtil {
     @SidedProxy(clientSide = "CoroUtil.forge.ClientProxy", serverSide = "CoroUtil.forge.CommonProxy")
     public static CommonProxy proxy;
     
-    public static boolean initProperNeededForInstance = true;
+    private static boolean initProperNeededForInstance = true;
     
     public static String eventChannelName = "coroutil";
 	public static final FMLEventChannel eventChannel = NetworkRegistry.INSTANCE.newEventDrivenChannel(eventChannelName);
-    
-    public static ConfigCoroUtil configCoroUtil = new ConfigCoroUtil();
-    public static ConfigCoroUtilAdvanced configDev = new ConfigCoroUtilAdvanced();
-    
+        
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -57,7 +53,7 @@ public class CoroUtil {
     	eventChannel.register(new EventHandlerPacket());
     }
 
-    public static void migrateOldConfig() {
+    private static void migrateOldConfig() {
 
     	File path = new File("." + File.separator + "config" + File.separator + "CoroUtil");
     	try {
@@ -77,7 +73,7 @@ public class CoroUtil {
 		fixConfigFile(oldFile, newFile, "coroutil_dynamicdifficulty {", "dynamicdifficulty {");
 	}
 
-	public static void fixConfigFile(File oldFile, File newFile, String oldCat, String newCat) {
+    private static void fixConfigFile(File oldFile, File newFile, String oldCat, String newCat) {
 		if (oldFile.exists() && !newFile.exists()) {
 			CULog.log("Detected old " + oldFile.toString() + ", relocating to " + newFile.toString());
 			try {

@@ -31,9 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRotFX extends Particle implements IWindHandler, IShaderRenderedEntity
 {
-    public boolean weatherEffect = false;
-
-    public float spawnY = -1;
+	public float spawnY = -1;
     
     //this field and 2 methods below are for backwards compatibility with old particle system from the new icon based system
     private int particleTextureIndexInt = 0;
@@ -52,8 +50,6 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
     //not a real entity ID now, just used for making rendering of entities slightly unique
     private int entityID = 0;
     
-    public int debugID = 0;
-    
     public float rotationYaw;
     public float rotationPitch;
     
@@ -63,7 +59,7 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
     
     private boolean killOnCollide = false;
 	
-	public boolean facePlayer = false;
+	protected boolean facePlayer = false;
 
 	//facePlayer will override this
     public boolean facePlayerYaw = false;
@@ -95,12 +91,10 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
 
     private float ticksFadeOutMaxOnDeath = -1;
     private float ticksFadeOutCurOnDeath = 0;
-    protected boolean fadingOut = false;
+	private boolean fadingOut = false;
 
     public float avoidTerrainAngle = 0;
 
-    //this is for yaw only
-    public boolean useRotationAroundCenter = false;
     public float rotationAroundCenter = 0;
     public float rotationAroundCenterPrev = 0;
     public float rotationSpeedAroundCenter = 0;
@@ -108,21 +102,22 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
 
     private boolean slantParticleToWind = false;
 
-    public Quaternion rotation;
-    public Quaternion rotationPrev;
+    protected Quaternion rotation;
+    private Quaternion rotationPrev;
 
     //set to true for direct quaternion control, not EULER conversion helper
-    public boolean quatControl = false;
+    protected boolean quatControl = false;
 
     public boolean fastLight = false;
 
-    public float brightnessCache = 0.5F;
+    protected float brightnessCache = 0.5F;
 
-    public boolean rotateOrderXY = false;
+    protected boolean rotateOrderXY = false;
 
-    public float extraYRotation = 0;
+	public float extraYRotation = 0;
 
-    public boolean isCollidedVerticallyDownwards = false;
+    protected boolean isCollidedVerticallyDownwards = false;
+    
     public EntityRotFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
@@ -134,7 +129,7 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
         brightnessCache = CoroUtilBlockLightCache.getBrightnessCached(world, (float)posX, (float)posY, (float)posZ);
     }
 
-    public boolean isSlantParticleToWind() {
+    protected boolean isSlantParticleToWind() {
         return slantParticleToWind;
     }
 
@@ -150,7 +145,7 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
         this.killWhenUnderTopmostBlock = killWhenUnderTopmostBlock;
     }
 
-    public boolean isDontRenderUnderTopmostBlock() {
+    protected boolean isDontRenderUnderTopmostBlock() {
         return dontRenderUnderTopmostBlock;
     }
 
@@ -166,7 +161,7 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
         this.ticksFadeOutMax = ticksFadeOutMax;
     }
     
-    public int getParticleTextureIndex()
+    protected int getParticleTextureIndex()
     {
         return this.particleTextureIndexInt;
     }
@@ -308,18 +303,12 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
 
     public void spawnAsWeatherEffect()
     {
-        weatherEffect = true;
         ExtendedRenderer.rotEffRenderer.addEffect(this);
     }
 
     public int getAge()
     {
         return particleAge;
-    }
-
-    public void setAge(int age)
-    {
-        particleAge = age;
     }
 
     public int getMaxAge()
@@ -573,10 +562,6 @@ public class EntityRotFX extends Particle implements IWindHandler, IShaderRender
     
     private boolean isVanillaMotionDampen() {
 		return vanillaMotionDampen;
-	}
-
-	public void setVanillaMotionDampen(boolean motionDampen) {
-		this.vanillaMotionDampen = motionDampen;
 	}
 
     public void updateQuaternion(Entity camera) {

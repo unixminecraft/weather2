@@ -116,12 +116,6 @@ public class ServerTickHandler
 		}
 	}
     
-    public static void initialize() {
-    	if (ServerTickHandler.lookupDimToWeatherMan.get(0) == null) {
-    		ServerTickHandler.addWorldToWeather(0);
-    	}
-    }
-    
     public static void reset() {
 		Weather.dbg("Weather2: ServerTickHandler resetting");
     	for (int i = 0; i < listWeatherMans.size(); i++) {

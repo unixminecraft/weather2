@@ -124,7 +124,7 @@ public abstract class ShaderProgram {
         return this.name;
     }
 
-    public int getProgramId() {
+    protected int getProgramId() {
         return programId;
     }
 }

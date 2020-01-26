@@ -1,10 +1,8 @@
 package CoroUtil.forge;
 
-import CoroUtil.packet.INBTPacketHandler;
 import CoroUtil.packet.PacketHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,21 +24,8 @@ public class EventHandlerPacket {
 	//- CoroAI_Inv could be factored out and replaced with CoroAI_Ent, epoch entities use it this way
 
 	@SideOnly(Side.CLIENT)
-	public World getClientWorld() {
+	private World getClientWorld() {
 		return Minecraft.getMinecraft().world;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public EntityPlayer getClientPlayer() {
-		return Minecraft.getMinecraft().player;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public INBTPacketHandler getClientDataInterface() {
-		if (Minecraft.getMinecraft().currentScreen instanceof INBTPacketHandler) {
-			return (INBTPacketHandler)Minecraft.getMinecraft().currentScreen;
-		}
-		return null;
 	}
 
 	@SideOnly(Side.CLIENT)

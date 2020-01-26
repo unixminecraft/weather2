@@ -18,16 +18,16 @@ public class ParticleBehaviors {
 
 	public List<EntityRotFX> particles = new ArrayList<EntityRotFX>();
 	public Vec3 coordSource;
-	public Entity sourceEntity = null;
-	public Random rand = new Random();
+	private Entity sourceEntity = null;
+	protected Random rand = new Random();
 	
 	//Visual tweaks
-	public float rateDarken = 0.025F;
-	public float rateBrighten = 0.010F;
-	public float rateBrightenSlower = 0.003F;
-	public float rateAlpha = 0.002F;
-	public float rateScale = 0.1F;
-	public int tickSmokifyTrigger = 40;
+	private float rateDarken = 0.025F;
+	private float rateBrighten = 0.010F;
+	private float rateBrightenSlower = 0.003F;
+	private float rateAlpha = 0.002F;
+	private float rateScale = 0.1F;
+	private int tickSmokifyTrigger = 40;
 	
 	public ParticleBehaviors(Vec3 source) {
 		coordSource = source;
@@ -137,7 +137,7 @@ public class ParticleBehaviors {
 		return entityfx;
 	}
 	
-	public EntityRotFX initParticle(EntityRotFX particle) {
+	protected EntityRotFX initParticle(EntityRotFX particle) {
 		
 		particle.setPrevPosX(particle.getPosX());
 		particle.setPrevPosY(particle.getPosY());

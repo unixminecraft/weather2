@@ -46,8 +46,6 @@ public class CommonProxy
 	private static final String tornado_siren_manual = "tornado_siren_manual";
 	private static final String wind_vane = "wind_vane";
 	private static final String weather_forecast = "weather_forecast";
-	private static final String weather_machine = "weather_machine";
-	private static final String weather_deflector = "weather_deflector";
 	private static final String anemometer = "anemometer";
 	private static final String sand_layer = "sand_layer";
 
@@ -72,12 +70,6 @@ public class CommonProxy
 
 	@GameRegistry.ObjectHolder(Weather.modID + ":" + weather_forecast)
 	public static Block blockWeatherForecast;
-
-	@GameRegistry.ObjectHolder(Weather.modID + ":" + weather_machine)
-	public static Block blockWeatherMachine;
-
-	@GameRegistry.ObjectHolder(Weather.modID + ":" + weather_deflector)
-	public static Block blockWeatherDeflector;
 
 	@GameRegistry.ObjectHolder(Weather.modID + ":" + sand_layer)
 	public static Block blockSandLayer;
@@ -120,8 +112,6 @@ public class CommonProxy
 		Weather.proxy.addItemBlock(event, new ItemBlock(blockTSirenManual).setRegistryName(blockTSirenManual.getRegistryName()));
 		Weather.proxy.addItemBlock(event, new ItemBlock(blockWindVane).setRegistryName(blockWindVane.getRegistryName()));
 		Weather.proxy.addItemBlock(event, new ItemBlock(blockWeatherForecast).setRegistryName(blockWeatherForecast.getRegistryName()));
-		Weather.proxy.addItemBlock(event, new ItemBlock(blockWeatherMachine).setRegistryName(blockWeatherMachine.getRegistryName()));
-		Weather.proxy.addItemBlock(event, new ItemBlock(blockWeatherDeflector).setRegistryName(blockWeatherDeflector.getRegistryName()));
 		Weather.proxy.addItemBlock(event, new ItemBlock(blockAnemometer).setRegistryName(blockAnemometer.getRegistryName()));
 	}
 
@@ -163,10 +153,6 @@ public class CommonProxy
 
 		if (!ConfigMisc.Block_WeatherForecastNoRecipe) GameRegistry.addShapedRecipe(new ResourceLocation(Weather.modID, weather_forecast), group,
 				new ItemStack(blockWeatherForecast, 1), new Object[] {"XDX", "DID", "XDX", 'D', Items.REDSTONE, 'I', Items.COMPASS, 'X', itemWeatherRecipe});
-		if (!ConfigMisc.Block_WeatherMachineNoRecipe) GameRegistry.addShapedRecipe(new ResourceLocation(Weather.modID, weather_machine), group,
-				new ItemStack(blockWeatherMachine, 1), new Object[] {"XDX", "DID", "XDX", 'D', Items.REDSTONE, 'I', Items.DIAMOND, 'X', itemWeatherRecipe});
-		if (!ConfigMisc.Block_WeatherDeflectorNoRecipe) GameRegistry.addShapedRecipe(new ResourceLocation(Weather.modID, weather_deflector), group,
-				new ItemStack(blockWeatherDeflector, 1), new Object[] {"XDX", "DID", "XDX", 'D', Items.REDSTONE, 'I', itemWeatherRecipe, 'X', Items.IRON_INGOT});
 
 		if (!ConfigMisc.Block_SandLayerNoRecipe) GameRegistry.addShapedRecipe(new ResourceLocation(Weather.modID, sand_layer), group,
 				new ItemStack(itemSandLayer, 64), new Object[] {"DDD", "DID", "DDD", 'D', Blocks.SAND, 'I', itemWeatherRecipe});

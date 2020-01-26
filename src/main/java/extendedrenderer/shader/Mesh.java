@@ -98,7 +98,7 @@ public class Mesh {
         return vertexCount;
     }
 
-    public void cleanup() {
+    protected void cleanup() {
         ShaderManager.glDisableVertexAttribArray(0);
 
         // Delete the VBO

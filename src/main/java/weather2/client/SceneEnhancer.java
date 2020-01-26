@@ -139,8 +139,6 @@ public class SceneEnhancer implements Runnable {
 
 	private static List<BlockPos> listPosRandom = new ArrayList<>();
 
-	public static List<EntityRotFX> testParticles = new ArrayList<>();
-
 	public SceneEnhancer() {
 		pm = new ParticleBehaviors(null);
 

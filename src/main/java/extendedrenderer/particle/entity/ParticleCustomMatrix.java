@@ -16,11 +16,9 @@ import net.minecraft.world.World;
  */
 public class ParticleCustomMatrix extends ParticleTexFX {
 
-    public float angleX;
-    public float angleY;
-    public float angleZ;
-
-    public float yy;
+	private float angleX;
+	private float angleY;
+	private float yy;
 
     public ParticleCustomMatrix(World worldIn, double posXIn, double posYIn, double posZIn, double mX, double mY, double mZ, TextureAtlasSprite par8Item) {
         super(worldIn, posXIn, posYIn, posZIn, mX, mY, mZ, par8Item);

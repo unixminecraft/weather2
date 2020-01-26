@@ -10,26 +10,12 @@ public class BlockCoord {
 	public int posZ;
 	
 	public Block block;
-	public int meta;
-
-	public BlockCoord(int p_i1354_1_, int p_i1354_2_, int p_i1354_3_)
-    {
-        this.posX = p_i1354_1_;
-        this.posY = p_i1354_2_;
-        this.posZ = p_i1354_3_;
-    }
-
-    public BlockCoord(BlockCoord p_i1355_1_)
-    {
-        this.posX = p_i1355_1_.posX;
-        this.posY = p_i1355_1_.posY;
-        this.posZ = p_i1355_1_.posZ;
-    }
-    
-    public BlockCoord(int posX, int posY, int posZ, Block block, int meta) {
-    	this(posX, posY, posZ);
+	
+	public BlockCoord(int posX, int posY, int posZ, Block block, int meta) {
+    	this.posX = posX;
+    	this.posY = posY;
+    	this.posZ = posZ;
     	this.block = block;
-    	this.meta = meta;
     }
     
     public boolean equals(Object p_equals_1_)
@@ -55,27 +41,10 @@ public class BlockCoord {
         return "Pos{x=" + this.posX + ", y=" + this.posY + ", z=" + this.posZ + '}';
     }
     
-    public int getX() {
-    	return posX;
-    }
-    
-    public int getY() {
-    	return posY;
-    }
-    
-    public int getZ() {
-    	return posZ;
-    }
-    
     public double getDistanceSquared(double toX, double toY, double toZ) {
-    	return distanceSq(toX, toY, toZ);
-    }
-    
-    public double distanceSq(double toX, double toY, double toZ)
-    {
-        double d0 = (double)this.getX() - toX;
-        double d1 = (double)this.getY() - toY;
-        double d2 = (double)this.getZ() - toZ;
+        double d0 = (double) posX - toX;
+        double d1 = (double) posY - toY;
+        double d2 = (double) posZ - toZ;
         return d0 * d0 + d1 * d1 + d2 * d2;
     }
     

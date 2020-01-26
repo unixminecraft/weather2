@@ -23,7 +23,6 @@ import extendedrenderer.EventHandler;
 import extendedrenderer.ExtendedRenderer;
 import extendedrenderer.foliage.Foliage;
 import extendedrenderer.foliage.FoliageData;
-import extendedrenderer.particle.ParticleRegistry;
 import extendedrenderer.render.FoliageRenderer;
 import extendedrenderer.render.RotatingParticleManager;
 import extendedrenderer.shader.InstancedMeshFoliage;
@@ -570,7 +569,7 @@ public class FoliageEnhancerShader implements Runnable {
         }
     }
 
-    public static void updateVBO2Threaded(TextureAtlasSprite sprite) {
+    private static void updateVBO2Threaded(TextureAtlasSprite sprite) {
 
         Minecraft mc = Minecraft.getMinecraft();
         Entity entityIn = mc.getRenderViewEntity();
@@ -611,15 +610,11 @@ public class FoliageEnhancerShader implements Runnable {
         }
     }
 
-    public static void addForPos(FoliageReplacerBase replacer, int height, BlockPos pos) {
-        addForPos(replacer, height, pos, new Vec3(0.4, 0, 0.4), true, 0);
-    }
-
     public static void addForPos(FoliageReplacerBase replacer, int height, BlockPos pos, Vec3 randPosVar, boolean biomeColorize) {
         addForPos(replacer, height, pos, randPosVar, biomeColorize, 0);
     }
 
-    public static void addForPos(FoliageReplacerBase replacer, int height, BlockPos pos, Vec3 randPosVar, boolean biomeColorize, int colorizeOffset) {
+    private static void addForPos(FoliageReplacerBase replacer, int height, BlockPos pos, Vec3 randPosVar, boolean biomeColorize, int colorizeOffset) {
         addForPos(replacer, height, pos, randPosVar, biomeColorize, colorizeOffset, null);
     }
 
@@ -728,63 +723,5 @@ public class FoliageEnhancerShader implements Runnable {
 
         lookupPosToFoliage.put(pos, data);
 
-    }
-
-    public void addForPosSeaweed(BlockPos pos) {
-
-        World world = Minecraft.getMinecraft().world;
-
-        Random rand = new Random();
-        IBlockState state = world.getBlockState(pos.down());
-        List<Foliage> listClutter = new ArrayList<>();
-        int heightIndex = 0;
-
-        float variance = 0.4F;
-        float randX = (rand.nextFloat() - rand.nextFloat()) * variance;
-        float randZ = (rand.nextFloat() - rand.nextFloat()) * variance;
-
-        int clutterSize = 14;
-
-        clutterSize = rand.nextInt(7) * 2;
-
-        for (int i = 0; i < clutterSize; i++) {
-            heightIndex = i / 2;
-            TextureAtlasSprite sprite = ParticleRegistry.listSeaweed.get(heightIndex);
-            Foliage foliage = new Foliage(sprite);
-            foliage.setPosition(pos.add(0, 0, 0));
-            foliage.posY += 0.0F;
-            foliage.prevPosY = foliage.posY;
-            foliage.heightIndex = heightIndex;
-            foliage.posX += 0.5F + randX;
-            foliage.prevPosX = foliage.posX;
-            foliage.posZ += 0.5F + randZ;
-            foliage.prevPosZ = foliage.posZ;
-            foliage.rotationYaw = 0;
-            foliage.rotationYaw = world.rand.nextInt(360);
-            foliage.rotationYaw = 45;
-            if ((i+1) % 2 == 0) {
-                foliage.rotationYaw += 90;
-            }
-
-            //for seaweed render
-            foliage.rotationYaw = 0;
-            if ((i+1) % 2 == 0) {
-                foliage.rotationYaw = 1;
-            }
-            foliage.particleScale /= 0.2;
-
-            int color = Minecraft.getMinecraft().getBlockColors().colorMultiplier(state, world, pos.down(), 0);
-            foliage.particleRed = (float) (color >> 16 & 255) / 255.0F;
-            foliage.particleGreen = (float) (color >> 8 & 255) / 255.0F;
-            foliage.particleBlue = (float) (color & 255) / 255.0F;
-
-            foliage.particleRed = 1F;
-            foliage.particleGreen = 1F;
-            foliage.particleBlue = 1F;
-            foliage.brightnessCache = CoroUtilBlockLightCache.brightnessPlayer;
-            listClutter.add(foliage);
-            ExtendedRenderer.foliageRenderer.getFoliageForSprite(sprite).add(foliage);
-
-        }
     }
 }

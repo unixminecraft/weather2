@@ -39,7 +39,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import weather2.ClientConfigData;
 import weather2.ClientTickHandler;
 import weather2.config.ConfigMisc;
-import weather2.config.ConfigStorm;
 import weather2.config.ConfigTornado;
 import weather2.entity.EntityMovingBlock;
 import weather2.util.WeatherUtil;
@@ -71,10 +70,6 @@ public class TornadoHelper {
 
     //for client player, for use of playing sounds
     private static boolean isOutsideCached = false;
-
-	//for caching query on if a block damage preventer block is nearby, also assume blocked at first for safety
-    private boolean isBlockGrabbingBlockedCached = true;
-    private long isBlockGrabbingBlockedCached_LastCheck = 0;
 
 	//static because its a shared list for the whole dimension
     private static HashMap<Integer, Long> flyingBlock_LastQueryTime = new HashMap<>();
@@ -385,7 +380,7 @@ public class TornadoHelper {
 
 	private boolean canGrab(World parWorld, IBlockState state, BlockPos pos)
     {
-        if (!CoroUtilBlock.isAir(state.getBlock()) && state.getBlock() != Blocks.FIRE && !isBlockGrabbingBlocked(parWorld, state, pos))
+        if (!CoroUtilBlock.isAir(state.getBlock()) && state.getBlock() != Blocks.FIRE)
         {
         	return canGrabEventCheck(parWorld, state, pos);
         }
@@ -628,26 +623,6 @@ public class TornadoHelper {
 		}
 
 		return flyingBlock_LastCount.get(dimID);
-	}
-
-    private boolean isBlockGrabbingBlocked(World world, IBlockState state, BlockPos pos) {
-		int queryRate = 40;
-		if (isBlockGrabbingBlockedCached_LastCheck + queryRate < world.getTotalWorldTime()) {
-			isBlockGrabbingBlockedCached_LastCheck = world.getTotalWorldTime();
-
-			isBlockGrabbingBlockedCached = false;
-
-			for (Long hash : storm.manager.getListWeatherBlockDamageDeflector()) {
-				BlockPos posDeflect = BlockPos.fromLong(hash);
-
-				if (pos.distanceSq(posDeflect) < ConfigStorm.Storm_Deflector_RadiusOfStormRemoval * ConfigStorm.Storm_Deflector_RadiusOfStormRemoval) {
-					isBlockGrabbingBlockedCached = true;
-					break;
-				}
-			}
-		}
-
-		return isBlockGrabbingBlockedCached;
 	}
 
 	public void cleanup() {

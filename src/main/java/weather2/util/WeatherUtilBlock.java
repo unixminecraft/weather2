@@ -173,7 +173,7 @@ public class WeatherUtilBlock {
 	 * ---- do this only if posSource != posSource + scanDistance effective found pos
 	 * 
 	 */
-	public static void floodAreaWithLayerableBlock(World world, Vec3 posSource, float directionYaw, float scanDistance, float fillRadius, float takeRadius, Block blockLayerable, int amountToTakeOrRelocate/*, boolean transferSandEqually*/) {
+	private static void floodAreaWithLayerableBlock(World world, Vec3 posSource, float directionYaw, float scanDistance, float fillRadius, float takeRadius, Block blockLayerable, int amountToTakeOrRelocate/*, boolean transferSandEqually*/) {
 		float tickStep = 0.75F;
 		//int fillPerTick = amountToTakeOrFill;
 		//use snow for now, make sand block after
