@@ -43,7 +43,7 @@ public class ModelAnemometer extends ModelBase
         this( 0.0f );
     }
 
-    public ModelAnemometer( float par1 )
+    private ModelAnemometer( float par1 )
     {
     	textureWidth = 64;
         textureHeight = 32;

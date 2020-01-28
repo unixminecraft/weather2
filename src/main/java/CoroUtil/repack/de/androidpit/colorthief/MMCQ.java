@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MMCQ {
+class MMCQ {
 
     private static final int SIGBITS = 5;
     private static final int RSHIFT = 8 - SIGBITS;
@@ -153,7 +153,7 @@ public class MMCQ {
     /**
      * Color map.
      */
-    public static class CMap {
+    static class CMap {
 
     	private final ArrayList<VBox> vboxes = new ArrayList<>();
 
@@ -161,7 +161,7 @@ public class MMCQ {
             vboxes.add(box);
         }
 
-        public int[][] palette() {
+        int[][] palette() {
             int numVBoxes = vboxes.size();
             int[][] palette = new int[numVBoxes][];
             for (int i = 0; i < numVBoxes; i++) {
@@ -374,7 +374,7 @@ public class MMCQ {
         throw new RuntimeException("VBox can't be cut");
     }
 
-    public static CMap quantize(int[][] pixels, int maxcolors) {
+    static CMap quantize(int[][] pixels, int maxcolors) {
         // short-circuit
         if (pixels.length == 0 || maxcolors < 2 || maxcolors > 256) {
             return null;

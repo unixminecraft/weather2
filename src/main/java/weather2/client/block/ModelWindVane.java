@@ -36,7 +36,7 @@ public class ModelWindVane extends ModelBase
         this( 0.0f );
     }
 
-    public ModelWindVane( float par1 )
+    private ModelWindVane( float par1 )
     {
         bottom = new ModelRenderer( this, 0, 0 );
         bottom.setTextureSize( 64, 32 );

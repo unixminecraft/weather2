@@ -3,7 +3,6 @@ package extendedrenderer.shader;
 import java.nio.FloatBuffer;
 
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 /**
  * Created by corosus on 08/05/17.
@@ -12,9 +11,7 @@ public class Matrix4fe extends Matrix4f {
 
 	private static final long serialVersionUID = 5342089086832176634L;
 	
-	private byte properties;
-
-    public Matrix4fe() {
+	public Matrix4fe() {
         this.m00 = 1.0F;
         this.m11 = 1.0F;
         this.m22 = 1.0F;
@@ -41,110 +38,6 @@ public class Matrix4fe extends Matrix4f {
     }
 
     private void properties(int properties) {
-        this.properties = 0;
-    }
-
-    private Matrix4fe rotateX(float ang, Matrix4fe dest) {
-        if((this.properties & 4) != 0) {
-            return this;//dest.rotationX(ang);
-        } else {
-            float sin = (float)Math.sin((double)ang);
-            float cos = (float)cosFromSin((double)sin, (double)ang);
-            float rm21 = -sin;
-            float nm10 = this.m10 * cos + this.m20 * sin;
-            float nm11 = this.m11 * cos + this.m21 * sin;
-            float nm12 = this.m12 * cos + this.m22 * sin;
-            float nm13 = this.m13 * cos + this.m23 * sin;
-            dest.m20 = this.m10 * rm21 + this.m20 * cos;
-            dest.m21 = this.m11 * rm21 + this.m21 * cos;
-            dest.m22 = this.m12 * rm21 + this.m22 * cos;
-            dest.m23 = this.m13 * rm21 + this.m23 * cos;
-            dest.m10 = nm10;
-            dest.m11 = nm11;
-            dest.m12 = nm12;
-            dest.m13 = nm13;
-            dest.m00 = this.m00;
-            dest.m01 = this.m01;
-            dest.m02 = this.m02;
-            dest.m03 = this.m03;
-            dest.m30 = this.m30;
-            dest.m31 = this.m31;
-            dest.m32 = this.m32;
-            dest.m33 = this.m33;
-            dest.properties((byte)(this.properties & -14));
-            return dest;
-        }
-    }
-
-    public Matrix4fe rotateX(float ang) {
-        return this.rotateX(ang, this);
-    }
-
-    private Matrix4fe rotateY(float ang, Matrix4fe dest) {
-        if((this.properties & 4) != 0) {
-            return this;//dest.rotationY(ang);
-        } else {
-            float sin = (float)Math.sin((double)ang);
-            float cos = (float)cosFromSin((double)sin, (double)ang);
-            float rm02 = -sin;
-            float nm00 = this.m00 * cos + this.m20 * rm02;
-            float nm01 = this.m01 * cos + this.m21 * rm02;
-            float nm02 = this.m02 * cos + this.m22 * rm02;
-            float nm03 = this.m03 * cos + this.m23 * rm02;
-            dest.m20 = this.m00 * sin + this.m20 * cos;
-            dest.m21 = this.m01 * sin + this.m21 * cos;
-            dest.m22 = this.m02 * sin + this.m22 * cos;
-            dest.m23 = this.m03 * sin + this.m23 * cos;
-            dest.m00 = nm00;
-            dest.m01 = nm01;
-            dest.m02 = nm02;
-            dest.m03 = nm03;
-            dest.m10 = this.m10;
-            dest.m11 = this.m11;
-            dest.m12 = this.m12;
-            dest.m13 = this.m13;
-            dest.m30 = this.m30;
-            dest.m31 = this.m31;
-            dest.m32 = this.m32;
-            dest.m33 = this.m33;
-            dest.properties((byte)(this.properties & -14));
-            return dest;
-        }
-    }
-
-    public Matrix4fe rotateY(float ang) {
-        return this.rotateY(ang, this);
-    }
-
-    private static double cosFromSin(double sin, double angle) {
-        double cos = Math.sqrt(1.0D - sin * sin);
-        double a = angle + 1.5707963267948966D;
-        double b = a - (double)((int)(a / 6.283185307179586D)) * 6.283185307179586D;
-        if(b < 0.0D) {
-            b += 6.283185307179586D;
-        }
-
-        return b >= 3.141592653589793D?-cos:cos;
-    }
-
-    private final Matrix4fe identity(Matrix4fe dest) {
-        dest.m00 = 1.0F;
-        dest.m01 = 0.0F;
-        dest.m02 = 0.0F;
-        dest.m03 = 0.0F;
-        dest.m10 = 0.0F;
-        dest.m11 = 1.0F;
-        dest.m12 = 0.0F;
-        dest.m13 = 0.0F;
-        dest.m20 = 0.0F;
-        dest.m21 = 0.0F;
-        dest.m22 = 1.0F;
-        dest.m23 = 0.0F;
-        dest.m30 = 0.0F;
-        dest.m31 = 0.0F;
-        dest.m32 = 0.0F;
-        dest.m33 = 1.0F;
-        return dest;
     }
 
     public FloatBuffer get(FloatBuffer buffer) {
@@ -196,32 +89,6 @@ public class Matrix4fe extends Matrix4f {
         dest.put(13, m.m31);
         dest.put(14, m.m32);
         dest.put(15, m.m33);
-    }
-
-    public Matrix4fe translate(Vector3f offset) {
-        return this.translate(offset.x, offset.y, offset.z);
-    }
-
-    private Matrix4fe translate(float x, float y, float z) {
-        if((this.properties & 4) != 0) {
-            return this.translation(x, y, z);
-        } else {
-            this.m30 = this.m00 * x + this.m10 * y + this.m20 * z + this.m30;
-            this.m31 = this.m01 * x + this.m11 * y + this.m21 * z + this.m31;
-            this.m32 = this.m02 * x + this.m12 * y + this.m22 * z + this.m32;
-            this.m33 = this.m03 * x + this.m13 * y + this.m23 * z + this.m33;
-            this.properties &= -6;
-            return this;
-        }
-    }
-
-    private Matrix4fe translation(float x, float y, float z) {
-        identity(this);
-        this.m30 = x;
-        this.m31 = y;
-        this.m32 = z;
-        this.properties(10);
-        return this;
     }
 
     public Matrix4fe mul(Matrix4fe right) {
@@ -301,9 +168,5 @@ public class Matrix4fe extends Matrix4f {
         this.m33 = 1.0F;
         this.properties(2);
         return this;
-    }
-
-    public Vector3f getTranslation() {
-        return new Vector3f(m30, m31, m32);
     }
 }
