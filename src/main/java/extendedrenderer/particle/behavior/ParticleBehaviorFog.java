@@ -6,10 +6,6 @@ import extendedrenderer.particle.entity.EntityRotFX;
 
 public class ParticleBehaviorFog extends ParticleBehaviors {
 
-	//Externally updated variables, adjusting how templated behavior works
-	public int curTick = 0;
-	public int ticksMax = 1;
-	
 	public ParticleBehaviorFog(Vec3 source) {
 		super(source);
 	}
